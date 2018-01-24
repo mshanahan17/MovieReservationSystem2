@@ -1,5 +1,6 @@
 package accounthandler;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,27 +11,16 @@ public class Users {
     public static void newUser(String userName, String password){
 
         Properties prop = new Properties();
-        OutputStream out = null;
 
         try {
-            out = new FileOutputStream("data/config.properties");
+
             prop.setProperty(userName, password);
-
-            prop.store(out, null);
-
+            prop.store(new FileOutputStream("account.properties"), null);
+            System.out.println("test");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (out != null) {
-                try {
-                    out.flush();
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 }

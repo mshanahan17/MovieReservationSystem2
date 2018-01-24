@@ -32,10 +32,9 @@ public class Registration extends HttpServlet {
         ServletUtils.validateAllInput(password);
         Boolean emailMatch = ServletUtils.validMatch(email[0], email[1]);
         Boolean passwordMatch = ServletUtils.validMatch(password[0], password[1]);
-
         if(emailMatch && passwordMatch){
-            response.sendRedirect("Login.jsp");
             Users.newUser("Matt2", "Bigly");
+            response.sendRedirect("Login.jsp");
         }
         else if(passwordMatch){
             String emailError = "E-mails do not match!";
