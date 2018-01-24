@@ -7,14 +7,13 @@ import java.io.OutputStream;
 import java.util.Properties;
 
 public class Users {
-
     public static void newUser(String userName, String password){
 
         Properties prop = new Properties();
         OutputStream out = null;
 
         try {
-            out = new FileOutputStream("config.properties");
+            out = new FileOutputStream("data/config.properties");
             prop.setProperty(userName, password);
 
             prop.store(out, null);

@@ -1,0 +1,14 @@
+footer {
+	background: #534B4F;
+background: linear-gradient(to bottom, #534B4F 0%, #443C40 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #534B4F), color-stop(100%, #443C40));
+background: -webkit-linear-gradient(top, #534B4F 0%, #443C40 100%);
+background: -moz-linear-gradient(top, #534B4F 0%, #443C40 100%);
+background: -o-linear-gradient(top, #534B4F 0%, #443C40 100%);
+background: -ms-linear-gradient(top, #534B4F 0%, #443C40 100%);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#534B4F', endColorstr='#443C40', GradientType=0);
+border: 1px solid #352D31;
+box-shadow: inset 0 1px 0 #625A5E;
+-webkit-box-shadow: inset 0 1px 0 #625A5E;
+-moz-box-shadow: inset 0 1px 0 #625A5E;
+}
