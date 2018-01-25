@@ -12,8 +12,15 @@
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" 
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
     crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../CSS/customer.css">
 </head>
 <body>
+	<header>
+		<img src="imaxBanner1.jpg" style="width: 100%" />
+	</header>
+	<nav>
+		<a href="Registration.jsp">Register</a>
+	</nav>
 <table id="results" width="100%">
     <thead>
     <th>Theater Name</th>
@@ -32,7 +39,8 @@
         <td>20</td>
         <td>$15.00</td>
         <td>placeholder</td>
-        <td><button name="details1" value="View Details">View Details</button> </td>
+        <td> <a href="MovieDetailsSelection.jsp" class="btn btn-primary btn-sm" role="button">View Details</a></td>
+   
     </tr>
     <tr>
         <td>Grand Theater</td>
@@ -41,7 +49,7 @@
         <td>20</td>
         <td>$15.00</td>
         <td>placeholder</td>
-        <td><button name="details1" value="View Details">View Details</button> </td>
+        <td><a href="MovieDetailsSelection.jsp" class="btn btn-primary btn-sm" role="button">View Details</a> </td>
     </tr>
     <tr>
         <td>Grand Theater</td>
@@ -50,7 +58,7 @@
         <td>20</td>
         <td>$15.00</td>
         <td>placeholder</td>
-        <td><button name="details1" value="View Details">View Details</button> </td>
+        <td><a href="MovieDetailsSelection.jsp" class="btn btn-primary btn-sm" role="button">View Details</a> </td>
     </tr>
     <tr>
         <td>Grand Theater</td>
@@ -59,7 +67,7 @@
         <td>20</td>
         <td>$15.00</td>
         <td>placeholder</td>
-        <td><button name="details1" value="View Details">View Details</button> </td>
+        <td><a href="MovieDetailsSelection.jsp" class="btn btn-primary btn-sm" role="button">View Details</a> </td>
     </tr>
     </tbody>
 </table>

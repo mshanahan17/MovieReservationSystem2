@@ -26,14 +26,17 @@ public class Registration extends HttpServlet {
 
         String fName = ServletUtils.validateInput(request.getParameter("fname"), "");
         String lName = ServletUtils.validateInput(request.getParameter("lname"), "");
+        
         String[] email = request.getParameterValues("email");
         String[] password = request.getParameterValues("password");
         ServletUtils.validateAllInput(email);
         ServletUtils.validateAllInput(password);
+        
         Boolean emailMatch = ServletUtils.validMatch(email[0], email[1]);
         Boolean passwordMatch = ServletUtils.validMatch(password[0], password[1]);
+        
         if(emailMatch && passwordMatch){
-            Users.newUser("Matt2", "Bigly");
+            Users.newUser(email[0], password[0]);
             response.sendRedirect("Login.jsp");
         }
         else if(passwordMatch){

@@ -26,8 +26,23 @@ public class Login extends HttpServlet {
 
         String email = ServletUtils.validateInput(request.getParameter("email"), "");
         String password = ServletUtils.validateInput(request.getParameter("password"), "");
+        
+        if(Users.userExists(email)) {
+        	if(Users.pwMatch(email, password)) {
+        		response.sendRedirect("Customer/CustomerHomePage.jsp");
+        	}
+        	else {
+                String pwError = "Passwords do not match!";
+                request.setAttribute("pwError", pwError);
+                request.getRequestDispatcher("Login.jsp").forward(request,response);
+        	}
+        }
+        else {
+            String emailError = "User Does Not Exist!";
+            request.setAttribute("emailError", emailError);
+            request.getRequestDispatcher("Login.jsp").forward(request,response);
+        }
 
-        response.sendRedirect("Customer/CustomerHomePage.jsp");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
