@@ -18,8 +18,9 @@
 	<header>
 		<img src="imaxBanner1.jpg" style="width: 100%" />
 	</header>
-	<nav>
-		<a href="Registration.jsp">Register</a>
+	<nav> 
+		<a href="ViewOrders.jsp">View Orders</a> 
+		<a href="../Login.jsp">Log Out</a>
 	</nav>
 </body>
 </html>

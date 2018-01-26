@@ -21,7 +21,8 @@
 		<img src="imaxBanner1.jpg" style="width: 100%" />
 	</header>
 	<nav>
-		<a href="Registration.jsp">Register</a>
+		<a href="CustomerHomePage.jsp">Home</a> 
+		<a href="../Login.jsp">Log Out</a>
 	</nav>
 
 </body>

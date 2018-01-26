@@ -16,17 +16,33 @@
 	rel="stylesheet"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
+			<script>
+			function validateForm() {
+			    var x = document.forms["userForm"]["email"].value;
+			    var y = document.forms["userForm"]["password"].value;
+			    if (x == "") {
+			        alert("Username must be filled out");
+			        return false;
+			    }
+			    
+			    if (y == "") {
+			        alert("Password must be filled out");
+			        return false;
+			    }
+			}
+	   </script>
 </head>
 <body background="background1.jpg">
 	<header>
 		<img src="imaxBanner1.jpg" style="width: 100%" />
-	</header>
-	<nav>
+			<nav>
 		<a href="Registration.jsp">Register</a>
 	</nav>
-	<div class="main">
+	</header>
+	<main role="main" class="container">
 		<div id="loginForm">
-			<form action="Login" method="post">
+			<form action="Login" name="userForm"
+			onsubmit="return validateForm()" method="post">
 				<fieldset>
 					<legend>Login</legend>
 					<b>E-mail:</b><br> <input type="email" name="email"> <span
@@ -37,14 +53,16 @@
 				</fieldset>
 			</form>
 		</div>
-	</div>
-
-	<footer class="footer navbar-fixed-bottom">
-		<p style="font: Britannic Bold; color: white;">IMAX® and The IMAX
+	</main>
+	    <footer class="footer">
+      <div class="container">
+        		<p style="font: Britannic Bold; size: 10px; color: white;">IMAX® and The IMAX
 			Experience® are trademarks of IMAX Corporation.</p>
 		<p style="font: Britannic Bold; color: white;">
 			<b>TO THE MAX</b>
 		</p>
-	</footer>
+      </div>
+    </footer>
+	
 </body>
 </html>

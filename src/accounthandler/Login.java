@@ -1,6 +1,8 @@
 package accounthandler;
 
 import java.io.IOException;
+
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,21 +29,19 @@ public class Login extends HttpServlet {
         String email = ServletUtils.validateInput(request.getParameter("email"), "");
         String password = ServletUtils.validateInput(request.getParameter("password"), "");
         
-        if(Users.userExists(email)) {
-        	if(Users.pwMatch(email, password)) {
-        		response.sendRedirect("Customer/CustomerHomePage.jsp");
-        	}
-        	else {
-                String pwError = "Passwords do not match!";
-                request.setAttribute("pwError", pwError);
-                request.getRequestDispatcher("Login.jsp").forward(request,response);
-        	}
-        }
-        else {
-            String emailError = "User Does Not Exist!";
-            request.setAttribute("emailError", emailError);
-            request.getRequestDispatcher("Login.jsp").forward(request,response);
-        }
+		ServletContext sc = this.getServletContext();
+		String propFilePath = sc.getRealPath("/WEB-INF/users.properties");
+		
+		Users user = new Users(email, password);
+		
+		
+        String redirect = user.userExists(user, propFilePath) 
+        		&& user.pwMatch(user, propFilePath)?
+        		"Customer/CustomerHomePage.jsp":
+        			"Registration.jsp";
+        
+        response.sendRedirect(redirect);
+        
 
     }
 

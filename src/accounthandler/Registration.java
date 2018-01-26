@@ -1,6 +1,8 @@
 package accounthandler;
 
 import java.io.IOException;
+
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,8 +37,14 @@ public class Registration extends HttpServlet {
         Boolean emailMatch = ServletUtils.validMatch(email[0], email[1]);
         Boolean passwordMatch = ServletUtils.validMatch(password[0], password[1]);
         
+        
+		ServletContext sc = this.getServletContext();
+		String propFilePath = sc.getRealPath("/WEB-INF/users.properties");
+		
+		
         if(emailMatch && passwordMatch){
-            Users.newUser(email[0], password[0]);
+            Users user = new Users(email[0], password[0]);
+            user.newUser(user, propFilePath);
             response.sendRedirect("Login.jsp");
         }
         else if(passwordMatch){
