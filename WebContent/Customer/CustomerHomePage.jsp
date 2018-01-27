@@ -39,5 +39,13 @@
 			</form>
 		</div>
 	</div>
+		<footer class="footer">
+		<div class="container">
+			<span style="font: Britannic Bold; font-size: 12px; color: white">IMAX®
+				and The IMAX Experience® are trademarks of IMAX Corporation.</span><br>
+			<span style="font: Britannic Bold; font-size: 12px; color: white">
+			<b>TO THE MAX!</b></span>
+		</div>
+	</footer>
 </body>
 </html>
