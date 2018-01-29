@@ -46,3 +46,27 @@ body {
 	color: red;
 }
 
+
+#main {
+	margin-top: 10px;
+}
+
+#regForm {
+	margin: 20px;
+}
+
+#regForm form input {
+	margin: 5px;
+}
+
+#checkoutForm {
+	margin: 20px;
+}
+
+#checkoutForm input {
+	margin: 5px;
+}
+
+#checkoutForm select {
+	margin: 5px;
+}

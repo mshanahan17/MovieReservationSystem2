@@ -19,31 +19,39 @@
 <body>
 	<header>
 		<img src="imaxBanner1.jpg" style="width: 100%" />
+		<nav>
+			<a href="Login.jsp">Back</a>
+		</nav>
 	</header>
-	<nav>
-		<a href="Registration.jsp">Register</a>
-	</nav>
-<div class="main">
-    <div id="regForm">
-        <fieldset style="width: 50vw">
-            <legend>User Registration:</legend>
-            <form action="Registration" method="post">
-                <b>First Name:</b><br>
-                <input type="text" name="fName"><br>
-                <b>Last Name:</b><br>
-                <input type="text" name="lName"><br>
-                <b>E-mail:</b><br>
-                <input type="email" name="email"><br>
-                <b>Re-Enter Email:</b><br>
-                <input type="email" name="email"><span style="color: red">${emailError}</span><br>
-                <b>Password:</b><br>
-                <input type="password" name="password"><br>
-                <b>Re-Enter Password:</b><br>
-                <input type="password" name="password"><span style="color: red">${pwError}</span><br>
-                <input type="submit">
-            </form>
-        </fieldset>
-    </div>
-</div>
+	<div class="main">
+    	<div id="regForm">
+        	<fieldset style="width: 50vw">
+            	<legend>User Registration:</legend>
+            	<form action="Registration" method="post">
+                	<b>First Name:</b><br>
+                	<input type="text" name="fName"><br>
+                	<b>Last Name:</b><br>
+                	<input type="text" name="lName"><br>
+                	<b>E-mail:</b><br>
+                	<input type="email" name="email"><br>
+                	<b>Re-Enter Email:</b><br>
+                	<input type="email" name="email"><span style="color: red">${emailError}</span><br>
+                	<b>Password:</b><br>
+                	<input type="password" name="password"><br>
+                	<b>Re-Enter Password:</b><br>
+                	<input type="password" name="password"><span style="color: red">${pwError}</span><br>
+                	<input type="submit">
+            	</form>
+        	</fieldset>
+    	</div>
+	</div>
+	<footer class="footer">
+		<div class="container">
+			<span style="font: Britannic Bold; font-size: 12px; color: white">IMAX®
+				and The IMAX Experience® are trademarks of IMAX Corporation.</span><br>
+			<span style="font: Britannic Bold; font-size: 12px; color: white">
+			<b>TO THE MAX!</b></span>
+		</div>
+	</footer>
 </body>
 </html>

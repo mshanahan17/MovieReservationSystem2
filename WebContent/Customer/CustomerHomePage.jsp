@@ -9,12 +9,12 @@
 <html>
 <head>
 <title>Home</title>
-<link rel="stylesheet" type="text/css" href="../CSS/customer.css">
 <link
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	rel="stylesheet"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="../CSS/customer.css">
 </head>
 <body>
 	<header>
@@ -34,12 +34,13 @@
 					<option value="theater3">Theater 3</option>
 					<option value="theater4">Theater 4</option>
 					<option value="theater5">Theater 5</option>
-				</select><br> Movie Search:<br> <input type="text" name="search"><br>
+				</select><br> Movie Search:<br> 
+				<input type="text" name="search"><br>
 				<input type="submit">
 			</form>
 		</div>
 	</div>
-		<footer class="footer">
+	<footer class="footer">
 		<div class="container">
 			<span style="font: Britannic Bold; font-size: 12px; color: white">IMAX®
 				and The IMAX Experience® are trademarks of IMAX Corporation.</span><br>

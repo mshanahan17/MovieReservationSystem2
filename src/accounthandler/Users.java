@@ -18,35 +18,28 @@ public class Users {
 		this.passWord = passWord;
 	}
 
-	public void newUser(Users user, String filePath) {
+	public void newUser(Users user, Properties prop, String filePath) {
 
-		FileInputStream fis = null;
-		
-		try {
-			fis = new FileInputStream(filePath);
-			prop.load(fis);
 			prop.setProperty(user.getUserName(), user.getPassWord());
-			prop.store(new FileOutputStream(filePath), null);
+			try {
+				prop.store(new FileOutputStream(filePath), null);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
-	public boolean userExists(Users user, String filePath) 
-			throws FileNotFoundException, IOException {
-		
-		prop.load(new FileInputStream(filePath));
+	public boolean userExists(Users user, Properties prop){
 		
 		return prop.containsKey(user.getUserName()) ? true : false;
 	}
 	
-	public boolean pwMatch(Users user, String filePath) 
-			throws FileNotFoundException, IOException {
+	public boolean pwMatch(Users user, Properties prop){
 		
-		prop.load(new FileInputStream(filePath));
 		return prop.getProperty(user.getUserName()).equals(user.getPassWord())
 				? true : false;
 

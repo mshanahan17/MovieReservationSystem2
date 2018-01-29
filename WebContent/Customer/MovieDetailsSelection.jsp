@@ -25,7 +25,7 @@
 	</header>
 	<div class="container">
 	
-		<div class="row" style="margin-top:10px">
+		<div id="main" class="row">
 			<div class="col-md-4">
 			<img src="starwars.jpg" style="width: 20vw; height:50vh">
 			</div>
@@ -85,28 +85,22 @@
 						<tr>
 							<td>Matt Shanahan</td>
 							<td>01/27/2018</td>
-							<td>Lorem ipsum dolor sit amet, 
-							consectetur adipiscing elit. Vivamus et 
-							aliquam felis. Curabitur id pellentesque nisl, 
-							ac mollis turpis. In.</td>
+							<td>Lorem ipsum dolor sit amet,<br> 
+							consectetur adipiscing elit.</td>
 							<td>&#9733 &#9733 &#9733 &#9733 &#9734</td>
 						</tr>
 						<tr>
 							<td>Matt Shanahan</td>
 							<td>01/27/2018</td>
-							<td>Lorem ipsum dolor sit amet, 
-							consectetur adipiscing elit. Vivamus et 
-							aliquam felis. Curabitur id pellentesque nisl, 
-							ac mollis turpis. In.</td>
+							<td>Lorem ipsum dolor sit amet,<br> 
+							consectetur adipiscing elit.</td>
 							<td>&#9733 &#9733 &#9733 &#9733 &#9734</td>
 						</tr>
 						<tr>
 							<td>Matt Shanahan</td>
 							<td>01/27/2018</td>
-							<td>Lorem ipsum dolor sit amet, 
-							consectetur adipiscing elit. Vivamus et 
-							aliquam felis. Curabitur id pellentesque nisl, 
-							ac mollis turpis. In.</td>
+							<td>Lorem ipsum dolor sit amet,<br> 
+							consectetur adipiscing elit.</td>
 							<td>&#9733 &#9733 &#9733 &#9733 &#9734</td>
 						</tr>
 					</tbody>
@@ -116,7 +110,7 @@
 			</div>
 		</div>
 	</div>
-		<footer class="footer">
+	<footer class="footer">
 		<div class="container">
 			<span style="font: Britannic Bold; font-size: 12px; color: white">IMAX®
 				and The IMAX Experience® are trademarks of IMAX Corporation.</span><br>
