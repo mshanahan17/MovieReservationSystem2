@@ -24,6 +24,23 @@
 		<a href="CustomerHomePage.jsp">Home</a> 
 		<a href="../Login.jsp">Log Out</a>
 	</nav>
+	
+	<table class="table table-bordered table-striped">
+		<thead>
+			<th>Order Number</th>
+			<th>Total</th>
+			<th>Date</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td>435554</td>
+				<td>$60.00</td>
+				<td>05/06/2019</td>
+				<td> <a href="ManageOrder.jsp" class="btn btn-primary btn-sm" role="button">View</a></td>
+			</tr>
+		</tbody>
+	</table><br>
+		
 	<footer class="footer">
 		<div class="container">
 			<span style="font: Britannic Bold; font-size: 12px; color: white">IMAX®
