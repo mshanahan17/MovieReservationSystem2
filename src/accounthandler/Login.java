@@ -24,28 +24,29 @@ import javax.servlet.http.HttpServletResponse;
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private long lastModified;
-	public Properties prop = new Properties();
-	private ServletContext sc;
-	private String filePath;
+	private FileWriter fWriter = null;
 
 	@Override
 	public void init() throws ServletException {
 		lastModified = System.currentTimeMillis()/1000 * 1000;
-		sc = this.getServletContext();
-		filePath = sc.getRealPath("/WEB-INF/users.properties");
 		
-		FileInputStream fis = null;
-		
+		/* initialize filewriter for log writing. Writes
+		 * the time login servlet is started.
+		 * Then destroy method writes when it is closed and
+		 * closes filewriter resources
+		 */
+		ServletContext sc = this.getServletContext();
+		String reportPath = sc.getRealPath("/data/reports.txt");
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss"); 
+		Date date = new Date();
 		try {
-			fis = new FileInputStream(filePath);
-			prop.load(fis);
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			fWriter = new FileWriter(reportPath);
+			fWriter.write("\nTime Stamp: " + dateFormat.format(date) );
+			fWriter.write("Login Servlet Connection Opened");
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 	
 	@Override
@@ -57,15 +58,22 @@ public class Login extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		/*
+		 * recieves and validates login information
+		 */
 		String email = ServletUtils.validateInput(request.getParameter("email"), "");
 		String password = ServletUtils.validateInput(request.getParameter("password"), "");
 
-		ServletContext sc = this.getServletContext();
-		String propFilePath = sc.getRealPath("/WEB-INF/users.properties");
-
 		Users user = new Users(email, password);
 
-		String redirect = user.userExists(user, prop) && user.pwMatch(user, prop)
+		ServletContext sc = this.getServletContext();
+		String filePath = sc.getRealPath("/WEB-INF/users.properties");
+		
+		/*
+		 * redirects to correct webpage depending on if login info
+		 * was correct or not.
+		 */
+		String redirect = user.userExists(user, filePath) && user.pwMatch(user, filePath)
 				? "Customer/CustomerHomePage.jsp"
 				: "Registration.jsp";
 
@@ -83,19 +91,32 @@ public class Login extends HttpServlet {
 		connectionClosed();
 	}
 	
+	/*
+	 * when servlet connection is terminated this method will 
+	 * write the time stamp and messaage then close the filewriter
+	 * resources
+	 */
 	private void connectionClosed() {
-		try {
-			String reportPath = sc.getRealPath("/data/reports.txt");
-			FileWriter fWriter = new FileWriter(reportPath);
+
 			DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss"); 
 			Date date = new Date();
-			fWriter.write("\nTime Stamp: " + dateFormat.format(date) );
-			fWriter.write("Login Servlet Connection Closed");
-			fWriter.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			try {
+				fWriter.write("\nTime Stamp: " + dateFormat.format(date) );
+				fWriter.write("Login Servlet Connection Closed");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				if(fWriter != null) {
+					try {
+						fWriter.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+
 	}
 
 }
