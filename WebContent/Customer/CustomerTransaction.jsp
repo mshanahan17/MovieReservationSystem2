@@ -1,3 +1,5 @@
+<%-- TODO: The page must display all information on the transaction page except the credit card information. --%>
+
 <%--
   Created by IntelliJ IDEA.
   User: Matt
@@ -23,7 +25,7 @@
 		</nav>
 	</header>
 	
-			<table class="table table-bordered table-striped">
+		<table class="table table-bordered table-striped">
 			<thead>
 				<th>Movie</th>
 				<th># of Tickets</th>
@@ -39,6 +41,7 @@
 				</tr>
 			</tbody>
 		</table><br>
+		
 		<h3>Total: $60.00</h3><br>
 		<form action="CustomerTransactionConfirmation.jsp" id="checkoutForm">
 			<input type="text" placeholder="First Name">
