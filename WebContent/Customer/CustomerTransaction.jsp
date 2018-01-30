@@ -40,6 +40,8 @@
 			</tbody>
 		</table><br>
 		<h3>Total: $60.00</h3><br>
+		<fieldset>
+		<legend>Payment Information</legend>
 		<form action="CustomerTransactionConfirmation.jsp" id="checkoutForm">
 			<input type="text" placeholder="First Name">
 			<input type="text" placeholder="Last Name"><br>
@@ -49,12 +51,11 @@
 			<option value="masterCard">Master Card</option>
 			<option value="discover">Discover</option>
 			</select><br>
-			<input type="text" placeholder="Card Number">
-			Expiration Date:<br>
+			<input type="text" placeholder="Card Number"><br>
 			<input type="text" placeholder="Security Code">
 			<input type="date"><br>
 			Billing Address:<br>
-			<input type="text" placeholder="Street Address">State:<br>
+			<input type="text" placeholder="Street Address"><br>
 			<input type="text" placeholder="City"> 
 			<select>
 			<option value="AL">Alabama</option>
@@ -111,7 +112,7 @@
 			</select> <br>
 			<input type="text" placeholder="Zip"><br>
 			Shipping Address:<br>
-			<input type="text" placeholder="Street Address">State:<br>
+			<input type="text" placeholder="Street Address"><br>
 			<input type="text" placeholder="City"> 
 			<select>
 			<option value="AL">Alabama</option>
@@ -172,7 +173,7 @@
    			<input type="button" value="Cancel Payment" />
 		</a>
 		</form>
-		
+		</fieldset>
 		<footer class="footer">
 		<div class="container">
 			<span style="font: Britannic Bold; font-size: 12px; color: white">IMAX®
