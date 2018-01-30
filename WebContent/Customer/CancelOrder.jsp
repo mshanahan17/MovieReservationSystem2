@@ -25,12 +25,12 @@
 	
 	<table class="table table-bordered table-striped">
 		<thead>
-		<th>Order #</th>	
-		<th>Movie</th>
-		<th># of Tickets</th>
-		<th>Total</th>
-		<th>Theater Room</th>
-	</thead>
+			<th>Order #</th>	
+			<th>Movie</th>
+			<th># of Tickets</th>
+			<th>Total</th>
+			<th>Theater Room</th>
+		</thead>
 	<tbody>
 		<tr>
 			<td> 443323 </td>
