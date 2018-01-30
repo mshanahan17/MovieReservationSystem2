@@ -20,17 +20,17 @@
 	</header>
 	<nav> 
 		<a href="ViewOrders.jsp">View Orders</a>
-		<a href="Login.jsp">Logout</a>
+		<a href="../Login.jsp">Logout</a>
 	</nav>
 	
 	<table class="table table-bordered table-striped">
 		<thead>
-		<th>Order #</th>	
-		<th>Movie</th>
-		<th># of Tickets</th>
-		<th>Total</th>
-		<th>Theater Room</th>
-	</thead>
+			<th>Order #</th>	
+			<th>Movie</th>
+			<th># of Tickets</th>
+			<th>Total</th>
+			<th>Theater Room</th>
+		</thead>
 	<tbody>
 		<tr>
 			<td> 443323 </td>
