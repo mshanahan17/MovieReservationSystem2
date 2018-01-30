@@ -20,7 +20,7 @@
 	</header>
 	<nav> 
 		<a href="ViewOrders.jsp">View Orders</a>
-		<a href="Login.jsp">Logout</a>
+		<a href="../Login.jsp">Logout</a>
 	</nav>
 	
 	<table class="table table-bordered table-striped">
