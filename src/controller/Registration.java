@@ -1,4 +1,4 @@
-package accounthandler;
+package controller;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.Users;
+
 /**
  * Servlet implementation class Registration
  */
@@ -23,29 +25,11 @@ import javax.servlet.http.HttpServletResponse;
 public class Registration extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private long lastModified;
-	private FileWriter fWriter = null;
 	
 	@Override
 	public void init() throws ServletException {
 		lastModified = System.currentTimeMillis()/1000 * 1000;
-		
-		/* initialize filewriter for log writing. Writes
-		 * the time registration servlet is started.
-		 * Then destroy method writes when it is closed and
-		 * closes filewriter resources
-		 */
-		ServletContext sc = this.getServletContext();
-		String reportPath = sc.getRealPath("/data/reports.txt");
-		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss"); 
-		Date date = new Date();
-		try {
-			fWriter = new FileWriter(reportPath);
-			fWriter.write("\nTime Stamp: " + dateFormat.format(date) );
-			fWriter.write("Registration Servlet Connection Opened");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		System.out.println("Registration Servlet Has Started");
 	}
 	
 	@Override
@@ -120,25 +104,7 @@ public class Registration extends HttpServlet {
 	 * resources
 	 */
 	private void connectionClosed() {
-		
-		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss"); 
-		Date date = new Date();
-		try {
-			fWriter.write("\nTime Stamp: " + dateFormat.format(date) );
-			fWriter.write("Registration Servlet Connection Closed");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			if(fWriter != null) {
-				try {
-					fWriter.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
+		System.out.println("Registration Server Has Closed");
 	}
 
 }

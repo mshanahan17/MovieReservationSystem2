@@ -1,4 +1,4 @@
-package accounthandler;
+package controller;
 
 public class ServletUtils {
 
