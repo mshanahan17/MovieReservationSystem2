@@ -16,6 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.Users;
 
@@ -42,6 +43,7 @@ public class Login extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		HttpSession session = request.getSession();
 		/*
 		 * recieves and validates login information
 		 */
@@ -57,10 +59,11 @@ public class Login extends HttpServlet {
 		 * redirects to correct webpage depending on if login info was correct or not.
 		 */
 		String redirect = user.userExists(user, filePath) && user.pwMatch(user, filePath)
-				? "Customer/CustomerHomePage.jsp"
+				? "WEB-INF/Customer/CustomerHomePage.jsp"
 				: "Registration.jsp";
 
-		response.sendRedirect(redirect);
+		request.getRequestDispatcher(redirect).forward(request, response);
+
 
 	}
 

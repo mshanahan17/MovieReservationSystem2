@@ -14,16 +14,18 @@
          rel="stylesheet"
          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
          crossorigin="anonymous">
-      <link rel="stylesheet" type="text/css" href="../CSS/customer.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/CSS/customer.css">
    </head>
    <body>
       <header>
-         <img src="../pics/imaxBanner1.jpg" style="width: 100%" />
+         <img src="${pageContext.request.contextPath}/pics/imaxBanner1.jpg" style="width: 100%" />
+         <nav>
+         	<a href="CustomerHomePage.jsp">Home</a> 
+         	<a href="ViewOrders.jsp">View Orders</a> 
+         	<a href="ViewAndCheckoutShoppingCart.jsp">View Cart</a> 
+         	<a href="../Login.jsp">Log Out</a>
+      	 </nav>
       </header>
-      <nav>
-         <a href="CustomerHomePage.jsp">Home</a> 
-         <a href="../Login.jsp">Log Out</a>
-      </nav>
       <table class="table table-bordered table-striped">
          <thead>
             <th>Order Number</th>
