@@ -20,13 +20,14 @@
       <header>
          <img src="${pageContext.request.contextPath}/pics/imaxBanner1.jpg" style="width: 100%" />
          <nav>
-         	<a href="CustomerHomePage.jsp">Home</a> 
-         	<a href="ViewOrders.jsp">View Orders</a> 
-         	<a href="ViewAndCheckoutShoppingCart.jsp">View Cart</a> 
-         	<a href="../Login.jsp">Log Out</a>
+         	<a href="Login">Home</a> 
+         	<a href="ViewOrders">View Orders</a> 
+         	<a href="UpdateShoppingCart">View Cart</a> 
+         	<a href="LogOut">Log Out</a>
       	 </nav>
       </header>
       <div class="main">
+      <h1>Welcome ${user.firstName}</h1>
          <div id="movieSearch">
             <form name="movieSearch" action="MovieSearchQuery">
                Select Your Theater:<br> 

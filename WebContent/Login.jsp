@@ -20,12 +20,12 @@
          function validateForm() {
          	var x = document.forms["userForm"]["email"].value;
          	var y = document.forms["userForm"]["password"].value;
-         	if (x == "") {
+         	if (x === "") {
          		alert("Username must be filled out");
          		return false;
          	}
          
-         	if (y == "") {
+         	if (y === "") {
          		alert("Password must be filled out");
          		return false;
          	}

@@ -6,11 +6,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class Users {
+public class User {
 	private String userName;
 	private String passWord;
+	private String firstName;
+	private String lastName;
 
-	public Users(String userName, String passWord) {
+	
+	public User() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public User(String userName, String passWord) {
 		super();
 		this.userName = userName;
 		this.passWord = passWord;
@@ -19,7 +27,7 @@ public class Users {
 	/*
 	 * Adds new user to properties file
 	 */
-	public void newUser(Users user, String filePath) {
+	public void newUser(User user, String filePath) {
 		Properties prop = new Properties();
 		prop.setProperty(user.getUserName(), user.getPassWord());
 
@@ -35,7 +43,7 @@ public class Users {
 
 	}
 
-	public boolean userExists(Users user, String filePath) 
+	public boolean userExists(User user, String filePath) 
 			throws IOException {
 		
 		Properties prop = new Properties();
@@ -47,7 +55,7 @@ public class Users {
 		return prop.containsKey(user.getUserName());
 	}
 
-	public boolean pwMatch(Users user, String filePath) 
+	public boolean pwMatch(User user, String filePath) 
 			throws IOException {
 
 		Properties prop = new Properties();
@@ -68,5 +76,23 @@ public class Users {
 	public String getPassWord() {
 		return this.passWord;
 	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	
+	
 
 }

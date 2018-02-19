@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import model.Users;
+import model.User;
 
 /**
  * Servlet implementation class Login
@@ -44,25 +44,35 @@ public class Login extends HttpServlet {
 			throws ServletException, IOException {
 
 		HttpSession session = request.getSession();
+		String path = "WEB-INF/Customer/CustomerHomePage.jsp";
 		/*
 		 * recieves and validates login information
 		 */
 		String email = ServletUtils.validateInput(request.getParameter("email"), "");
 		String password = ServletUtils.validateInput(request.getParameter("password"), "");
 
-		Users user = new Users(email, password);
+		User user = (User) session.getAttribute("user");
+		
+		if(user == null) {
+			user = new User(email, password);
+			ServletContext sc = this.getServletContext();
+			String filePath = sc.getRealPath("/WEB-INF/users.properties");
+			String redirect = user.userExists(user, filePath) && user.pwMatch(user, filePath)
+					? path
+					: "Registration.jsp";
 
-		ServletContext sc = this.getServletContext();
-		String filePath = sc.getRealPath("/WEB-INF/users.properties");
+			session.setAttribute("user", user);
+			request.getRequestDispatcher(redirect).forward(request, response);
+		}
+		else {
+			
+			request.getRequestDispatcher(path).forward(request, response);
+		}
+
 
 		/*
 		 * redirects to correct webpage depending on if login info was correct or not.
 		 */
-		String redirect = user.userExists(user, filePath) && user.pwMatch(user, filePath)
-				? "WEB-INF/Customer/CustomerHomePage.jsp"
-				: "Registration.jsp";
-
-		request.getRequestDispatcher(redirect).forward(request, response);
 
 
 	}

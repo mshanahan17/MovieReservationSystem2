@@ -22,7 +22,7 @@
          	var lName = document.forms["userForm"]["lName"].value;
          	var email = document.forms["userForm"]["email"].value;
          	var password = document.forms["userForm"]["password"].value;
-         	if (fName == "" || lName == "" || email == "" || password == "") {
+         	if (fName === "" || lName === "" || email[0] === "") {
          		alert("All fields must be filled out!");
          		return false;
          	}

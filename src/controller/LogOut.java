@@ -6,18 +6,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class ViewOrders
+ * Servlet implementation class LogOut
  */
-@WebServlet("/ViewOrders")
-public class ViewOrders extends HttpServlet {
+@WebServlet("/LogOut")
+public class LogOut extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ViewOrders() {
+    public LogOut() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,7 +36,9 @@ public class ViewOrders extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String path = "WEB-INF/Customer/ViewOrders.jsp";
+		request.getSession().invalidate();
+		String path = "Login.jsp";
+		
 		request.getRequestDispatcher(path).forward(request, response);
 	}
 
