@@ -12,17 +12,18 @@
       <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" 
          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
          crossorigin="anonymous">
-      <link rel="stylesheet" type="text/css" href="../CSS/customer.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/CSS/customer.css">
    </head>
    <body>
       <header>
-         <img src="../pics/imaxBanner1.jpg" style="width: 100%" />
+         <img src="${pageContext.request.contextPath}/pics/imaxBanner1.jpg" style="width: 100%" />
+         <nav>
+         	<a href="Login">Home</a> 
+         	<a href="ViewOrders">View Orders</a> 
+         	<a href="UpdateShoppingCart">View Cart</a> 
+         	<a href="LogOut">Log Out</a>
+      	 </nav>
       </header>
-      <nav>
-         <a href="CustomerHomePage.jsp">Home</a>
-         <a href="ViewOrders.jsp">View Orders</a>
-         <a href="../Login.jsp">Logout</a>
-      </nav>
       <table class="table table-bordered table-striped">
          <thead>
             <th>Movie</th>

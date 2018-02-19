@@ -9,7 +9,7 @@ public class ServletUtils {
                 "<HEAD><TITLE>" + title + "</TITLE></HEAD>\n");
     }
 
-    public static String filter(String input) {
+    private static String filter(String input) {
         if (!hasSpecialChars(input)) {
             return(input);
         }

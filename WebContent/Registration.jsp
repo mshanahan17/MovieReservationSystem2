@@ -15,6 +15,19 @@
          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
          crossorigin="anonymous">
       <link rel="stylesheet" type="text/css" href="CSS/customer.css">
+      
+            <script>
+         function validateForm() {
+         	var fName = document.forms["userForm"]["fName"].value;
+         	var lName = document.forms["userForm"]["lName"].value;
+         	var email = document.forms["userForm"]["email"].value;
+         	var password = document.forms["userForm"]["password"].value;
+         	if (fName === "" || lName === "" || email[0] === "") {
+         		alert("All fields must be filled out!");
+         		return false;
+         	}
+         }
+      </script>
    </head>
    <body>
       <header>
@@ -27,7 +40,8 @@
          <div id="regForm">
             <fieldset style="width: 50vw">
                <legend>User Registration:</legend>
-               <form action="Registration" method="post">
+               <form action="Registration" method="post" name="userForm"
+               onSubmit="return validateForm()">
                   <b>First Name:</b><br>
                   <input type="text" name="fName"><br>
                   <b>Last Name:</b><br>

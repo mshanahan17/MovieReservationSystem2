@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.Users;
+import model.User;
 
 /**
  * Servlet implementation class Registration
@@ -73,7 +73,9 @@ public class Registration extends HttpServlet {
 		 * entries did not match.
 		 */
         if(emailMatch && passwordMatch){
-            Users user = new Users(email[0], password[0]);
+            User user = new User(email[0], password[0]);
+            user.setFirstName(fName);
+            user.setLastName(lName);
             user.newUser(user, filePath);
             response.sendRedirect("Login.jsp");
         }
