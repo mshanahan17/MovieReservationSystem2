@@ -1,10 +1,10 @@
 package model;
 
-public class TransactionBean {
+public class Transaction {
 	//TODO: Validate credit card account details
 	double balance;
 	
-	public TransactionBean() {
+	public Transaction() {
 		// TODO Auto-generated constructor stub
 	}
 

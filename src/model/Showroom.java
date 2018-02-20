@@ -1,10 +1,10 @@
 package model;
 
-public class ShowroomBean {
+public class Showroom {
 	int capacity;
-	TheatreBean theatre; //TODO: Is this the correct class it should be referencing?
+	Theater theatre; //TODO: Is this the correct class it should be referencing?
 	
-	public ShowroomBean() {	
+	public Showroom() {	
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -17,11 +17,11 @@ public class ShowroomBean {
 		this.capacity = capacity;
 	}
 
-	public TheatreBean getTheatre() {
+	public Theater getTheatre() {
 		return theatre;
 	}
 
-	public void setTheatre(TheatreBean theatre) {
+	public void setTheatre(Theater theatre) {
 		this.theatre = theatre;
 	}
 
