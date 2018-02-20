@@ -2,14 +2,13 @@ package model;
 
 public class User {
 	private String firstName;
-	private String lastName;
-	
+	private String lastName;	
 	private String emailAddress;
 	private String password;
 	
-	private Address billingAddress;
-	private Address shippingAddress;
 	private String phoneNumber;
+	private Address billingAddress;
+	private Address shippingAddress;	
 	
 	public User() {
 		super();
@@ -69,6 +68,17 @@ public class User {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+	
+	@Override
+	public String toString() {
+		return "firstName: " + firstName
+				+ "\nlastName: " + lastName
+				+ "\nemailAddress: " + emailAddress
+				+ "\npassword: " + password
+				+ "\nphoneNumber: " + phoneNumber
+				+ "\nbillingAddress: " + billingAddress
+				+ "\nshippingAddress: " + shippingAddress;
 	}
 		
 }
