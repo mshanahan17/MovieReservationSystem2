@@ -1,29 +1,29 @@
 package model;
 
-public class MovieShowingBean {
-	MovieBean movie;
-	ShowroomBean showRoom;
+public class MovieShowing {
+	Movie movie;
+	Showroom showRoom;
 	int numOfPurchasedSeats;
 	double cost;
 	
-	public MovieShowingBean() {
+	public MovieShowing() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public MovieBean getMovie() {
+	public Movie getMovie() {
 		return movie;
 	}
 
-	public void setMovie(MovieBean movie) {
+	public void setMovie(Movie movie) {
 		this.movie = movie;
 	}
 
-	public ShowroomBean getShowRoom() {
+	public Showroom getShowRoom() {
 		return showRoom;
 	}
 
-	public void setShowRoom(ShowroomBean showRoom) {
+	public void setShowRoom(Showroom showRoom) {
 		this.showRoom = showRoom;
 	}
 

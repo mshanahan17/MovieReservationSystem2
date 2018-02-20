@@ -1,11 +1,11 @@
 package model;
 
-public class MovieBean {
+public class Movie {
 	private String title;
 	private String description;
 	private String rating;
 	
-	public MovieBean() {
+	public Movie() {
 		super();
 	}
 	

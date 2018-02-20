@@ -1,12 +1,12 @@
 package model;
 
-public class ReviewBean {
+public class Review {
 	String content; //TODO: Validate content - make sure it doesn't exceed max review size
 	double rating;
-	UserBean user;
-	MovieBean movie;
+	User user;
+	Movie movie;
 	
-	public ReviewBean() {
+	public Review() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -27,19 +27,19 @@ public class ReviewBean {
 		this.rating = rating;
 	}
 
-	public UserBean getUser() {
+	public User getUser() {
 		return user;
 	}
 
-	public void setUser(UserBean user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 
-	public MovieBean getMovie() {
+	public Movie getMovie() {
 		return movie;
 	}
 
-	public void setMovie(MovieBean movie) {
+	public void setMovie(Movie movie) {
 		this.movie = movie;
 	}
 

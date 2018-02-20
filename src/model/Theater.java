@@ -1,11 +1,11 @@
 package model;
 
-public class TheatreBean {
+public class Theater {
 	String name;
 	Address address;
-	UserBean user; //TODO: Is this the correct class it should be referencing?
+	User user; //TODO: Is this the correct class it should be referencing?
 	
-	public TheatreBean() {
+	public Theater() {
 		super();
 	}
 	
@@ -25,11 +25,11 @@ public class TheatreBean {
 		this.address = address;
 	}
 	
-	public UserBean getUser() {
+	public User getUser() {
 		return user;
 	}
 	
-	public void setUser(UserBean user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 	

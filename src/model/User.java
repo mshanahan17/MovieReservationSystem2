@@ -1,80 +1,18 @@
 package model;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 public class User {
-	private String userName;
-	private String passWord;
 	private String firstName;
 	private String lastName;
-
+	
+	private String emailAddress;
+	private String password;
+	
+	private Address billingAddress;
+	private Address shippingAddress;
+	private String phoneNumber;
 	
 	public User() {
 		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public User(String userName, String passWord) {
-		super();
-		this.userName = userName;
-		this.passWord = passWord;
-	}
-
-	/*
-	 * Adds new user to properties file
-	 */
-	public void newUser(User user, String filePath) {
-		Properties prop = new Properties();
-		prop.setProperty(user.getUserName(), user.getPassWord());
-
-		try {
-			prop.store(new FileOutputStream(filePath), null);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
-	public boolean userExists(User user, String filePath) 
-			throws IOException {
-		
-		Properties prop = new Properties();
-		FileInputStream fis = null;
-
-		fis = new FileInputStream(filePath);
-		prop.load(fis);
-
-		return prop.containsKey(user.getUserName());
-	}
-
-	public boolean pwMatch(User user, String filePath) 
-			throws IOException {
-
-		Properties prop = new Properties();
-		FileInputStream fis = null;
-
-		fis = new FileInputStream(filePath);
-		prop.load(fis);
-		
-		return prop.getProperty(user.getUserName()).equals(user.getPassWord()) 
-					? true : false;
-
-	}
-
-	public String getUserName() {
-		return this.userName;
-	}
-
-	public String getPassWord() {
-		return this.passWord;
 	}
 
 	public String getFirstName() {
@@ -92,7 +30,45 @@ public class User {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	
-	
 
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Address getBillingAddress() {
+		return billingAddress;
+	}
+
+	public void setBillingAddress(Address billingAddress) {
+		this.billingAddress = billingAddress;
+	}
+
+	public Address getShippingAddress() {
+		return shippingAddress;
+	}
+
+	public void setShippingAddress(Address shippingAddress) {
+		this.shippingAddress = shippingAddress;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+		
 }

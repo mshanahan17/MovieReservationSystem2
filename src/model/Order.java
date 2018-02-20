@@ -2,23 +2,23 @@ package model;
 
 import java.util.Date;
 
-public class OrderBean {
+public class Order {
 	//TODO: Validate billing address
 	//TODO: Confirm/Validate that the desired ticket quantity does not exceed the showroom capacity
 	
-	UserBean customer;
+	User customer;
 	Date date;
 	double cost;
 	
-	public OrderBean() {
+	public Order() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public UserBean getCustomer() {
+	public User getCustomer() {
 		return customer;
 	}
 
-	public void setCustomer(UserBean customer) {
+	public void setCustomer(User customer) {
 		this.customer = customer;
 	}
 
