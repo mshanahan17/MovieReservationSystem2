@@ -58,7 +58,7 @@
             <div class="col-md-1">
             </div>
             <div class="col-md-10">
-               <form action="ViewAndCheckoutShoppingCart.jsp">
+               <form action="ViewAndCheckoutShoppingCart.jsp" method="post">
                   <table class="table table-bordered">
                      <thead>
                         <th>Theater</th>

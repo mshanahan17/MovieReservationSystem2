@@ -6,6 +6,7 @@
    To change this template use File | Settings | File Templates.
    --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <html>
    <head>
       <title>Home</title>
@@ -29,14 +30,12 @@
       <div class="main">
       <h1>Welcome ${user.firstName}</h1>
          <div id="movieSearch">
-            <form name="movieSearch" action="MovieSearchQuery">
+            <form name="movieSearch" action="MovieSearchQuery" method="post">
                Select Your Theater:<br> 
                <select name="theaters">
-                  <option value="theater1">Theater 1</option>
-                  <option value="theater2">Theater 2</option>
-                  <option value="theater3">Theater 3</option>
-                  <option value="theater4">Theater 4</option>
-                  <option value="theater5">Theater 5</option>
+                  <c:forEach items="${theater}" var="theater">
+         				<option value="${theater}">${theater}</option>
+      			  </c:forEach>
                </select>
                <br> Movie Search:<br> 
                <input type="text" name="search"><br>

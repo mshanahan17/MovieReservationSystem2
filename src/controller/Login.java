@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 
@@ -52,7 +53,13 @@ public class Login extends HttpServlet {
 		String password = ServletUtils.validateInput(request.getParameter("password"), "");
 
 		User user = (User) session.getAttribute("user");
-		
+		ArrayList<String> theaters = new ArrayList();
+		theaters.add("Theater 1");
+		theaters.add("Theater 2");
+		theaters.add("Theater 3");
+		theaters.add("Theater 4");
+		theaters.add("Theater 5");
+		session.setAttribute("theater", theaters);
 		if(user == null) {
 			user = new User(email, password);
 			ServletContext sc = this.getServletContext();

@@ -46,23 +46,23 @@
       <br>
       <fieldset>
          <legend>Payment Information</legend>
-         <form action="CustomerTransactionConfirmation.jsp" id="checkoutForm">
-            <input type="text" placeholder="First Name">
-            <input type="text" placeholder="Last Name"><br>
+         <form action="CustomerTransactionConfirmation" id="checkoutForm" method="post">
+            <input type="text" placeholder="First Name" name="fName">
+            <input type="text" placeholder="Last Name" name="lName"><br>
             Select Card Type:<br> 
-            <select name="creditCard">
+            <select name="ccType">
                <option value="visa">Visa</option>
                <option value="masterCard">Master Card</option>
                <option value="discover">Discover</option>
             </select>
             <br>
-            <input type="text" placeholder="Card Number"><br>
-            <input type="text" placeholder="Security Code">
-            <input type="date"><br>
+            <input type="text" placeholder="Card Number" name="ccNum"><br>
+            <input type="text" placeholder="Security Code" name="secCode">
+            <input type="date" name="date"><br>
             Billing Address:<br>
-            <input type="text" placeholder="Street Address"><br>
-            <input type="text" placeholder="City"> 
-            <select>
+            <input type="text" placeholder="Street Address" name="billStreet"><br>
+            <input type="text" placeholder="City" name="billCity"> 
+            <select name="billState">
                <option value="AL">Alabama</option>
                <option value="AK">Alaska</option>
                <option value="AZ">Arizona</option>
@@ -116,11 +116,11 @@
                <option value="WY">Wyoming</option>
             </select>
             <br>
-            <input type="text" placeholder="Zip"><br>
+            <input type="text" placeholder="Zip" name="billZip"><br>
             Shipping Address:<br>
-            <input type="text" placeholder="Street Address"><br>
-            <input type="text" placeholder="City"> 
-            <select>
+            <input type="text" placeholder="Street Address" name="shipStreet"><br>
+            <input type="text" placeholder="City" name="shipCity"> 
+            <select name="shipState">
                <option value="AL">Alabama</option>
                <option value="AK">Alaska</option>
                <option value="AZ">Arizona</option>
@@ -174,9 +174,9 @@
                <option value="WY">Wyoming</option>
             </select>
             <br>
-            <input type="text" placeholder="Zip"><br>
+            <input type="text" placeholder="Zip" name="shipZip"><br>
             <input type="submit" value="Confirm Payment">
-            <a href="ViewAndCheckoutShoppingCart.jsp">
+            <a href="UpdateShoppingCart">
             <input type="button" value="Cancel Payment" />
             </a>
          </form>

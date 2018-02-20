@@ -55,7 +55,7 @@
                </tr>
             </tbody>
          </table>
-         <form action="CustomerTransaction.jsp">
+         <form action="Checkout" method="post">
             <h3>Total: $60.00</h3>
             <br>
             <input type="submit" value="Checkout">
