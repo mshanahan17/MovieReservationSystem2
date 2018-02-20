@@ -9,7 +9,6 @@ import java.sql.Statement;
 
 public class DBAccess {
 	private Connection conn = null;
-	private Statement stmt = null;
 	private PreparedStatement ps = null;
 	
 	// JDBC driver name and database URL
@@ -21,11 +20,28 @@ public class DBAccess {
 	private static final String USER = "mshanahan"; // Replace with your CSE_LOGIN
 	private static final String PASS = "k8ErVH";   // Replace with your CSE MySQL_PASSWORD
 	
+	public static void main(String[] args) { 
+       	DBAccess dba = new DBAccess();
+       	dba.createConnection();       	
+		User u = new User();
+		u.setFirstName("Catman");
+		u.setLastName("Pages");
+		u.setEmailAddress("catman@gmail.com");
+		u.setPassword("333");
+		dba.addSingleUser(u);
+		dba.closeConnection();
+		
+	   	DBAccess db = new DBAccess();
+	   	db.createConnection();
+	   	User user = db.getUserByEmailAddress("catman@gmail.com");
+	   	System.out.println(user.toString());
+	   	db.closeConnection();
+				
+	}
+	
 	public void addSingleUser(User user) {
 		  
 		try {
-		  stmt = conn.createStatement();
-		  String sql;
 		  
 		  String firstName = user.getFirstName();
 		  String lastName = user.getLastName();
@@ -33,13 +49,17 @@ public class DBAccess {
 		  String password = user.getPassword();
 		  
 
-		  sql = "INSERT INTO User (firstName, lastName, emailAddress, password)" +
-		          "VALUES ('" + firstName +
-				  "', '" + lastName + 
-				  "', '" + emailAddress + 
-				  "', '" + password + "')";
-		  stmt.executeUpdate(sql);
+		  String sql = "INSERT INTO User (FirstName, LastName, EmailAddress, Password) VALUES (?, ?, ?, ?)";
 		  
+		  PreparedStatement ps = conn.prepareStatement(sql);
+		  ps.setString(1, firstName);
+		  ps.setString(2, lastName);
+		  ps.setString(3, emailAddress);
+		  ps.setString(4, password);
+		  
+		  ps.executeUpdate();
+		  
+		  ps.close();
 		  
 		  } catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -51,19 +71,51 @@ public class DBAccess {
 	
 	public boolean userExistsByEmailAddress(String emailAddress) {
 		boolean userExists = false;
-		String sql = "SELECT * from User";
-	    Statement stat;
+		
+		String sql = "SELECT COUNT(EmailAddress) FROM User WHERE EmailAddress = ?";
+	    PreparedStatement ps;
 		try {
-			stat = conn.createStatement();
-			ResultSet rs = stat.executeQuery(sql);
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, emailAddress);
+			
+			
+			ResultSet rs = ps.executeQuery();
 			
 			while (rs.next()){	
-				if(emailAddress.equals( rs.getString(4) )) {
+				if(Integer.parseInt(rs.getString(1)) > 0) {
 					userExists = true;
 				}    
 		    }
 			
-		    stat.close();
+			rs.close();
+			ps.close();
+		        
+		} catch (SQLException e) {
+			System.out.println("ERROR: Blah");
+			e.printStackTrace();
+		}
+		
+		return userExists;
+	}
+	
+	public boolean userExistsByPassword(String password) {
+		boolean userExists = false;
+		String sql = "SELECT COUNT(EmailAddress) FROM User WHERE EmailAddress = ?";
+	    PreparedStatement ps;
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, password);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while (rs.next()){	
+				if(Integer.parseInt(rs.getString(1)) > 0) {
+					userExists = true;
+				}    
+		    }
+			
+			rs.close();
+		    ps.close();
 		        
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -72,49 +124,27 @@ public class DBAccess {
 		return userExists;
 	}
 	
-	public boolean userExistsByPassword(String password) {
-		boolean passwordMatches = false;
-		String sql = "SELECT * from User";
-	    Statement stat;
-		try {
-			stat = conn.createStatement();
-			ResultSet rs = stat.executeQuery(sql);
-			
-			while (rs.next()){	
-				if(password.equals( rs.getString(5) )) {
-					passwordMatches = true;
-				}    
-		    }
-			
-		    stat.close();
-		        
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return passwordMatches;
-	}
-	
 	
 	public User getUserByEmailAddress(String emailAddress) {
-		String sql = "SELECT * from User";
-	    Statement stat;
+		String sql = "SELECT * from User WHERE EmailAddress = ?";
+	    PreparedStatement ps;
 	   
 	    User user = new User();
 		try {
-			stat = conn.createStatement();
-			ResultSet rs = stat.executeQuery(sql);
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, emailAddress);
 			
-			while (rs.next()){
-				if(emailAddress.equals( rs.getString(4) )) {
-					user.setFirstName(rs.getString(2));
-					user.setLastName(rs.getString(3));
-					user.setEmailAddress(rs.getString(4));
-					user.setPassword(rs.getString(5));
-				} 
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				user.setFirstName(rs.getString("FirstName"));
+				user.setLastName(rs.getString("LastName"));
+				user.setEmailAddress(rs.getString("EmailAddress"));
+				user.setPassword(rs.getString("Password"));
 		    }
 			
-		    stat.close();
+			rs.close();
+		    ps.close();
 		        
 		} catch (SQLException e) {
 			e.printStackTrace();
