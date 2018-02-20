@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.User;
+import model.UserDB;
 
 /**
  * Servlet implementation class Login
@@ -45,12 +46,15 @@ public class Login extends HttpServlet {
 			throws ServletException, IOException {
 
 		HttpSession session = request.getSession();
-		String path = "WEB-INF/Customer/CustomerHomePage.jsp";
+		String success = "WEB-INF/Customer/CustomerHomePage.jsp";
+		String failure = "Registraion.jsp";
 		/*
 		 * recieves and validates login information
 		 */
-		String email = ServletUtils.validateInput(request.getParameter("email"), "");
-		String password = ServletUtils.validateInput(request.getParameter("password"), "");
+		String email = ServletUtils.
+				validateInput(request.getParameter("email"), "");
+		String password = ServletUtils.
+				validateInput(request.getParameter("password"), "");
 
 		User user = (User) session.getAttribute("user");
 		ArrayList<String> theaters = new ArrayList();
@@ -60,20 +64,23 @@ public class Login extends HttpServlet {
 		theaters.add("Theater 4");
 		theaters.add("Theater 5");
 		session.setAttribute("theater", theaters);
+		
 		if(user == null) {
-			user = new User(email, password);
-			ServletContext sc = this.getServletContext();
-			String filePath = sc.getRealPath("/WEB-INF/users.properties");
-			String redirect = user.userExists(user, filePath) && user.pwMatch(user, filePath)
-					? path
-					: "Registration.jsp";
+			UserDB userDb = new UserDB();
 
+			user = userDb.getUserByEmailAddress(email);
+			
+			if(user == null || !user.getPassword().equals(password)) {
+				request.getRequestDispatcher(failure).forward(request, response);
+			}
+
+			
 			session.setAttribute("user", user);
-			request.getRequestDispatcher(redirect).forward(request, response);
+			request.getRequestDispatcher(success).forward(request, response);
 		}
 		else {
 			
-			request.getRequestDispatcher(path).forward(request, response);
+			request.getRequestDispatcher(success).forward(request, response);
 		}
 
 
