@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -20,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.Theater;
+import model.TheaterDB;
 import model.User;
 import model.UserDB;
 
@@ -69,16 +72,11 @@ public class Login extends HttpServlet {
 
 
 		User user = (User) session.getAttribute("user");
+		TheaterDB theater = new TheaterDB();
 		
-		ArrayList<String> theaters = new ArrayList();
-		theaters.add("Theater 1");
-		theaters.add("Theater 2");
-		theaters.add("Theater 3");
-		theaters.add("Theater 4");
-		theaters.add("Theater 5");
-		session.setAttribute("theater", theaters);
-		
-		
+		List<Theater> theaters = theater.getTheaters();
+		session.setAttribute("theaters", theaters);
+				
 		//Validates login directing to registration if user is not found
 		//or displays a password error on ligin if user is found but wrong password
 		if(user == null) {

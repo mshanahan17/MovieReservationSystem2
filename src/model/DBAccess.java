@@ -216,16 +216,18 @@ public class DBAccess {
 	   
 	    List<Theater> theaters = new ArrayList<Theater>();
 	    
-	    Theater t = new Theater();
-	    Address a = new Address();
-	    User owner = new User();
+
 	    
 		try {
 			ps = conn.prepareStatement(sql);			
 			ResultSet rs = ps.executeQuery();
 			
 			while(rs.next()) {
-								
+					
+			    Theater t = new Theater();
+			    Address a = new Address();
+			    User owner = new User();
+			    
 				a.setStreetAddress(rs.getString("Address"));
 				a.setCity(rs.getString("City"));
 				a.setState(rs.getString("State"));

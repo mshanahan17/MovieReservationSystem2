@@ -35,8 +35,8 @@
             <form name="movieSearch" action="MovieSearchQuery" method="post">
                Select Your Theater:<br> 
                <select name="theaters">
-                  <c:forEach items="${theater}" var="theater">
-         				<option value="${theater}">${theater}</option>
+                  <c:forEach items="${theaters}" var="theater">
+         				<option value="${theater.name}">${theater.name}</option>
       			  </c:forEach>
                </select>
                <br> Movie Search:<br> 
