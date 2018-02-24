@@ -14,6 +14,7 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +45,7 @@ public class Login extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		
 		HttpSession session = request.getSession();
 		String success = "WEB-INF/Customer/CustomerHomePage.jsp";
 		String failure = "Registraion.jsp";
@@ -55,8 +56,20 @@ public class Login extends HttpServlet {
 				validateInput(request.getParameter("email"), "");
 		String password = ServletUtils.
 				validateInput(request.getParameter("password"), "");
+		
+		boolean rememberMe = request.getParameter("rememberMe") != null;
+		
+		//Sets email into cookie to be remembered for next login attempt
+		if(rememberMe)
+		{
+		    Cookie c = new Cookie("userId", email);
+		    c.setMaxAge(24*60*60);
+		    response.addCookie(c); 
+		}
+
 
 		User user = (User) session.getAttribute("user");
+		
 		ArrayList<String> theaters = new ArrayList();
 		theaters.add("Theater 1");
 		theaters.add("Theater 2");
@@ -65,23 +78,27 @@ public class Login extends HttpServlet {
 		theaters.add("Theater 5");
 		session.setAttribute("theater", theaters);
 		
+		
+		//Validates login directing to registration if user is not found
+		//or displays a password error on ligin if user is found but wrong password
 		if(user == null) {
 			UserDB userDb = new UserDB();
 
 			user = userDb.getUserByEmailAddress(email);
-			
-			if(user == null || !user.getPassword().equals(password)) {
+
+			if(user == null) {
 				request.getRequestDispatcher(failure).forward(request, response);
 			}
-
+			else if(!user.getPassword().equals(password)) {
+				session.setAttribute("pwError", "Incorrect Password");
+				request.getRequestDispatcher("Login.jsp").forward(request, response);
+			}
 			
 			session.setAttribute("user", user);
-			request.getRequestDispatcher(success).forward(request, response);
-		}
-		else {
 			
-			request.getRequestDispatcher(success).forward(request, response);
 		}
+		
+		request.getRequestDispatcher(success).forward(request, response);
 
 
 		/*

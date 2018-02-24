@@ -29,7 +29,9 @@
       </header>
       <div class="main">
       <h1>Welcome ${user.firstName}</h1>
-         <div id="movieSearch">
+         
+      </div>
+      <div id="movieSearch">
             <form name="movieSearch" action="MovieSearchQuery" method="post">
                Select Your Theater:<br> 
                <select name="theaters">
@@ -39,11 +41,11 @@
                </select>
                <br> Movie Search:<br> 
                <input type="text" name="search"><br>
+               Pick A Show Date:<br>
+               <input type="date" name="showDate"><br>
                <input type="submit">
             </form>
-         </div>
-      </div>
-      <footer class="footer">
+         </div><footer class="footer">
          <div class="container">
             <span style="font: Britannic Bold; font-size: 12px; color: white">IMAX®
             and The IMAX Experience® are trademarks of IMAX Corporation.</span><br>

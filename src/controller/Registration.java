@@ -15,6 +15,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.catalina.Session;
 
 import model.User;
 import model.UserDB;
@@ -45,8 +48,8 @@ public class Registration extends HttpServlet {
     	/* 
     	 * unused parameters at this time will use in futre stages possibly
     	 */
-        String fName = ServletUtils.validateInput(request.getParameter("fname"), "");
-        String lName = ServletUtils.validateInput(request.getParameter("lname"), "");
+        String fName = ServletUtils.validateInput(request.getParameter("fName"), "");
+        String lName = ServletUtils.validateInput(request.getParameter("lName"), "");
         
         /* email is used as login info so both email and password
          * are validated
@@ -113,5 +116,6 @@ public class Registration extends HttpServlet {
 	private void connectionClosed() {
 		System.out.println("Registration Server Has Closed");
 	}
+	
 
 }

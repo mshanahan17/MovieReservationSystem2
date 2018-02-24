@@ -24,6 +24,7 @@
          	<a href="LogOut">Log Out</a>
       	 </nav>
       </header>
+      <h1>${user.firstName} ${user.lastName}</h1>
       <h2>Order #: 422334</h2>
       <table class="table table-bordered table-striped">
          <thead>
@@ -42,8 +43,8 @@
                <td>$60.00</td>
                <td>Grand Theater: 1</td>
                <td>05/19/2019 12:30 PM</td>
-               <td><a href="MovieDetailsSelection.jsp" class="btn btn-primary btn-sm" role="button">View</a> </td>
-               <td><a href="CancelOrder.jsp" class="btn btn-primary btn-sm" role="button">Cancel</a> </td>
+               <td><a href="MovieSearchResults" class="btn btn-primary btn-sm" role="button">View</a> </td>
+               <td><a href="CancelOrder" class="btn btn-primary btn-sm" role="button">Cancel</a> </td>
             </tr>
             <tr>
                <td>The Land Before Time</td>
@@ -51,8 +52,8 @@
                <td>$30.00</td>
                <td>Grand Theater: 4</td>
                <td>05/22/2019 4:30 PM</td>
-               <td><a href="MovieDetailsSelection.jsp" class="btn btn-primary btn-sm" role="button">View</a> </td>
-               <td><a href="CancelOrder.jsp" class="btn btn-primary btn-sm" role="button">Cancel</a> </td>
+               <td><a href="MovieSearchResults" class="btn btn-primary btn-sm" role="button">View</a> </td>
+               <td><a href="CancelOrder" class="btn btn-primary btn-sm" role="button">Cancel</a> </td>
             </tr>
          </tbody>
       </table>

@@ -25,6 +25,7 @@
          	<a href="LogOut">Log Out</a>
       	 </nav>
       </header>
+      <h1>${user.firstName} ${user.lastName}</h1>
       <div id="main">
          <table class="table table-bordered table-striped" 
             id="results">
@@ -49,7 +50,7 @@ for (int i = 0; i < movies.size(); i++) {
                   <td>20</td>
                   <td>$15.00</td>
                   <td>placeholder</td>
-                  <td> <a href="MovieDetailsSelection.jsp" class="btn btn-primary btn-sm" role="button">View Details</a></td>
+                  <td> <a href="MovieSearchResults" class="btn btn-primary btn-sm" role="button">View Details</a></td>
                </tr>
 <% } %>
             </tbody>

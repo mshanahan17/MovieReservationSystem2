@@ -44,6 +44,8 @@ public class MovieSearchQuery extends HttpServlet {
 		// TODO Auto-generated method stub
 		String query = ServletUtils.validateInput(request.getParameter("search"), "");
 		String theater = request.getParameter("theaters");
+		String date = request.getParameter("showDate");
+		System.out.println(date);
 
 		HttpSession session = request.getSession();
 

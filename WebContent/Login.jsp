@@ -45,11 +45,14 @@
                method="post" name="userForm">
                <fieldset>
                   <legend>Login</legend>
-                  <b>E-mail:</b><br> <input type="email" name="email"> <span
+                  <b>E-mail:</b><br> <input type="email" name="email" value="${cookie.userId.value}"> 
+                  
+                  <span
                      style="color: red">${emailError}</span><br> <b>Password:</b><br>
                   <input type="password" name="password"> <span
-                     style="color: red">${pwError}</span><br> <br> <input
-                     type="submit">
+                     style="color: red">${pwError}</span><br>
+                     <input type="checkbox" name="rememberMe">Remember Me<br>
+                     <input type="submit">
                </fieldset>
             </form>
          </div>

@@ -6,19 +6,18 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class CustomerReview
+ * Servlet implementation class ReviewServlet
  */
-@WebServlet("/CustomerReview")
-public class CustomerReview extends HttpServlet {
+@WebServlet("/ReviewServlet")
+public class ReviewServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CustomerReview() {
+    public ReviewServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,18 +35,8 @@ public class CustomerReview extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String review = ServletUtils.validateInput(
-				request.getParameter("review"), "");
-		int rating = Integer.parseInt(request.getParameter("rating"));
-		
-		String confirmationResponse = "Success";
-		
-		HttpSession session = request.getSession();
-		
-		session.setAttribute("review", confirmationResponse);
-		
-		request.getRequestDispatcher("WEB-INF/Customer/CustomerReviewConfirmation.jsp")
-			   .forward(request, response);
+		request.getRequestDispatcher("WEB-INF/Customer/CustomerReview.jsp")
+			   .forward(request,  response);
 	}
 
 }

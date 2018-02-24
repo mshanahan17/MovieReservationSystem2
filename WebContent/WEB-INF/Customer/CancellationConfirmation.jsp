@@ -24,6 +24,7 @@
          	<a href="LogOut">Log Out</a>
       	 </nav>
       </header>
+      <h1>${user.firstName} ${user.lastName}</h1>
       <table class="table table-bordered table-striped">
          <thead>
             <th>Order #</th>

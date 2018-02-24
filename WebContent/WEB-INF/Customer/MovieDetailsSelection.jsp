@@ -24,12 +24,11 @@
          	<a href="LogOut">Log Out</a>
       	 </nav>
       </header>
+      <h1>${user.firstName} ${user.lastName}</h1>
       <div class="container">
          <div id="main" class="row">
             <div class="col-md-4">
-               <img src="../pics/starwars.jpg" style="width: 20vw; height:50vh"><br>
-               <h5>Chrome Users Click <a href="../BonusHeaderHandling">Here </a><br>
-                To See Webp Version.</h5>
+               <img src="${pageContext.request.contextPath}/pics/starwars.jpg" style="width: 20vw; height:50vh"><br>
             </div>
             <div class="col-md-8">
                <h1>Star Wars: The Last Jedi</h1>
@@ -58,7 +57,7 @@
             <div class="col-md-1">
             </div>
             <div class="col-md-10">
-               <form action="ViewAndCheckoutShoppingCart.jsp" method="post">
+               <form action="UpdateShoppingCart" method="post">
                   <table class="table table-bordered">
                      <thead>
                         <th>Theater</th>
@@ -75,6 +74,7 @@
                         <td>20</td>
                      </tbody>
                   </table>
+                  <h5>Ticket Quantity: <input type="text" size="1" name="ticketQty"></h5>
                   <input type="submit" value="Add To Cart">
                </form>
             </div>
@@ -85,6 +85,9 @@
             <div class="col-md-1">
             </div>
             <div class="col-md-10">
+            	<form action="ReviewServlet" method="post">
+            		<input type="submit" value="Add Review">
+            	</form>
                <table class="table table-bordered">
                   <tbody id="reviews">
                      <tr>

@@ -26,6 +26,7 @@
          	<a href="LogOut">Log Out</a>
       	 </nav>
       </header>
+      <h1>${user.firstName} ${user.lastName}</h1>
       <table class="table table-bordered table-striped">
          <thead>
             <th>Order Number</th>
@@ -37,7 +38,7 @@
                <td>435554</td>
                <td>$60.00</td>
                <td>05/06/2019</td>
-               <td> <a href="ManageOrder.jsp" class="btn btn-primary btn-sm" role="button">View</a></td>
+               <td> <a href="ManageOrder" class="btn btn-primary btn-sm" role="button">View</a></td>
             </tr>
          </tbody>
       </table>

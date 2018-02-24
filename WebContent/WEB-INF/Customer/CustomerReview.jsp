@@ -26,13 +26,15 @@
          	<a href="LogOut">Log Out</a>
       	 </nav>
       </header>
+      <h1>${user.firstName} ${user.lastName}</h1>
       <main role="main" class="container">
          <div id="loginForm">
-            <form id="loginForm" action="Login"
-               method="post" name="rivewForm">
+            <form id="loginForm" action="CustomerReview"
+               method="post" name="reviewForm">
                <fieldset>
                   <legend>Customer Review</legend>
                   <b>Review:</b><br> <input type="text" name="review"><br>
+                  <b>Rating:</b>
                   <select name="rating">
                   	<option value="1">1</option>
                   	<option value="2">2</option>

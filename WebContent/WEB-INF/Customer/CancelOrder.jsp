@@ -24,6 +24,7 @@
          	<a href="LogOut">Log Out</a>
       	 </nav>
       </header>
+      <h1>${user.firstName} ${user.lastName}</h1>
       <table class="table table-bordered table-striped">
          <thead>
             <th>Order #</th>
@@ -43,8 +44,8 @@
          </tbody>
       </table>
       <br>
-      <a href="CancellationConfirmation.jsp" class="btn btn-primary btn-sm" role="button">Confirm Cancellation</a>
-      <a href="CustomerHomePage.jsp" class="btn btn-primary btn-sm" role="button">Discard Cancellation</a>
+      <a href="CancelOrderTransaction" class="btn btn-primary btn-sm" role="button">Confirm Cancellation</a>
+      <a href="ManageOrder" class="btn btn-primary btn-sm" role="button">Discard Cancellation</a>
       <footer class="footer">
          <div class="container">
             <span style="font: Britannic Bold; font-size: 12px; color: white">IMAX®
