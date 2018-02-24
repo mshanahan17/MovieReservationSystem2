@@ -4,7 +4,7 @@ public class Address {
 	private String streetAddress;
 	private String city;
 	private String state;
-	private String zip;
+	private int zip;
 	
 	public Address() {
 		super();		
@@ -22,7 +22,7 @@ public class Address {
 		return state;
 	}
 
-	public String getZip() {
+	public int getZip() {
 		return zip;
 	}
 
@@ -38,13 +38,14 @@ public class Address {
 		this.state = state;
 	}
 	
-	public void setZip(String zip) {
+	public void setZip(int zip) {
 		this.zip = zip;
 	}
 	
 	@Override
 	public String toString() {
-		return "streetAddress: " + streetAddress 
+		return "Address-"
+				+ "\nstreetAddress: " + streetAddress 
 				+ "\ncity: " + city
 				+ "\nstate: " + state
 				+ "\nzip: " + zip;

@@ -3,7 +3,7 @@ package model;
 public class Theater {
 	String name;
 	Address address;
-	User user; //TODO: Is this the correct class it should be referencing?
+	User owner; 
 	
 	public Theater() {
 		super();
@@ -25,13 +25,19 @@ public class Theater {
 		this.address = address;
 	}
 	
-	public User getUser() {
-		return user;
+	public User getOwner() {
+		return owner;
 	}
 	
-	public void setUser(User user) {
-		this.user = user;
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "Theater-"
+			+ "\nname: " + name
+			+ "\naddress: " + address
+			+ "\nowner: " + owner;
+	}
 }

@@ -5,6 +5,7 @@ public class User {
 	private String lastName;	
 	private String emailAddress;
 	private String password;
+	private int numOfVisits;
 	
 	private String phoneNumber;
 	private Address billingAddress;
@@ -70,12 +71,22 @@ public class User {
 		this.phoneNumber = phoneNumber;
 	}
 	
+	public int getNumOfVisits() {
+		return numOfVisits;
+	}
+
+	public void setNumOfVisits(int numOfVisits) {
+		this.numOfVisits = numOfVisits;
+	}
+
 	@Override
 	public String toString() {
-		return "firstName: " + firstName
+		return "User-"
+				+ "\nfirstName: " + firstName
 				+ "\nlastName: " + lastName
 				+ "\nemailAddress: " + emailAddress
 				+ "\npassword: " + password
+				+ "\nnumOfVisits: " + numOfVisits
 				+ "\nphoneNumber: " + phoneNumber
 				+ "\nbillingAddress: " + billingAddress
 				+ "\nshippingAddress: " + shippingAddress;
