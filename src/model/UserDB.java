@@ -5,7 +5,6 @@ import model.User;
 
 public class UserDB {
 	
-
     public void registerUser(User user) {
        	DBAccess db = new DBAccess();
        	db.createConnection();
@@ -13,7 +12,7 @@ public class UserDB {
        	db.closeConnection();
     }
     
-    public boolean validateUserByUsername(String userName) {
+    public boolean userExistsByEmailAddress(String userName) {
     	    boolean userExists = false;
        	DBAccess db = new DBAccess();
        	db.createConnection();
@@ -23,7 +22,7 @@ public class UserDB {
        	return userExists;
     }
     
-    public boolean validateUserByPassword(String password) {
+    public boolean userExistsByPassword(String password) {
 	    boolean passwordMatches = false;
    	    DBAccess db = new DBAccess();
    	    db.createConnection();
