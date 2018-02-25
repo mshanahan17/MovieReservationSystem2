@@ -6,6 +6,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class UpdateShoppingCart
@@ -36,6 +37,9 @@ public class UpdateShoppingCart extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String path = "WEB-INF/Customer/ViewAndCheckoutShoppingCart.jsp";
+		int numTickets = Integer.parseInt(request.getParameter("ticketQty"));
+		HttpSession session = request.getSession();
+		session.setAttribute("numTickets", numTickets);
 		request.getRequestDispatcher(path).forward(request,  response);
 	}
 

@@ -7,6 +7,7 @@
    --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <html>
    <head>
       <title>Details</title>
@@ -61,7 +62,14 @@
                         <td>${movie.showroom.capacity - movie.numOfPurchasedSeats}</td>
                      </tbody>
                   </table>
-                  <h5>Ticket Quantity: <input type="text" size="1" name="ticketQty"></h5>
+                  <h5>Ticket Quantity: 
+					<select name="ticketQty">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					</select></h5>
                   <input type="submit" value="Add To Cart">
                </form>
             </div>
@@ -77,30 +85,14 @@
             	</form>
                <table class="table table-bordered">
                   <tbody id="reviews">
-                     <tr>
-                        <td>Matt Shanahan</td>
-                        <td>01/27/2018</td>
-                        <td>Lorem ipsum dolor sit amet,<br> 
-                           consectetur adipiscing elit.
-                        </td>
-                        <td>&#9733 &#9733 &#9733 &#9733 &#9734</td>
-                     </tr>
-                     <tr>
-                        <td>Matt Shanahan</td>
-                        <td>01/27/2018</td>
-                        <td>Lorem ipsum dolor sit amet,<br> 
-                           consectetur adipiscing elit.
-                        </td>
-                        <td>&#9733 &#9733 &#9733 &#9733 &#9734</td>
-                     </tr>
-                     <tr>
-                        <td>Matt Shanahan</td>
-                        <td>01/27/2018</td>
-                        <td>Lorem ipsum dolor sit amet,<br> 
-                           consectetur adipiscing elit.
-                        </td>
-                        <td>&#9733 &#9733 &#9733 &#9733 &#9734</td>
-                     </tr>
+                  <c:forEach items="${reviews}" var="review" end="5">
+         		  <tr>
+                  <td>${review.user.firstName} ${review.user.lastName}</td>
+                  <td>${review.date}</td>
+                  <td>${review.content}</td>
+                  <td>${review.rating}</td>
+               </tr>
+      		   </c:forEach>
                   </tbody>
                </table>
             </div>

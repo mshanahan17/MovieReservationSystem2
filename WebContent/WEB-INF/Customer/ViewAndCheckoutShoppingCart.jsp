@@ -6,6 +6,7 @@
    To change this template use File | Settings | File Templates.
    --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
    <head>
       <title>View Cart</title>
@@ -45,19 +46,21 @@
             </thead>
             <tbody>
                <tr>
-                  <td>Star Wars: The Last Jedi</td>
-                  <td>placeholder</td>
-                  <td>Grand 3</td>
-                  <td>01/28/2018 7:30 pm</td>
-                  <td>4</td>
-                  <td>$60.00</td>
+                  <td>${movie.movie.title}</td>
+                  <td><img src="data:image/gif; base64,${movie.movie.thumbnail}" style="max-height: 75px"></td>
+                  <td>${movie.showroom.theater.name}</td>
+                  <td>${movie.startTime}</td>
+                  <td>${numTickets}</td>
+                  <td>$<fmt:formatNumber type="number" minFractionDigits="2" 
+                  maxFractionDigits="2" value="${movie.cost * numTickets}" /></td>
                   <td><input type="button" value="Remove" 
                      onclick="SomeDeleteRowFunction(this);"></td>
                </tr>
             </tbody>
          </table>
          <form action="Checkout" method="post">
-            <h3>Total: $60.00</h3>
+            <h3>Total: $<fmt:formatNumber type="number" minFractionDigits="2" 
+                  maxFractionDigits="2" value="${movie.cost * numTickets}" /></h3>
             <br>
             <input type="submit" value="Checkout">
          </form>
