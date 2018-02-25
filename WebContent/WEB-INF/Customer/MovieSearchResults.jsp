@@ -6,7 +6,8 @@
    To change this template use File | Settings | File Templates.
    --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.*" %>
+
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <html>
    <head>
       <title>Results</title>
@@ -39,20 +40,22 @@
                <th>Details</th>
             </thead>
             <tbody>
-            <%
-ArrayList<String> movies = (ArrayList<String>)request.getSession().getAttribute("movieList");
-for (int i = 0; i < movies.size(); i++) {
-%>
-               <tr>
+               <c:forEach items="${movies}" var="movie" varStatus="count" end="4">
+         			<option value="${theater.name}">${theater.name}</option>
+         		  <tr>
                   <td>Grand Theater</td>
-                  <td><%= movies.get(i)%></td>
+                  <td name="${count.index}">${movie.title}</td>
                   <td>12:30</td>
                   <td>20</td>
                   <td>$15.00</td>
-                  <td>placeholder</td>
-                  <td> <a href="MovieSearchResults" class="btn btn-primary btn-sm" role="button">View Details</a></td>
+                  <td><img src="data:image/gif; base64,${thumbnail}" style="max-height: 75px"></td>
+                  <td> 
+                  	   <form action="MovieSearchResults" name="details" value="one">
+                  			<input type="submit" name="button" value="View Details${count.index}">
+                  	   </form>
+                  </td>
                </tr>
-<% } %>
+      		   </c:forEach>
             </tbody>
          </table>
       </div>
