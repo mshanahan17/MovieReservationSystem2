@@ -2,9 +2,10 @@ package model;
 
 public class Review {
 	String content; //TODO: Validate content - make sure it doesn't exceed max review size
-	double rating;
+	String rating;
 	User user;
 	Movie movie;
+	String date;
 	
 	public Review() {
 		super();
@@ -19,11 +20,11 @@ public class Review {
 		this.content = content;
 	}
 
-	public double getRating() {
+	public String getRating() {
 		return rating;
 	}
 
-	public void setRating(double rating) {
+	public void setRating(String rating) {
 		this.rating = rating;
 	}
 
@@ -43,12 +44,21 @@ public class Review {
 		this.movie = movie;
 	}
 	
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
 	@Override
 	public String toString() {
 		return "Review-"
 				+ "\ncontent: " + content
 				+ "\nrating: " + rating
 				+ "\nuser:" + user
+				+ "\ndate: " + date
 				+ "\nmovie: " + movie;
 	}
 

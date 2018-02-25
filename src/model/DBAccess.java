@@ -175,6 +175,7 @@ public class DBAccess {
 	}
 
 	public User getUserById(int Id) {
+		//TODO: Test this
 		String sql = "SELECT * from User WHERE Id = ?";
 	    PreparedStatement ps;
 	   
@@ -223,6 +224,7 @@ public class DBAccess {
 	}
 
 	public List<Theater> getAllTheaters() {
+		//TODO: Test this
 		String sql = "SELECT * from TheaterBuilding";
 	    PreparedStatement ps;
 	   
@@ -315,6 +317,7 @@ public class DBAccess {
 	}
 	
 	public Movie getMovieById(int id) {
+		//TODO: Test this
 		String sql = "select * from Movie where Id = ?";
 		
 	    PreparedStatement ps;
@@ -346,33 +349,266 @@ public class DBAccess {
 	}
 	
 	public Showroom getShowroomById(int id) {
-		//TODO: Implement
-		return null;
+		//TODO: Test this
+		String sql = "select * from ShowRoom where Id = ?";
+		
+	    PreparedStatement ps;	   	    
+	    
+	    Showroom sr = null;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {	
+				sr = new Showroom();
+				sr.setCapacity(rs.getInt("availableSeats"));
+				
+				int theaterId = rs.getInt("theaterBuilding");
+				Theater t = getTheaterById(theaterId);
+				sr.setTheater(t);
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+		return sr;
+	}
+	
+	public List<Review> getReviewsByMovieTitle(String movieTitle) {
+		//TODO: Test this
+		String sql = "select cr.Id from CustomerReview cr\n" + 
+				"join Movie m on cr.movieID = m.Id\n" + 
+				"where m.`Movie name` like ?"; 				
+		
+	    PreparedStatement ps;
+	   
+	    List<Review> reviewSearchResults = new ArrayList<Review>();
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, formatSearchString(movieTitle));
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {				
+				int reviewId = rs.getInt("Id");				
+				reviewSearchResults.add(getReviewById(reviewId));
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return reviewSearchResults;
 	}
 	
 	public Review getReviewById(int id) {
-		//TODO: Implement
-		return null;
+		//TODO: test this
+		String sql = "select * from CustomerReview where Id = ?";
+		
+	    PreparedStatement ps;	   	    
+	    
+	    Review r = null;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {	
+				r = new Review();
+				
+				int movieId = rs.getInt("movieID");
+				Movie m = getMovieById(movieId);
+				r.setMovie(m);
+				
+				int userId = rs.getInt("userID");
+				User u = getUserById(userId);
+				r.setUser(u);
+				
+				r.setDate(rs.getString("ReviewDate"));				
+				r.setRating(rs.getString("Rating"));
+				r.setContent(rs.getString("Review"));
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+		return r;
 	}
 	
 	public Order getOrderById(int id) {
-		//TODO: Implement
-		return null;
+		//TODO: test this
+		String sql = "select * from Order where Id = ?";
+		
+	    PreparedStatement ps;	   	    
+	    
+	    Order o = null;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {	
+				o = new Order();
+				
+				int customerId = rs.getInt("CustomerID");
+				User customer = getUserById(customerId);
+				o.setCustomer(customer);
+				
+				o.setCost(rs.getInt("TotalCost"));				
+				o.setDate(rs.getString("OrderDate"));				
+				o.setBillingAddress(rs.getString("BillingAddress"));
+				o.setCreditCardNumber(rs.getString("CreditCardNumber"));
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+		return o;
 	}
 	
 	public Theater getTheaterById(int id) {
-		//TODO: Implement
-		return null;
+		//TODO: Test this
+		String sql = "select * from Theater where Id = ?";
+		
+	    PreparedStatement ps;	   	    
+	    
+	    Theater t = null;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {	
+				t = new Theater();
+				
+				int ownerId = rs.getInt("ownerID");
+				User owner = getUserById(ownerId);
+				t.setOwner(owner);
+				
+				t.setName(rs.getString("Name"));	
+				
+				Address a = new Address();
+				a.setStreetAddress(rs.getString("Address"));
+				a.setCity(rs.getString("Address"));
+				a.setState(rs.getString("State"));
+				a.setZip(rs.getInt("PostalCode"));
+				
+				t.setAddress(a);
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+		return t;
 	}
 	
 	public MovieShowing getMovieShowingById(int id) {
-		//TODO: Implement
-		return null;
+		//TODO: Test this
+		String sql = "select * from MovieShowing where Id = ?";
+		
+	    PreparedStatement ps;
+	   
+	    MovieShowing ms = null;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				
+				ms = new MovieShowing();
+				ms.setCost(rs.getDouble("Price"));
+				ms.setNumOfPurchasedSeats(rs.getInt("NumberPurchased"));				
+				ms.setStartTime(rs.getString("StartTime"));
+				ms.setEndTime(rs.getString("EndTime"));
+				
+				int movieId = rs.getInt("movieID");				
+				Movie m = getMovieById(movieId);
+				ms.setMovie(m);
+				
+				int showroomId = rs.getInt("showroomID");
+				Showroom sr = getShowroomById(showroomId);
+				ms.setShowroom(sr);				
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return ms;
 	}
 	
 	public CreditCard getCreditCardById(int id) {
-		//TODO: Implement
-		return null;
+		//TODO: Test this
+		String sql = "select * from CreditCard where Id = ?";
+		
+	    PreparedStatement ps;
+	   
+	    CreditCard cc = null;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				
+				cc = new CreditCard();
+				cc.setCardHolderName(rs.getString("CardHolderName"));
+				cc.setCardNumber(rs.getString("CreditCardNumber"));				
+				cc.setBalance(rs.getDouble("Balance"));
+				cc.setCardType(rs.getString("CardType"));
+				cc.setCvv(rs.getInt("CVV"));
+				cc.setExpirationDate(rs.getString("ExpirationDate"));
+				
+				int ownerId = rs.getInt("userID");				
+				User owner = getUserById(ownerId);
+				cc.setOwner(owner);
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return cc;
 	}
 	
 	public void createConnection() {

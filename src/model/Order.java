@@ -7,10 +7,10 @@ public class Order {
 	//TODO: Confirm/Validate that the desired ticket quantity does not exceed the showroom capacity
 	
 	User customer;
-	Date date;
+	String date;
 	double cost;
-	Address billingAddress;
-	CreditCard creditCard;
+	String billingAddress;
+	String creditCardNumber;
 	
 	public Order() {
 		// TODO Auto-generated constructor stub
@@ -24,11 +24,11 @@ public class Order {
 		this.customer = customer;
 	}
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 
@@ -40,20 +40,20 @@ public class Order {
 		this.cost = cost;
 	}
 
-	public Address getBillingAddress() {
+	public String getBillingAddress() {
 		return billingAddress;
 	}
 
-	public void setBillingAddress(Address billingAddress) {
+	public void setBillingAddress(String billingAddress) {
 		this.billingAddress = billingAddress;
 	}
 
-	public CreditCard getCreditCard() {
-		return creditCard;
+	public String getCreditCardNumber() {
+		return creditCardNumber;
 	}
 
-	public void setCreditCard(CreditCard creditCard) {
-		this.creditCard = creditCard;
+	public void setCreditCardNumber(String creditCardNumber) {
+		this.creditCardNumber = creditCardNumber;
 	}
 
 	@Override
@@ -63,6 +63,6 @@ public class Order {
 			+ "\ndate: " + date
 			+ "\ncost: " + cost
 			+ "\nbillingAddress: " + billingAddress
-			+ "\ncreditCard: " + creditCard;
+			+ "\ncreditCardNumber: " + creditCardNumber;
 	}
 }

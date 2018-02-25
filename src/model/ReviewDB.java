@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 public class ReviewDB {
 
 	public Review getReviewById(int id) {
@@ -9,5 +11,15 @@ public class ReviewDB {
        	db.closeConnection();
 		return r;
 	}
-
+	
+	public List<Review> getReviewsByMovieTitle(String movieTitle) {
+					
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	
+       	List<Review> reviews = db.getReviewsByMovieTitle(movieTitle);
+       	
+       	db.closeConnection();
+		return reviews;
+	}
 }
