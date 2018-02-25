@@ -1,5 +1,8 @@
 package model;
 
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,6 +11,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 public class DBAccess {
 	private Connection conn = null;
@@ -216,8 +221,6 @@ public class DBAccess {
 	   
 	    List<Theater> theaters = new ArrayList<Theater>();
 	    
-
-	    
 		try {
 			ps = conn.prepareStatement(sql);			
 			ResultSet rs = ps.executeQuery();
@@ -253,6 +256,49 @@ public class DBAccess {
 		return theaters;
 	}
 
+	public List<Movie> getMovieSearchResults(String theaterName, String movieName, String dateTime) {
+		//TODO: Finish this
+		String sql = "select m.`Movie name`, m.Description, m.Thumbnail, m.Rating from MovieShowing ms\n"
+				+ "join Movie m on ms.movieID = m.Id\n"
+				+ "join Showroom sr on ms.showroomID = sr.Id\n" 
+				+ "join TheaterBuilding tb on sr.theaterBuilding = tb.Id\n" 
+				+ "where m.`Movie name` like ? \n" 
+				+ "and tb.name like ?\n"
+				+ "and ms.StartTime like ?";
+		
+	    PreparedStatement ps;
+	   
+	    List<Movie> searchResults = new ArrayList<Movie>();
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, movieName);
+			ps.setString(2, theaterName);
+			ps.setString(3, dateTime);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				
+				Movie m = new Movie();
+				m.setTitle(rs.getString("Movie name"));
+				m.setDescription(rs.getString("Description"));				
+				m.setThumbnail(blobToBufferedImage(rs.getBlob("Thumbnail")));
+				m.setRating(rs.getString("Rating"));
+				
+				searchResults.add(m);
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return searchResults;
+	}
+	
 	public void createConnection() {
 		try {
 			//Register the JDBC driver
@@ -268,8 +314,7 @@ public class DBAccess {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-	
+	}	
 	
 	public void closeConnection() {
 		try {
@@ -279,5 +324,18 @@ public class DBAccess {
 		}
 	}
 
-
+	private BufferedImage blobToBufferedImage(Blob b) {
+  
+		
+		BufferedImage image = null;
+		try {
+			InputStream in = b.getBinaryStream();
+			image = ImageIO.read(in);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+		
+		return image;
+	}
 }

@@ -1,11 +1,12 @@
 package model;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TheaterDB {
 
-//	public static void main(String[] args) {
+	public static void main(String[] args) {
 //		TheaterDB tdb = new TheaterDB();
 //		
 //		List<Theater> theaters = tdb.getTheaters(); 
@@ -14,7 +15,12 @@ public class TheaterDB {
 //			System.out.println(theater + "\n\n");
 //			
 //		}
-//	}
+				
+//		for(int i = 0; i < 10000000; i++) {					
+//				
+//		}		
+		
+	}
 	
 	public List<Theater> getTheaters() {
 		List<Theater> theaters = new ArrayList<Theater>();
