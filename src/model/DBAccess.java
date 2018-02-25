@@ -28,6 +28,12 @@ public class DBAccess {
 	private static final String PASS = "k8ErVH";   // Replace with your CSE MySQL_PASSWORD
 	
 	public static void main(String[] args) { 
+		
+//		DBAccess dba = new DBAccess();
+//		System.out.println(dba.formatSearchString("theater1   "));
+//		System.out.println(dba.formatSearchString(" scared kitten    "));
+//		System.out.println(dba.formatSearchString("2018-04-04 17:30:00"));
+		
 //       	DBAccess dba = new DBAccess();
 //       	dba.createConnection();       	
 //		User u = new User();
@@ -272,9 +278,9 @@ public class DBAccess {
 	    
 		try {
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, movieName);
-			ps.setString(2, theaterName);
-			ps.setString(3, dateTime);
+			ps.setString(1, formatSearchString(movieName));
+			ps.setString(2, formatSearchString(theaterName));
+			ps.setString(3, formatSearchString(dateTime));
 			
 			ResultSet rs = ps.executeQuery();
 			
@@ -325,8 +331,7 @@ public class DBAccess {
 	}
 
 	private BufferedImage blobToBufferedImage(Blob b) {
-  
-		
+  		
 		BufferedImage image = null;
 		try {
 			InputStream in = b.getBinaryStream();
@@ -337,5 +342,11 @@ public class DBAccess {
 		}  
 		
 		return image;
+	}
+	
+	private String formatSearchString(String s) {
+		String newStr = "%" + s.trim() + "%";
+		newStr = newStr.replace(' ', '%');
+		return newStr;
 	}
 }
