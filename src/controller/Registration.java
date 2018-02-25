@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.catalina.Session;
+import org.apache.commons.mail.EmailException;
 
 import model.User;
 import model.UserDB;
@@ -62,21 +63,17 @@ public class Registration extends HttpServlet {
         /*
          * Checks to see the repeat entries of the form match.
          */
+        UserDB userDB = new UserDB();
         Boolean emailMatch = ServletUtils.validMatch(email[0], email[1]);
         Boolean passwordMatch = ServletUtils.validMatch(password[0], password[1]);
-		
-        /*
-         * gets filepath for properties file to be sent to Users class
-         */
-		ServletContext sc = this.getServletContext();
-		String filePath = sc.getRealPath("/WEB-INF/users.properties");
-		
+		Boolean userAlreadyExists = userDB.userExistsByEmailAddress(email[0]);
+
 		/*
 		 * If email and password entries match user is redirected to login
 		 * page. Otherwise an error message is displayed depending on which
 		 * entries did not match.
 		 */
-        if(emailMatch && passwordMatch){
+        if(emailMatch && passwordMatch && !userAlreadyExists){
             User user = new User();
             user.setFirstName(fName);
             user.setLastName(lName);
@@ -85,7 +82,20 @@ public class Registration extends HttpServlet {
 
             UserDB userDb = new UserDB();
             userDb.registerUser(user);
+            
+            //Send out confirmation e-mail
+            try {
+				JavaMailer.sendConfirmationEmail(email[0]);
+			} catch (EmailException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             response.sendRedirect("Login.jsp");
+        }
+        else if(userAlreadyExists) {
+        	String emailError = "E-mail Already Exists!";
+            request.setAttribute("emailError", emailError);
+            request.getRequestDispatcher("Registration.jsp").forward(request,response);
         }
         else if(passwordMatch){
             String emailError = "E-mails do not match!";
