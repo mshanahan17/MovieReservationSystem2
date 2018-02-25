@@ -8,7 +8,7 @@ public class MovieDB {
 	public static void main(String[] args) {
 		MovieDB mdb = new MovieDB();
 		
-		List<Movie> movies = mdb.searchMovies("theater1", "the scared little kitten", "2018-04-04 17:30:00");
+		List<Movie> movies = mdb.searchMovies("    theater", "  scared kitten  ", " 2018-04-04     17:30:00  ");
 		
 		for(Movie movie : movies) {
 			System.out.println(movie);
