@@ -43,8 +43,13 @@ public class MovieSearchResults extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String button = request.getParameter("details");
-		System.out.println(button);
+		String button0 = request.getParameter("button0");
+		String button1 = request.getParameter("button1");
+		HttpSession session = request.getSession();
+		List<Movie> movies = (List<Movie>) session.getAttribute("movies");
+		if(button0 != null) {
+			session.setAttribute("movie", movies.get(0));
+		}
 		request.getRequestDispatcher("WEB-INF/Customer/MovieDetailsSelection.jsp")
 			   .forward(request, response);
 	}

@@ -50,8 +50,8 @@
                   <td>$15.00</td>
                   <td><img src="data:image/gif; base64,${movie.thumbnail}" style="max-height: 75px"></td>
                   <td> 
-                  	   <form action="MovieSearchResults" name="details" value="one">
-                  			<input type="submit" name="button" value="View Details${count.index}">
+                  	   <form action="MovieSearchResults" method="post">
+                  			<input type="submit" name="button${count.index}" value="View Details">
                   	   </form>
                   </td>
                </tr>

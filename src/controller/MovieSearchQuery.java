@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import model.Movie;
 import model.MovieDB;
@@ -54,19 +55,13 @@ public class MovieSearchQuery extends HttpServlet {
 		String query = ServletUtils.validateInput(request.getParameter("search"), "");
 		String theater = request.getParameter("theaters");
 		String date = request.getParameter("showDate");
-		String pattern = "yyyy-mm-dd HH:mm";
-		DateTime dt = new DateTime();
-		dt.parse("2018-04-02 15:00", DateTimeFormat.forPattern(pattern));
-		List<Movie> movies = (new MovieDB()).searchMovies("theater1", "the scared little kitten", "2018-04-04 17:30:00");
+//		String pattern = "yyyy-mm-dd HH:mm";
+//		DateTime dt = new DateTime();
+//		DateTimeFormatter dtf = DateTimeFormat.forPattern(pattern);
+//		dt = dt.parse("2018-04-02 15:00:00");
+//		String fmt = dtf.print(dt);
+		List<Movie> movies = (new MovieDB()).searchMovies(theater, query, date);
 		HttpSession session = request.getSession();
-		
-//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//		ImageIO.write(movies.get(0).getThumbnail(), "jpg", baos );
-//		baos.flush();
-//		byte[] imageInByteArray = baos.toByteArray();
-//		baos.close();
-//		String b64 = javax.xml.bind.DatatypeConverter.printBase64Binary(imageInByteArray);
-//		request.getSession().setAttribute("thumbnail", b64);
 
 		session.setAttribute("movies", movies);
 		

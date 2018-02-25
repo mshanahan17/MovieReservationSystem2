@@ -27,32 +27,19 @@
       <h1>${user.firstName} ${user.lastName}</h1>
       <div class="container">
          <div id="main" class="row">
-            <div class="col-md-4">
-               <img src="${pageContext.request.contextPath}/pics/starwars.jpg" style="width: 20vw; height:50vh"><br>
+            <div class="col-md-5">
+               <img src="data:image/gif; base64,${movie.thumbnail}" style="height:50vh; max-width: 30vw"><br>
             </div>
-            <div class="col-md-8">
-               <h1>Star Wars: The Last Jedi</h1>
-               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                  Vestibulum mollis lectus arcu. Nulla consequat lobortis lacus, 
-                  sed venenatis libero molestie quis. Suspendisse potenti. 
-                  Suspendisse at sollicitudin quam, eu lobortis mauris. Donec 
-                  lobortis purus congue dolor hendrerit auctor. Mauris quis 
-                  sem mattis, bibendum velit sit amet, tempus lectus. Donec 
-                  ornare imperdiet tortor eget rutrum. Nulla semper elit in 
-                  tortor ullamcorper, non sagittis neque malesuada. Vestibulum 
-                  ante ipsum primis in faucibus orci luctus et ultrices posuere 
-                  cubilia Curae; Donec eu enim non metus ullamcorper accumsan 
-                  vitae vitae augue. Quisque at purus mollis, convallis urna id, 
-                  placerat est. Morbi ut iaculis tellus. Mauris at fermentum turpis. 
-                  Etiam dapibus, orci ut lacinia finibus, lectus augue egestas orci, e
-                  u aliquam massa metus non ligula. Nulla nec malesuada nunc.
+            <div class="col-md-7">
+               <h1>${movie.title}</h1>
+               <p>${movie.description}
                </p>
                <span>
                   <h3>Rating: </h3>
-                  &#9733 &#9733 &#9733 &#9733 &#9734
+                  ${movie.rating}
                </span>
             </div>
-         </div>
+         </div><br>
          <div class="row">
             <div class="col-md-1">
             </div>
