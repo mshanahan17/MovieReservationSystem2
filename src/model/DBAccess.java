@@ -1,6 +1,7 @@
 package model;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Connection;
@@ -289,7 +290,7 @@ public class DBAccess {
 				Movie m = new Movie();
 				m.setTitle(rs.getString("Movie name"));
 				m.setDescription(rs.getString("Description"));				
-				m.setThumbnail(blobToBufferedImage(rs.getBlob("Thumbnail")));
+				m.setThumbnail(blobToString(rs.getBlob("Thumbnail")));
 				m.setRating(rs.getString("Rating"));
 				
 				searchResults.add(m);
@@ -342,6 +343,25 @@ public class DBAccess {
 		}  
 		
 		return image;
+	}
+	
+	private String blobToString(Blob b) {
+		
+		String b64 = null;
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        ImageIO.write(blobToBufferedImage(b), "jpg", baos );
+	        baos.flush();
+	        byte[] imageInByteArray = baos.toByteArray();
+	        baos.close();
+	        b64 = javax.xml.bind.DatatypeConverter.printBase64Binary(imageInByteArray);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+		
+		
+		return b64;
 	}
 	
 	private String formatSearchString(String s) {

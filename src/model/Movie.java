@@ -6,7 +6,7 @@ public class Movie {
 	private String title;
 	private String description;
 	private String rating;
-	private BufferedImage thumbnail;
+	private String thumbnail;
 	
 	public static void main(String[] args) {		
 		
@@ -40,11 +40,11 @@ public class Movie {
 		this.rating = rating;
 	}
 	
-	public BufferedImage getThumbnail() {
+	public String getThumbnail() {
 		return thumbnail;
 	}
 
-	public void setThumbnail(BufferedImage thumbnail) {
+	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
 	}
 
