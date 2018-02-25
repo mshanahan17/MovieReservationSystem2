@@ -33,5 +33,13 @@ public class TheaterDB {
 	   	db.closeConnection();
 		return theaters;
 	}
+	
+	public Theater getTheaterById(int id) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	Theater t = db.getTheaterById(id);
+       	db.closeConnection();
+		return t;
+	}
 
 }

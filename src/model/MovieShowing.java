@@ -2,9 +2,11 @@ package model;
 
 public class MovieShowing {
 	Movie movie;
-	Showroom showRoom;
+	Showroom showroom;
 	int numOfPurchasedSeats;
 	double cost;
+	String startTime;
+	String endTime;
 	
 	public MovieShowing() {
 		super();
@@ -19,12 +21,12 @@ public class MovieShowing {
 		this.movie = movie;
 	}
 
-	public Showroom getShowRoom() {
-		return showRoom;
+	public Showroom getShowroom() {
+		return showroom;
 	}
 
-	public void setShowRoom(Showroom showRoom) {
-		this.showRoom = showRoom;
+	public void setShowroom(Showroom showRoom) {
+		this.showroom = showRoom;
 	}
 
 	public int getNumOfPurchasedSeats() {
@@ -41,6 +43,33 @@ public class MovieShowing {
 
 	public void setCost(double cost) {
 		this.cost = cost;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+	
+	@Override
+	public String toString() {
+		return "MovieShowing-"
+		   + "\nnumOfPurchasedSeats: " + numOfPurchasedSeats
+		   + "\ncost: " + cost
+		   + "\nstartTime: " + startTime
+		   + "\nendTime: " + endTime
+		   + "\nmovie: " + movie
+		   + "\nshowroom: " + showroom;
 	}
 
 }

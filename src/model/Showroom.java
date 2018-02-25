@@ -2,7 +2,7 @@ package model;
 
 public class Showroom {
 	int capacity;
-	Theater theatre; //TODO: Is this the correct class it should be referencing?
+	Theater theater; //TODO: Is this the correct class it should be referencing?
 	
 	public Showroom() {	
 		super();
@@ -18,11 +18,19 @@ public class Showroom {
 	}
 
 	public Theater getTheatre() {
-		return theatre;
+		return theater;
 	}
 
 	public void setTheatre(Theater theatre) {
-		this.theatre = theatre;
+		this.theater = theatre;
 	}
+	
+	@Override
+	public String toString() {
+		return "Showroom-"
+		   + "\ncapacity: " + capacity
+		   + "\ntheater: " + theater;
+	}
+	
 
 }

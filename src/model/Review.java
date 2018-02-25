@@ -42,5 +42,14 @@ public class Review {
 	public void setMovie(Movie movie) {
 		this.movie = movie;
 	}
+	
+	@Override
+	public String toString() {
+		return "Review-"
+				+ "\ncontent: " + content
+				+ "\nrating: " + rating
+				+ "\nuser:" + user
+				+ "\nmovie: " + movie;
+	}
 
 }
