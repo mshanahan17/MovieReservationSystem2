@@ -60,13 +60,13 @@ public class MovieSearchQuery extends HttpServlet {
 		List<Movie> movies = (new MovieDB()).searchMovies("theater1", "the scared little kitten", "2018-04-04 17:30:00");
 		HttpSession session = request.getSession();
 		
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ImageIO.write(movies.get(0).getThumbnail(), "jpg", baos );
-		baos.flush();
-		byte[] imageInByteArray = baos.toByteArray();
-		baos.close();
-		String b64 = javax.xml.bind.DatatypeConverter.printBase64Binary(imageInByteArray);
-		request.getSession().setAttribute("thumbnail", b64);
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		ImageIO.write(movies.get(0).getThumbnail(), "jpg", baos );
+//		baos.flush();
+//		byte[] imageInByteArray = baos.toByteArray();
+//		baos.close();
+//		String b64 = javax.xml.bind.DatatypeConverter.printBase64Binary(imageInByteArray);
+//		request.getSession().setAttribute("thumbnail", b64);
 
 		session.setAttribute("movies", movies);
 		

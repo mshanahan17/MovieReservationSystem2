@@ -48,7 +48,7 @@
                   <td>12:30</td>
                   <td>20</td>
                   <td>$15.00</td>
-                  <td><img src="data:image/gif; base64,${thumbnail}" style="max-height: 75px"></td>
+                  <td><img src="data:image/gif; base64,${movie.thumbnail}" style="max-height: 75px"></td>
                   <td> 
                   	   <form action="MovieSearchResults" name="details" value="one">
                   			<input type="submit" name="button" value="View Details${count.index}">
