@@ -21,8 +21,8 @@ public class Showroom {
 		return theater;
 	}
 
-	public void setTheatre(Theater theatre) {
-		this.theater = theatre;
+	public void setTheater(Theater theater) {
+		this.theater = theater;
 	}
 	
 	@Override
