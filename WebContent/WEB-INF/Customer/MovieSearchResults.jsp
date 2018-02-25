@@ -8,6 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
    <head>
       <title>Results</title>
@@ -40,15 +41,15 @@
                <th>Details</th>
             </thead>
             <tbody>
-               <c:forEach items="${movies}" var="movie" varStatus="count" end="4">
-         			<option value="${theater.name}">${theater.name}</option>
+               <c:forEach items="${movieShowings}" var="movieShowing" varStatus="count" end="4">
          		  <tr>
-                  <td>Grand Theater</td>
-                  <td name="${count.index}">${movie.title}</td>
-                  <td>12:30</td>
-                  <td>20</td>
-                  <td>$15.00</td>
-                  <td><img src="data:image/gif; base64,${movie.thumbnail}" style="max-height: 75px"></td>
+                  <td>${movieShowing.showroom.theater.name}</td>
+                  <td>${movieShowing.movie.title}</td>
+                  <td>${movieShowing.startTime}</td>
+                  <td>${movieShowing.showroom.capacity - movieShowing.numOfPurchasedSeats}</td>
+                  <td>$<fmt:formatNumber type="number" minFractionDigits="2" 
+                  maxFractionDigits="2" value="${movieShowing.cost}" /></td>
+                  <td><img src="data:image/gif; base64,${movieShowing.movie.thumbnail}" style="max-height: 75px"></td>
                   <td> 
                   	   <form action="MovieSearchResults" method="post">
                   			<input type="submit" name="button${count.index}" value="View Details">

@@ -1,9 +1,9 @@
 package model;
 
 public class Theater {
-	String name;
-	Address address;
-	User owner; 
+	private String name;
+	private Address address;
+	private User owner; 
 	
 	public Theater() {
 		super();

@@ -1,8 +1,8 @@
 package model;
 
 public class Showroom {
-	int capacity;
-	Theater theater; //TODO: Is this the correct class it should be referencing?
+	private int capacity;
+	private Theater theater; //TODO: Is this the correct class it should be referencing?
 	
 	public Showroom() {	
 		super();
@@ -17,7 +17,7 @@ public class Showroom {
 		this.capacity = capacity;
 	}
 
-	public Theater getTheatre() {
+	public Theater getTheater() {
 		return theater;
 	}
 

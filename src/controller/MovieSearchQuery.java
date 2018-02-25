@@ -19,6 +19,8 @@ import org.joda.time.format.DateTimeFormatter;
 
 import model.Movie;
 import model.MovieDB;
+import model.MovieShowing;
+import model.MovieShowingDB;
 
 /**
  * Servlet implementation class MovieSearchQuery
@@ -55,15 +57,13 @@ public class MovieSearchQuery extends HttpServlet {
 		String query = ServletUtils.validateInput(request.getParameter("search"), "");
 		String theater = request.getParameter("theaters");
 		String date = request.getParameter("showDate");
-//		String pattern = "yyyy-mm-dd HH:mm";
-//		DateTime dt = new DateTime();
-//		DateTimeFormatter dtf = DateTimeFormat.forPattern(pattern);
-//		dt = dt.parse("2018-04-02 15:00:00");
-//		String fmt = dtf.print(dt);
-		List<Movie> movies = (new MovieDB()).searchMovies(theater, query, date);
+
+		List<MovieShowing> movieShowings = (new MovieShowingDB()).searchMovieShowings(theater, query, date);
 		HttpSession session = request.getSession();
 
-		session.setAttribute("movies", movies);
+		System.out.println(movieShowings.get(0).getNumOfPurchasedSeats());
+		System.out.println(movieShowings.get(0).getShowroom());
+		session.setAttribute("movieShowings", movieShowings);
 		
 		request.getRequestDispatcher("WEB-INF/Customer/MovieSearchResults.jsp").forward(request,  response);
 

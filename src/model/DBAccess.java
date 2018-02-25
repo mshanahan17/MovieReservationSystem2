@@ -292,8 +292,8 @@ public class DBAccess {
 				MovieShowing ms = new MovieShowing();
 				ms.setCost(rs.getDouble("Price"));
 				ms.setNumOfPurchasedSeats(rs.getInt("NumberPurchased"));				
-				ms.setStartTime(rs.getString("StartTime"));
-				ms.setEndTime(rs.getString("EndTime"));
+				ms.setStartTime(rs.getString("StartTime").substring(0, 16));
+				ms.setEndTime(rs.getString("EndTime").substring(0, 16));
 				
 				int movieId = rs.getInt("movieID");				
 				Movie m = getMovieById(movieId);
@@ -350,7 +350,7 @@ public class DBAccess {
 	
 	public Showroom getShowroomById(int id) {
 		//TODO: Test this
-		String sql = "select * from ShowRoom where Id = ?";
+		String sql = "select * from Showroom where Id = ?";
 		
 	    PreparedStatement ps;	   	    
 	    
@@ -491,7 +491,7 @@ public class DBAccess {
 	
 	public Theater getTheaterById(int id) {
 		//TODO: Test this
-		String sql = "select * from Theater where Id = ?";
+		String sql = "select * from TheaterBuilding where Id = ?";
 		
 	    PreparedStatement ps;	   	    
 	    

@@ -6,6 +6,7 @@
    To change this template use File | Settings | File Templates.
    --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
    <head>
       <title>Details</title>
@@ -28,15 +29,15 @@
       <div class="container">
          <div id="main" class="row">
             <div class="col-md-5">
-               <img src="data:image/gif; base64,${movie.thumbnail}" style="height:50vh; max-width: 30vw"><br>
+               <img src="data:image/gif; base64,${movie.movie.thumbnail}" style="height:50vh; max-width: 30vw"><br>
             </div>
             <div class="col-md-7">
-               <h1>${movie.title}</h1>
-               <p>${movie.description}
+               <h1>${movie.movie.title}</h1>
+               <p>${movie.movie.description}
                </p>
                <span>
                   <h3>Rating: </h3>
-                  ${movie.rating}
+                  ${movie.movie.rating}
                </span>
             </div>
          </div><br>
@@ -48,17 +49,16 @@
                   <table class="table table-bordered">
                      <thead>
                         <th>Theater</th>
-                        <th>Room</th>
                         <th>Showtime</th>
                         <th>Price</th>
                         <th>Seats Left</th>
                      </thead>
                      <tbody>
-                        <td>Grand</td>
-                        <td>4</td>
-                        <td>7:30 pm</td>
-                        <td>$15.00</td>
-                        <td>20</td>
+                        <td>${movie.showroom.theater.name}</td>
+                        <td>${movie.startTime}</td>
+                        <td>$<fmt:formatNumber type="number" minFractionDigits="2" 
+                  		maxFractionDigits="2" value="${movie.cost}"/></td>
+                        <td>${movie.showroom.capacity - movie.numOfPurchasedSeats}</td>
                      </tbody>
                   </table>
                   <h5>Ticket Quantity: <input type="text" size="1" name="ticketQty"></h5>
