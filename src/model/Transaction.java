@@ -16,4 +16,9 @@ public class Transaction {
 		this.balance = balance;
 	}
 
+	@Override
+	public String toString() {
+		return "Transaction-"
+				+ "\nbalance: " + balance;
+	}
 }

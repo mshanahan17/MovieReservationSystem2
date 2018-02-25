@@ -40,5 +40,13 @@ public class UserDB {
 	   	
 	   	return user;
     }
+    
+    public User getUserById(int id) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	User u = db.getUserById(id);
+       	db.closeConnection();
+		return u;
+    }
 
 }

@@ -263,9 +263,9 @@ public class DBAccess {
 		return theaters;
 	}
 
-	public List<Movie> getMovieSearchResults(String theaterName, String movieName, String dateTime) {
+	public List<MovieShowing> getMovieShowingSearchResults(String theaterName, String movieName, String date) {
 		//TODO: Finish this
-		String sql = "select m.`Movie name`, m.Description, m.Thumbnail, m.Rating from MovieShowing ms\n"
+		String sql = "select * from MovieShowing ms\n"
 				+ "join Movie m on ms.movieID = m.Id\n"
 				+ "join Showroom sr on ms.showroomID = sr.Id\n" 
 				+ "join TheaterBuilding tb on sr.theaterBuilding = tb.Id\n" 
@@ -275,25 +275,33 @@ public class DBAccess {
 		
 	    PreparedStatement ps;
 	   
-	    List<Movie> searchResults = new ArrayList<Movie>();
+	    List<MovieShowing> searchResults = new ArrayList<MovieShowing>();
 	    
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, formatSearchString(movieName));
 			ps.setString(2, formatSearchString(theaterName));
-			ps.setString(3, formatSearchString(dateTime));
+			ps.setString(3, formatSearchString(date));
 			
 			ResultSet rs = ps.executeQuery();
 			
 			while(rs.next()) {
 				
-				Movie m = new Movie();
-				m.setTitle(rs.getString("Movie name"));
-				m.setDescription(rs.getString("Description"));				
-				m.setThumbnail(blobToString(rs.getBlob("Thumbnail")));
-				m.setRating(rs.getString("Rating"));
+				MovieShowing ms = new MovieShowing();
+				ms.setCost(rs.getDouble("Price"));
+				ms.setNumOfPurchasedSeats(rs.getInt("NumberPurchased"));				
+				ms.setStartTime(rs.getString("StartTime"));
+				ms.setEndTime(rs.getString("EndTime"));
 				
-				searchResults.add(m);
+				int movieId = rs.getInt("movieID");				
+				Movie m = getMovieById(movieId);
+				ms.setMovie(m);
+				
+				int showroomId = rs.getInt("showroomID");
+				Showroom sr = getShowroomById(showroomId);
+				ms.setShowroom(sr);
+				
+				searchResults.add(ms);
 		    }
 			
 			rs.close();
@@ -304,6 +312,67 @@ public class DBAccess {
 		}
 		
 		return searchResults;
+	}
+	
+	public Movie getMovieById(int id) {
+		String sql = "select * from Movie where Id = ?";
+		
+	    PreparedStatement ps;
+	   
+	    Movie m = new Movie();
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {				
+				m.setTitle(rs.getString("Movie name"));
+				m.setDescription(rs.getString("Description"));				
+				m.setThumbnail(blobToString(rs.getBlob("Thumbnail")));
+				m.setRating(rs.getString("Rating"));
+				
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return m;
+	}
+	
+	public Showroom getShowroomById(int id) {
+		//TODO: Implement
+		return null;
+	}
+	
+	public Review getReviewById(int id) {
+		//TODO: Implement
+		return null;
+	}
+	
+	public Order getOrderById(int id) {
+		//TODO: Implement
+		return null;
+	}
+	
+	public Theater getTheaterById(int id) {
+		//TODO: Implement
+		return null;
+	}
+	
+	public MovieShowing getMovieShowingById(int id) {
+		//TODO: Implement
+		return null;
+	}
+	
+	public CreditCard getCreditCardById(int id) {
+		//TODO: Implement
+		return null;
 	}
 	
 	public void createConnection() {

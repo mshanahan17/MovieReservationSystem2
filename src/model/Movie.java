@@ -1,7 +1,5 @@
 package model;
 
-import java.awt.image.BufferedImage;
-
 public class Movie {
 	private String title;
 	private String description;

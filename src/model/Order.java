@@ -9,6 +9,8 @@ public class Order {
 	User customer;
 	Date date;
 	double cost;
+	Address billingAddress;
+	CreditCard creditCard;
 	
 	public Order() {
 		// TODO Auto-generated constructor stub
@@ -38,4 +40,29 @@ public class Order {
 		this.cost = cost;
 	}
 
+	public Address getBillingAddress() {
+		return billingAddress;
+	}
+
+	public void setBillingAddress(Address billingAddress) {
+		this.billingAddress = billingAddress;
+	}
+
+	public CreditCard getCreditCard() {
+		return creditCard;
+	}
+
+	public void setCreditCard(CreditCard creditCard) {
+		this.creditCard = creditCard;
+	}
+
+	@Override
+	public String toString() {
+		return "Order-"
+			+ "\ncustomer: " + customer
+			+ "\ndate: " + date
+			+ "\ncost: " + cost
+			+ "\nbillingAddress: " + billingAddress
+			+ "\ncreditCard: " + creditCard;
+	}
 }

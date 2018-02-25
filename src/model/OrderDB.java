@@ -2,8 +2,12 @@ package model;
 
 public class OrderDB {
 
-	public OrderDB() {
-		// TODO Auto-generated constructor stub
+	public Order getOrderById(int id) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	Order o = db.getOrderById(id);
+       	db.closeConnection();
+		return o;
 	}
 
 }
