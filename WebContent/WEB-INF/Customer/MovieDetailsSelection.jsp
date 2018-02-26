@@ -36,10 +36,7 @@
                <h1>${movie.movie.title}</h1>
                <p>${movie.movie.description}
                </p>
-               <span>
-                  <h3>Rating: </h3>
-                  ${movie.movie.rating}
-               </span>
+                  <h3>Rating: ${movie.movie.rating}</h3>
             </div>
          </div><br>
          <div class="row">

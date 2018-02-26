@@ -1,12 +1,19 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import model.MovieShowing;
+import model.Order;
+import model.User;
 
 /**
  * Servlet implementation class UpdateShoppingCart
@@ -37,9 +44,40 @@ public class UpdateShoppingCart extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String path = "WEB-INF/Customer/ViewAndCheckoutShoppingCart.jsp";
-		int numTickets = Integer.parseInt(request.getParameter("ticketQty"));
+		String qtyTickets = request.getParameter("ticketQty");
 		HttpSession session = request.getSession();
-		session.setAttribute("numTickets", numTickets);
+		
+		User user = (User) session.getAttribute("user");
+		MovieShowing movShow = (MovieShowing) session.getAttribute("movie");
+
+		double total;
+		if(session.getAttribute("total") == null) {
+			total = 0;
+		}
+		else {
+			total = (Double) session.getAttribute("total");
+		}
+		int numTickets = 0;
+		if(qtyTickets != null) {
+			numTickets = Integer.parseInt(qtyTickets);
+			session.setAttribute("numTickets", numTickets);
+		}
+		
+		ArrayList<Order> partialOrders = (ArrayList<Order>) session.getAttribute("partialOrders");
+		
+		if(partialOrders == null) {
+			partialOrders = new ArrayList();
+		}
+		Order order = new Order();
+		double cost = movShow.getCost() * numTickets;
+		order.setCost(cost);
+		total += cost;
+		order.setCustomer(user);
+		order.setDate(movShow.getStartTime());
+		partialOrders.add(order);
+		session.setAttribute("partialOrders", partialOrders);
+		session.setAttribute("total", total);
+
 		request.getRequestDispatcher(path).forward(request,  response);
 	}
 

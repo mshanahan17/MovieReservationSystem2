@@ -25,7 +25,7 @@ public class Review {
 	}
 
 	public void setRating(String rating) {
-		this.rating = rating;
+		this.rating = this.formatRating(rating);
 	}
 
 	public User getUser() {
@@ -52,6 +52,20 @@ public class Review {
 		this.date = date;
 	}
 
+	private String formatRating(String rating) {
+		int numStars = Integer.parseInt(rating);
+		StringBuilder formattedRating = new StringBuilder();
+		for(int i =0; i < 5; i++) {
+			if(i < numStars) {
+				formattedRating.append("&#9733 ");
+			}
+			else {
+				formattedRating.append("&#9734 ");
+			}
+		}
+		
+		return formattedRating.toString();
+	}
 	@Override
 	public String toString() {
 		return "Review-"

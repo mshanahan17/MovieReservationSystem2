@@ -7,6 +7,7 @@
    --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <html>
    <head>
       <title>View Cart</title>
@@ -38,13 +39,14 @@
             <thead>
                <th>Movie</th>
                <th>Poster</th>
-               <th>Theater Room</th>
+               <th>Theater</th>
                <th>Showtime</th>
                <th># of Tickets</th>
                <th>Total</th>
                <th>Delete</th>
             </thead>
             <tbody>
+              <c:forEach items="${partialOrders}" var="order" varStatus="count">
                <tr>
                   <td>${movie.movie.title}</td>
                   <td><img src="data:image/gif; base64,${movie.movie.thumbnail}" style="max-height: 75px"></td>
@@ -52,15 +54,16 @@
                   <td>${movie.startTime}</td>
                   <td>${numTickets}</td>
                   <td>$<fmt:formatNumber type="number" minFractionDigits="2" 
-                  maxFractionDigits="2" value="${movie.cost * numTickets}" /></td>
+                  maxFractionDigits="2" value="${order.cost}" /></td>
                   <td><input type="button" value="Remove" 
                      onclick="SomeDeleteRowFunction(this);"></td>
                </tr>
+      		   </c:forEach>
             </tbody>
          </table>
          <form action="Checkout" method="post">
             <h3>Total: $<fmt:formatNumber type="number" minFractionDigits="2" 
-                  maxFractionDigits="2" value="${movie.cost * numTickets}" /></h3>
+                  maxFractionDigits="2" value="${total}" /></h3>
             <br>
             <input type="submit" value="Checkout">
          </form>
