@@ -15,13 +15,6 @@
          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
          crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/CSS/customer.css">
-      <script>
-         function SomeDeleteRowFunction(o) {
-            //no clue what to put here?
-            	var p= o.parentNode.parentNode;
-                p.parentNode.removeChild(p);
-           }
-      </script>
    </head>
    <body>
       <header>
@@ -46,6 +39,7 @@
                <th>Delete</th>
             </thead>
             <tbody>
+            <h1 style="color:red">${cartError}</h1>
               <c:forEach items="${partialOrders}" var="order" varStatus="count">
                <tr>
                   <td>${order.movieShowing.movie.title}</td>
@@ -55,8 +49,11 @@
                   <td>${order.ticketQuantity}</td>
                   <td>$<fmt:formatNumber type="number" minFractionDigits="2" 
                   maxFractionDigits="2" value="${order.cost}" /></td>
-                  <td><input type="button" value="Remove" 
-                     onclick="SomeDeleteRowFunction(this);"></td>
+                  <td>
+                  <form action="Checkout">
+                  <input type="submit" value="Remove" name="button${count.index}">
+                  </td>
+                   </form>
                </tr>
       		   </c:forEach>
             </tbody>

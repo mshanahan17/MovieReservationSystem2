@@ -8,8 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.Address;
 import model.CreditCard;
 import model.User;
+import model.UserDB;
 
 /**
  * Servlet implementation class CustomerTransactionConfirmation
@@ -39,6 +41,7 @@ public class CustomerTransactionConfirmation extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		
 		String fName = ServletUtils.validateInput(request.getParameter("fName"), "");
 		String lName = ServletUtils.validateInput(request.getParameter("lName"), "");
 		String ccType = ServletUtils.validateInput(request.getParameter("ccType"), "");
@@ -56,6 +59,8 @@ public class CustomerTransactionConfirmation extends HttpServlet {
 		String firstCC = request.getParameter("firstCC");
 		
 		HttpSession session = request.getSession();
+		session.removeAttribute("ccError");
+		session.removeAttribute("transactionError");
 		User user = (User) session.getAttribute("user");
 		
 		if(user == null) {
@@ -69,8 +74,45 @@ public class CustomerTransactionConfirmation extends HttpServlet {
 		creditCard.setCvv(secCode);
 		creditCard.setExpirationDate(date);
 		
+		Address billingAddress = new Address();
+		billingAddress.setCity(billCity);
+		billingAddress.setState(billState);
+		billingAddress.setStreetAddress(billStreet);
+		billingAddress.setZip(billZip);
+		Address shippingAddress = new Address();
+		shippingAddress.setCity(shipCity);
+		shippingAddress.setState(shipState);
+		shippingAddress.setStreetAddress(shipStreet);
+		shippingAddress.setZip(shipZip);
+		
+		UserDB userDB = new UserDB();
+		/*
+		 * Given user an initial credit card to use with a balanace of 300
+		 * if this is their first card or new card.
+		 * Also update their address if this is first time entering info
+		 */
 		if(firstCC != null) {
 			creditCard.setBalance(300);
+			user.setBillingAddress(billingAddress);
+			user.setShippingAddress(shippingAddress);
+			user.setCreditCard(creditCard);
+			userDB.addCreditCardToUser(user, creditCard);
+		}
+		
+		if(!userDB.validateCreditCard(user, creditCard)) {
+			String invalidCard = "Credit Card Doesn't Match Records";
+			session.setAttribute("ccError", invalidCard);
+			request.getRequestDispatcher("WEB-INF/Customer/CustomerTransaction.jsp").forward(request,  response);
+			return;
+		}
+		
+		double total = (double) session.getAttribute("total");
+		
+		if(!userDB.attemptTransaction(user, creditCard, total)) {
+			String failedTransaction = "Insufficient Balance On Credit Card";
+			session.setAttribute("transActionError", failedTransaction);
+			request.getRequestDispatcher("WEB-INF/Customer/CustomerTransaction.jsp").forward(request,  response);
+			return;
 		}
 		
 		request.getRequestDispatcher("WEB-INF/Customer/CustomerTransactionConfirmation.jsp").forward(request,  response);
