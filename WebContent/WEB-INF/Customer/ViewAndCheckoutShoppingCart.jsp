@@ -48,11 +48,11 @@
             <tbody>
               <c:forEach items="${partialOrders}" var="order" varStatus="count">
                <tr>
-                  <td>${movie.movie.title}</td>
-                  <td><img src="data:image/gif; base64,${movie.movie.thumbnail}" style="max-height: 75px"></td>
-                  <td>${movie.showroom.theater.name}</td>
-                  <td>${movie.startTime}</td>
-                  <td>${numTickets}</td>
+                  <td>${order.movieShowing.movie.title}</td>
+                  <td><img src="data:image/gif; base64,${order.movieShowing.movie.thumbnail}" style="max-height: 75px"></td>
+                  <td>${order.movieShowing.showroom.theater.name}</td>
+                  <td>${order.movieShowing.startTime}</td>
+                  <td>${order.ticketQuantity}</td>
                   <td>$<fmt:formatNumber type="number" minFractionDigits="2" 
                   maxFractionDigits="2" value="${order.cost}" /></td>
                   <td><input type="button" value="Remove" 

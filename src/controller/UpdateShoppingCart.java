@@ -65,7 +65,18 @@ public class UpdateShoppingCart extends HttpServlet {
 		int numTickets = 0;
 		if(qtyTickets != null) {
 			numTickets = Integer.parseInt(qtyTickets);
-			session.setAttribute("numTickets", numTickets);
+			movShow.setNumOfPurchasedSeats(numTickets);
+			int capacity = movShow.getShowroom().getCapacity();
+			int available = capacity - movShow.getNumOfPurchasedSeats();
+			if(numTickets > available) {
+				
+				session.setAttribute("noCapactiy", "Only " + available + " tickets remaining");
+				request.getRequestDispatcher("WEB-INF/Customer/MovieDetailsSelection.jsp").forward(request, response);
+				return;
+			}
+			else {
+				movShow.updatePurchasedSeatCount(numTickets);
+			}
 		}
 		
 		ArrayList<Order> partialOrders = (ArrayList<Order>) session.getAttribute("partialOrders");
@@ -74,9 +85,12 @@ public class UpdateShoppingCart extends HttpServlet {
 			partialOrders = new ArrayList();
 		}
 		
+
 		Order order = new Order();
 		double cost = movShow.getCost() * numTickets;
+		order.setTicketQuantity(numTickets);
 		order.setCost(cost);
+		order.setMovieShowing(movShow);
 		total += cost;
 		order.setCustomer(user);
 		order.setDate(movShow.getStartTime());

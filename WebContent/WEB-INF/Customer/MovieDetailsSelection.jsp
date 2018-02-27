@@ -66,7 +66,7 @@
 					<option value="3">3</option>
 					<option value="4">4</option>
 					<option value="5">5</option>
-					</select></h5>
+					</select> <span style="color:red">${noCapacity}</span></h5>
                   <input type="submit" value="Add To Cart">
                </form>
             </div>

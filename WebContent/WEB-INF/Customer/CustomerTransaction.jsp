@@ -38,11 +38,11 @@
          <tbody>
                <c:forEach items="${partialOrders}" var="order" varStatus="count">
                <tr>
-                  <td>${movie.movie.title}</td>
-                  <td>${numTickets}</td>
+                  <td>${order.movieShowing.movie.title}</td>
+                  <td>${order.ticketQuantity}</td>
                   <td>$<fmt:formatNumber type="number" minFractionDigits="2" 
                   maxFractionDigits="2" value="${order.cost}" /></td>
-                  <td>${movie.showroom.theater.name}</td>
+                  <td>${order.movieShowing.showroom.theater.name}</td>
                </tr>
       		   </c:forEach>
          </tbody>

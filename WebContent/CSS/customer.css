@@ -70,3 +70,8 @@ body {
 #checkoutForm select {
 	margin: 5px;
 }
+
+#reviewText {
+	height: 100vh;
+	width: 20vw;
+}

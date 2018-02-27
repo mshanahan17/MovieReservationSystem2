@@ -50,6 +50,7 @@ public class Login extends HttpServlet {
 			throws ServletException, IOException {
 		
 		HttpSession session = request.getSession();
+		session.removeAttribute("pwError");
 		String success = "WEB-INF/Customer/CustomerHomePage.jsp";
 		String failure = "Registraion.jsp";
 		/*

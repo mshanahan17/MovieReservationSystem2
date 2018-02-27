@@ -6,7 +6,7 @@ public class CreditCard {
 	double balance;
 	String cardType;
 	User owner;
-	int cvv;
+	String cvv;
 	String expirationDate;
 	
 	public CreditCard() {
@@ -53,11 +53,11 @@ public class CreditCard {
 		this.owner = owner;
 	}
 
-	public int getCvv() {
+	public String getCvv() {
 		return cvv;
 	}
 
-	public void setCvv(int cvv) {
+	public void setCvv(String cvv) {
 		this.cvv = cvv;
 	}
 
