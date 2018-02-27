@@ -100,7 +100,6 @@ public class CustomerTransactionConfirmation extends HttpServlet {
 			user.setShippingAddress(shippingAddress);
 			user.setCreditCard(creditCard);
 			userDB.addCreditCardToUser(user, creditCard);
-			System.out.println(user);
 		}
 		
 		if(!userDB.validateCreditCard(user, creditCard)) {
