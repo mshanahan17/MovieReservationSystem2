@@ -49,4 +49,11 @@ public class UserDB {
 		return u;
     }
 
+    public void addCreditCardByUser(User u, CreditCard cc) {
+    		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	db.addCreditCardToUser(u, cc);
+       	db.closeConnection();
+		return;
+    }
 }

@@ -620,6 +620,11 @@ public class DBAccess {
 		return ms;
 	}
 	
+	public void addCreditCardToUser(User u, CreditCard cc) {
+		//TODO: Implement
+		return;
+	}
+	
 	public CreditCard getCreditCardById(int id) {
 		//TODO: Test this
 		String sql = "select * from CreditCard where Id = ?";
@@ -641,7 +646,7 @@ public class DBAccess {
 				cc.setCardNumber(rs.getString("CreditCardNumber"));				
 				cc.setBalance(rs.getDouble("Balance"));
 				cc.setCardType(rs.getString("CardType"));
-				cc.setCvv(rs.getInt("CVV"));
+				cc.setCvv(rs.getString("CVV"));
 				cc.setExpirationDate(rs.getString("ExpirationDate"));
 				
 				int ownerId = rs.getInt("userID");				
