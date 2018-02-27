@@ -65,6 +65,7 @@ public class CustomerTransactionConfirmation extends HttpServlet {
 		
 		if(user == null) {
 			request.getRequestDispatcher("Login.jsp").forward(request,  response);
+			return;
 		}
 		
 		CreditCard creditCard = new CreditCard();
@@ -91,12 +92,15 @@ public class CustomerTransactionConfirmation extends HttpServlet {
 		 * if this is their first card or new card.
 		 * Also update their address if this is first time entering info
 		 */
+		System.out.println(firstCC);
 		if(firstCC != null) {
+			System.out.println("test");
 			creditCard.setBalance(300);
 			user.setBillingAddress(billingAddress);
 			user.setShippingAddress(shippingAddress);
 			user.setCreditCard(creditCard);
 			userDB.addCreditCardToUser(user, creditCard);
+			System.out.println(user);
 		}
 		
 		if(!userDB.validateCreditCard(user, creditCard)) {

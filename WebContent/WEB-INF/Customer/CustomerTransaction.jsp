@@ -53,7 +53,7 @@
       <br>
       <fieldset>
          <legend>Payment Information</legend>
-         <h3 style="color:red">${ccError + transactionError}</h3>
+         <h3 style="color:red">${ccError} ${transactionError}</h3>
          <form action="CustomerTransactionConfirmation" id="checkoutForm" method="post">
             <input type="text" placeholder="First Name" name="fName">
             <input type="text" placeholder="Last Name" name="lName"><br>
