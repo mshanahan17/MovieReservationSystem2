@@ -4,7 +4,7 @@ public class Address {
 	private String streetAddress;
 	private String city;
 	private String state;
-	private int zip;
+	private String zip;
 	
 	public Address() {
 		super();		
@@ -22,7 +22,7 @@ public class Address {
 		return state;
 	}
 
-	public int getZip() {
+	public String getZip() {
 		return zip;
 	}
 
@@ -38,7 +38,7 @@ public class Address {
 		this.state = state;
 	}
 	
-	public void setZip(int zip) {
+	public void setZip(String zip) {
 		this.zip = zip;
 	}
 	

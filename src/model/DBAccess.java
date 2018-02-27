@@ -243,7 +243,7 @@ public class DBAccess {
 				a.setStreetAddress(rs.getString("Address"));
 				a.setCity(rs.getString("City"));
 				a.setState(rs.getString("State"));
-				a.setZip(rs.getInt("PostalCode"));
+				a.setZip(rs.getString("PostalCode"));
 				
 				t.setAddress(a);
 				t.setName(rs.getString("Name"));
@@ -564,7 +564,7 @@ public class DBAccess {
 				a.setStreetAddress(rs.getString("Address"));
 				a.setCity(rs.getString("Address"));
 				a.setState(rs.getString("State"));
-				a.setZip(rs.getInt("PostalCode"));
+				a.setZip(rs.getString("PostalCode"));
 				
 				t.setAddress(a);
 		    }
