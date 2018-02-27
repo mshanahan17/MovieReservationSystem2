@@ -49,18 +49,18 @@
       <br>
       <h2> Success! </h2>
       <p> Your order has been placed </p>
-      <p> Ricky Bobby </p>
+      <p> ${user.firstName} ${user.lastName} </p>
       <p>
          Billing Address:<br>
-         4474 KittyCat Rd.<br>
-         Wichita, KS<br>
-         69101 <br>
+         ${user.billingAddress.streetAddress}<br>
+         ${user.billingAddress.city}, ${user.billingAddress.state}<br>
+         ${user.billingAddress.zip} <br>
       </p>
       <p>
          Shipping Address:<br>
-         4474 KittyCat Rd.<br>
-         Wichita, KS<br>
-         69101<br>
+        ${user.shippingAddress.streetAddress}<br>
+         ${user.shippingAddress.city}, ${user.shippingAddress.state}<br>
+         ${user.shippingAddress.zip}<br>
       </p>
       <footer class="footer">
          <div class="container">
