@@ -654,7 +654,32 @@ public class DBAccess {
 	}
 	
 	public void addAddressToUser(User u, Address a) {
-		//TODO: Implement
+		//TODO: Test this
+		String sql = "update User \n" + 
+				"set Address = ?, City = ?, State = ?, PostalCode = ?\n" + 
+				"where EmailAddress = ? and Password = ?"; 
+		
+	    PreparedStatement ps;
+	    
+	    Address ba = u.getBillingAddress();
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, ba.getStreetAddress());
+			ps.setString(2, ba.getCity());
+			ps.setString(2, ba.getState());
+			ps.setString(2, ba.getZip());
+			ps.setString(2, u.getEmailAddress());
+			ps.setString(2, u.getPassword());
+			
+			ps.executeUpdate(sql);
+									
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		return;
 	}
 	
