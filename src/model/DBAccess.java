@@ -624,7 +624,12 @@ public class DBAccess {
 	
 	public void addCreditCardToUser(User u, CreditCard cc) {
 		
-		String sql = "insert into CreditCard (CardHolderName, CreditCardNumber, Balance, CardType, UserId, CVV, ExpirationDate) values (?, ?, ?, ?, ?, ?, ?)";
+		//String sql = "insert into CreditCard (CardHolderName, CreditCardNumber, Balance, CardType, UserId, CVV, ExpirationDate) values (?, ?, ?, ?, ?, ?, ?)";
+		String sql = "insert into CreditCard (CardHolderName, CreditCardNumber, Balance, CardType, UserId, CVV, ExpirationDate) \n" + 
+				"values (?, ?, ?, ?,\n" + 
+				"	(select Id from User where EmailAddress = ? and `Password` = ?), \n" + 
+				"    ?, ?)";
+		
 		
 	    PreparedStatement ps;
 	    
@@ -635,12 +640,11 @@ public class DBAccess {
 			ps.setDouble(3, cc.getBalance());
 			ps.setString(4, cc.getCardType());
 			
-			ps.setInt(5, 4);			
-//			ps.setString(5, u.getEmailAddress());
-//			ps.setString(6, u.getPassword());
+			ps.setString(5, u.getEmailAddress());
+			ps.setString(6, u.getPassword());
 			
-			ps.setString(6, cc.getCvv());
-			ps.setString(7, cc.getExpirationDate());			
+			ps.setString(7, cc.getCvv());
+			ps.setString(8, cc.getExpirationDate());			
 			
 			System.out.println(ps);
 			
@@ -674,7 +678,7 @@ public class DBAccess {
 			ps.setString(2, u.getEmailAddress());
 			ps.setString(2, u.getPassword());
 			
-			ps.executeUpdate(sql);
+			ps.executeUpdate();
 									
 		    ps.close();
 		        
@@ -775,7 +779,7 @@ public class DBAccess {
 			ps.setDouble(1, newBalance);
 			ps.setString(2, cc.getCardNumber());
 			
-			ps.executeUpdate(sql);
+			ps.executeUpdate();
 
 		    ps.close();
 		        
@@ -877,8 +881,7 @@ public class DBAccess {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}  
-		
+		}  		
 		
 		return b64;
 	}
