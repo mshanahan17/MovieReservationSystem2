@@ -28,6 +28,7 @@
       </header>
       <h1>${user.firstName} ${user.lastName}</h1>
       <div class="main">
+      <h3 style="color:red">${orderError}</h3>
          <table class="table table-bordered table-striped">
             <thead>
                <th>Movie</th>
