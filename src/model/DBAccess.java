@@ -630,6 +630,11 @@ public class DBAccess {
 		return;
 	}
 	
+	public void attemptTransaction(User u, CreditCard cc, double transactionAmount) {
+		//TODO: Implement
+		return;
+	}
+	
 	public CreditCard getCreditCardById(int id) {
 		//TODO: Test this
 		String sql = "select * from CreditCard where Id = ?";

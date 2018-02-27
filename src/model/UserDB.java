@@ -61,4 +61,9 @@ public class UserDB {
     		//TODO: Implement
     		return;
     }
+    
+    public void attemptTransaction(User u, CreditCard cc, double transactionAmount) {
+    		//TODO: Implement
+    		return;
+    }
 }
