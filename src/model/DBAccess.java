@@ -27,6 +27,8 @@ public class DBAccess {
 	// Database credentials
 	private static final String USER = "mshanahan"; // Replace with your CSE_LOGIN
 	private static final String PASS = "k8ErVH";   // Replace with your CSE MySQL_PASSWORD
+
+	private static final double INVALID_VALUE = -777.7777;
 	
 	public static void main(String[] args) { 
 		
@@ -621,7 +623,33 @@ public class DBAccess {
 	}
 	
 	public void addCreditCardToUser(User u, CreditCard cc) {
-		//TODO: Implement
+		String sql = "insert into CreditCard (CardHolderName, CreditCardNumber, Balance, CardType, UserId, CVV, ExpirationDate) \n" + 
+				"values (?, ?, ?, ?,\n" + 
+				"	(select Id from User where EmailAddress = ? and `Password` = ?), \n" + 
+				"    ?, ?)"; 
+		
+	    PreparedStatement ps;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, cc.getCardHolderName());
+			ps.setString(2, cc.getCardNumber());
+			ps.setDouble(3, cc.getBalance());
+			ps.setString(4, cc.getCardType());
+			ps.setString(5, u.getEmailAddress());
+			ps.setString(6, u.getPassword());
+			ps.setString(7, cc.getCvv());
+			ps.setString(8, cc.getExpirationDate());			
+			
+			
+			ps.executeUpdate(sql);						
+			
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		return;
 	}
 	
@@ -632,12 +660,103 @@ public class DBAccess {
 	
 	public boolean validateCreditCard(User u, CreditCard cc) {
 		//TODO: Implement
-		return false;
+		String sql = "select * from CreditCard \n" + 
+				"where UserId = \n" + 
+				"	(select Id from User where EmailAddress = ? and `Password` = ?)\n" + 
+				"and CreditCardNumber = ?";
+		
+	    PreparedStatement ps;
+	   
+	    boolean foundCard = false;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, u.getEmailAddress());
+			ps.setString(2, u.getPassword());
+			ps.setString(2, cc.getCardNumber());
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				if(rs.getString("CreditCardNumber") == null) {
+					foundCard = false;
+				} else {
+					foundCard = true;
+				}					
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return foundCard;
 	}
 	
-	public boolean attemptTransaction(User u, CreditCard cc, double transactionAmount) {
-		//TODO: Implement
-		return false;
+	public boolean attemptTransaction(CreditCard cc, double transactionAmount) {
+		
+		double balance = getCreditCardBalanceByCreditCard(cc);
+		double result = balance - transactionAmount;
+		
+		if(result > 0) {
+			updateCreditCardBalanceByCreditCard(cc, result);
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+	
+	private double getCreditCardBalanceByCreditCard(CreditCard cc) {
+		//TODO: Test this
+		String sql = "select Balance from CreditCard where CreditCardNumber = ?";
+		
+	    PreparedStatement ps;
+	    
+	    double balance = INVALID_VALUE;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, cc.getCardNumber());
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {				
+				balance = rs.getDouble("Balance");			
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return balance;
+	}
+	
+	private void updateCreditCardBalanceByCreditCard(CreditCard cc, double newBalance) {
+		//TODO: Test this
+		String sql = "update CreditCard set Balance = ? where CreditCardNumber = ?";
+		
+	    PreparedStatement ps;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setDouble(1, newBalance);
+			ps.setString(2, cc.getCardNumber());
+			
+			ps.executeUpdate(sql);
+
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return;
 	}
 	
 	public CreditCard getCreditCardById(int id) {
