@@ -48,6 +48,10 @@ public class UpdateShoppingCart extends HttpServlet {
 		HttpSession session = request.getSession();
 		
 		User user = (User) session.getAttribute("user");
+		if(user == null) {
+			request.getRequestDispatcher("Login.jsp").forward(request,  response);
+			return;
+		}
 		MovieShowing movShow = (MovieShowing) session.getAttribute("movie");
 
 		if(movShow == null || qtyTickets == null || qtyTickets == "") {
@@ -85,7 +89,12 @@ public class UpdateShoppingCart extends HttpServlet {
 			partialOrders = new ArrayList();
 		}
 		
-
+		if(partialOrders.size() > 5) {
+			String orderError = "Maximum of 5 orders please remove an item from your cart to add another!";
+			session.setAttribute("orderError", orderError);
+			request.getRequestDispatcher(path).forward(request,  response);
+			return;
+		}
 		Order order = new Order();
 		double cost = movShow.getCost() * numTickets;
 		order.setTicketQuantity(numTickets);
