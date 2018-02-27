@@ -453,8 +453,51 @@ public class DBAccess {
 	}
 	
 	public List<Order> getOrdersByUser(User u) {
+		//TODO: test this
+		String sql = "select * from `Order` o\n" + 
+				"join User u on o.CustomerId = u.Id\n" + 
+				"join OrderItem oi on o.Id = oi.OrderId\n" + 
+				"where u.EmailAddress = ?\n" + 
+				"and u.`Password` = ?;";
 		
-		return null;
+	    PreparedStatement ps;	   	    
+	    
+	    List<Order> orders = new ArrayList<Order>();
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, u.getEmailAddress());
+			ps.setString(1, u.getPassword());
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {	
+				Order o = new Order();
+				
+				// Order attributes
+				o.setCost(rs.getDouble("TotalCost"));
+				o.setDate(rs.getString("OrderDate"));
+				o.setBillingAddress(rs.getString("BillingAddress"));
+				o.setCreditCardNumber(rs.getString("CreditCardNumber"));
+				
+				// TODO: HERE
+				int showingId = rs.getInt("ShowingId"); // get MovieShowing with this
+				MovieShowing ms = getMovieShowingById(showingId);
+				o.setMovieShowing(ms);
+				
+				o.setTicketQuantity(rs.getInt("Quantity")); // This is how many tickets they bought of a particular showing
+				
+				orders.add(o);
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+		return orders;
 	}
 	
 	public Order getOrderById(int id) {

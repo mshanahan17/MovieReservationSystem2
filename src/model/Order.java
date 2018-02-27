@@ -12,6 +12,7 @@ public class Order {
 	String billingAddress;
 	String creditCardNumber;
 	MovieShowing movieShowing;
+	int ticketQuantity;
 	
 	//TODO: Load up MovieShowing object upon creation from DB
 	
@@ -65,6 +66,14 @@ public class Order {
 
 	public void setMovieShowing(MovieShowing movieShowing) {
 		this.movieShowing = movieShowing;
+	}
+
+	public int getTicketQuantity() {
+		return ticketQuantity;
+	}
+
+	public void setTicketQuantity(int ticketQuantity) {
+		this.ticketQuantity = ticketQuantity;
 	}
 
 	@Override

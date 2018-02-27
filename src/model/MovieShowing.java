@@ -13,6 +13,10 @@ public class MovieShowing {
 		// TODO Auto-generated constructor stub
 	}
 
+	public void updatePurchasedSeatCount(int seatValue) {
+		numOfPurchasedSeats += seatValue;
+	}
+	
 	public Movie getMovie() {
 		return movie;
 	}
