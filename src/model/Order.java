@@ -11,6 +11,9 @@ public class Order {
 	double cost;
 	String billingAddress;
 	String creditCardNumber;
+	MovieShowing movieShowing;
+	
+	//TODO: Load up MovieShowing object upon creation from DB
 	
 	public Order() {
 		// TODO Auto-generated constructor stub
@@ -54,6 +57,14 @@ public class Order {
 
 	public void setCreditCardNumber(String creditCardNumber) {
 		this.creditCardNumber = creditCardNumber;
+	}
+
+	public MovieShowing getMovieShowing() {
+		return movieShowing;
+	}
+
+	public void setMovieShowing(MovieShowing movieShowing) {
+		this.movieShowing = movieShowing;
 	}
 
 	@Override

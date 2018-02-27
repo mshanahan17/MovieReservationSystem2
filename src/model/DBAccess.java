@@ -452,6 +452,11 @@ public class DBAccess {
 		return r;
 	}
 	
+	public List<Order> getOrdersByUser(User u) {
+		
+		return null;
+	}
+	
 	public Order getOrderById(int id) {
 		//TODO: test this
 		String sql = "select * from Order where Id = ?";

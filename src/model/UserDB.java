@@ -2,7 +2,7 @@ package model;
 
 import model.DBAccess;
 import model.User;
-
+	//TODO: LOAD CREDITCARD INFO FROM DB UPON CREATION
 public class UserDB {
 	
     public void registerUser(User user) {

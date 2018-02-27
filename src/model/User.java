@@ -1,5 +1,7 @@
 package model;
 
+//TODO: LOAD CREDITCARD INFO FROM DB UPON CREATION
+
 public class User {
 	private String firstName;
 	private String lastName;	
@@ -10,6 +12,7 @@ public class User {
 	private String phoneNumber;
 	private Address billingAddress;
 	private Address shippingAddress;	
+	private CreditCard creditCard;
 	
 	public User() {
 		super();
@@ -77,6 +80,14 @@ public class User {
 
 	public void setNumOfVisits(int numOfVisits) {
 		this.numOfVisits = numOfVisits;
+	}
+
+	public CreditCard getCreditCard() {
+		return creditCard;
+	}
+
+	public void setCreditCard(CreditCard creditCard) {
+		this.creditCard = creditCard;
 	}
 
 	@Override
