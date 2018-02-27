@@ -1,12 +1,18 @@
 package controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import model.Movie;
+import model.Review;
+import model.User;
 
 /**
  * Servlet implementation class CustomerReview
@@ -38,11 +44,25 @@ public class CustomerReview extends HttpServlet {
 		// TODO Auto-generated method stub
 		String review = ServletUtils.validateInput(
 				request.getParameter("review"), "");
-		int rating = Integer.parseInt(request.getParameter("rating"));
+		String rating = request.getParameter("rating");
 		
 		String confirmationResponse = "Success";
-		
+		String date = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
+		System.out.println(date);
 		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		Movie movie = (Movie) session.getAttribute("movie");
+		if(user == null) {
+			request.getRequestDispatcher("Login.jsp")
+			   .forward(request, response);
+		}
+		
+		Review movieReview = new Review();
+		movieReview.setContent(review);
+		movieReview.setDate(date);
+		movieReview.setMovie(movie);
+		movieReview.setRating(rating);
+		movieReview.setUser(user);
 		
 		session.setAttribute("review", confirmationResponse);
 		

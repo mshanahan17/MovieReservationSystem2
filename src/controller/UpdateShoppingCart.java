@@ -89,7 +89,7 @@ public class UpdateShoppingCart extends HttpServlet {
 			partialOrders = new ArrayList();
 		}
 		
-		if(partialOrders.size() > 5) {
+		if(partialOrders.size() > 4) {
 			String orderError = "Maximum of 5 orders please remove an item from your cart to add another!";
 			session.setAttribute("orderError", orderError);
 			request.getRequestDispatcher(path).forward(request,  response);

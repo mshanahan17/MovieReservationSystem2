@@ -44,11 +44,14 @@ public class Checkout extends HttpServlet {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
 		session.removeAttribute("cartError");
+		session.removeAttribute("ccError");
+		session.removeAttribute("transactionError");
 		
 		User user = (User) session.getAttribute("user");
 		
 		if(user == null) {
 			request.getRequestDispatcher("WEB-INF/Customer/Login.jsp").forward(request, response);
+			return;
 		}
 		
 		String button0 = request.getParameter("button0");

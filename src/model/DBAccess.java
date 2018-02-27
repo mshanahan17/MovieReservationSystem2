@@ -704,7 +704,7 @@ public class DBAccess {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, u.getEmailAddress());
 			ps.setString(2, u.getPassword());
-			ps.setString(2, cc.getCardNumber());
+			ps.setString(3, cc.getCardNumber());
 			
 			ResultSet rs = ps.executeQuery();
 			
