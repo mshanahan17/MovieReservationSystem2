@@ -623,10 +623,8 @@ public class DBAccess {
 	}
 	
 	public void addCreditCardToUser(User u, CreditCard cc) {
-		String sql = "insert into CreditCard (CardHolderName, CreditCardNumber, Balance, CardType, UserId, CVV, ExpirationDate) \n" + 
-				"values (?, ?, ?, ?,\n" + 
-				"	(select Id from User where EmailAddress = ? and `Password` = ?), \n" + 
-				"    ?, ?)"; 
+		
+		String sql = "insert into CreditCard (CardHolderName, CreditCardNumber, Balance, CardType, UserId, CVV, ExpirationDate) values (?, ?, ?, ?, ?, ?, ?)";
 		
 	    PreparedStatement ps;
 	    
@@ -636,13 +634,17 @@ public class DBAccess {
 			ps.setString(2, cc.getCardNumber());
 			ps.setDouble(3, cc.getBalance());
 			ps.setString(4, cc.getCardType());
-			ps.setString(5, u.getEmailAddress());
-			ps.setString(6, u.getPassword());
-			ps.setString(7, cc.getCvv());
-			ps.setString(8, cc.getExpirationDate());			
 			
+			ps.setInt(5, 4);			
+//			ps.setString(5, u.getEmailAddress());
+//			ps.setString(6, u.getPassword());
 			
-			ps.executeUpdate(sql);						
+			ps.setString(6, cc.getCvv());
+			ps.setString(7, cc.getExpirationDate());			
+			
+			System.out.println(ps);
+			
+			ps.executeUpdate();						
 			
 		    ps.close();
 		        
