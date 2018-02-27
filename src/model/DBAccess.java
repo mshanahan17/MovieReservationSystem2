@@ -623,10 +623,13 @@ public class DBAccess {
 	}
 	
 	public void addCreditCardToUser(User u, CreditCard cc) {
+		
+		//String sql = "insert into CreditCard (CardHolderName, CreditCardNumber, Balance, CardType, UserId, CVV, ExpirationDate) values (?, ?, ?, ?, ?, ?, ?)";
 		String sql = "insert into CreditCard (CardHolderName, CreditCardNumber, Balance, CardType, UserId, CVV, ExpirationDate) \n" + 
 				"values (?, ?, ?, ?,\n" + 
 				"	(select Id from User where EmailAddress = ? and `Password` = ?), \n" + 
-				"    ?, ?)"; 
+				"    ?, ?)";
+		
 		
 	    PreparedStatement ps;
 	    
@@ -636,13 +639,16 @@ public class DBAccess {
 			ps.setString(2, cc.getCardNumber());
 			ps.setDouble(3, cc.getBalance());
 			ps.setString(4, cc.getCardType());
+			
 			ps.setString(5, u.getEmailAddress());
 			ps.setString(6, u.getPassword());
+			
 			ps.setString(7, cc.getCvv());
 			ps.setString(8, cc.getExpirationDate());			
 			
+			System.out.println(ps);
 			
-			ps.executeUpdate(sql);						
+			ps.executeUpdate();						
 			
 		    ps.close();
 		        
@@ -654,7 +660,32 @@ public class DBAccess {
 	}
 	
 	public void addAddressToUser(User u, Address a) {
-		//TODO: Implement
+		//TODO: Test this
+		String sql = "update User \n" + 
+				"set Address = ?, City = ?, State = ?, PostalCode = ?\n" + 
+				"where EmailAddress = ? and Password = ?"; 
+		
+	    PreparedStatement ps;
+	    
+	    Address ba = u.getBillingAddress();
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, ba.getStreetAddress());
+			ps.setString(2, ba.getCity());
+			ps.setString(2, ba.getState());
+			ps.setString(2, ba.getZip());
+			ps.setString(2, u.getEmailAddress());
+			ps.setString(2, u.getPassword());
+			
+			ps.executeUpdate();
+									
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		return;
 	}
 	
@@ -748,7 +779,7 @@ public class DBAccess {
 			ps.setDouble(1, newBalance);
 			ps.setString(2, cc.getCardNumber());
 			
-			ps.executeUpdate(sql);
+			ps.executeUpdate();
 
 		    ps.close();
 		        
@@ -850,8 +881,7 @@ public class DBAccess {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}  
-		
+		}  		
 		
 		return b64;
 	}
