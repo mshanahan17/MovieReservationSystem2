@@ -98,13 +98,13 @@ public class UserDB {
 		return isValid;
     }
     
-    public void attemptTransaction(User u, CreditCard cc, double transactionAmount) {
+    public boolean attemptTransaction(User u, CreditCard cc, double transactionAmount) {
 		DBAccess db = new DBAccess();
        	db.createConnection();
        	
-       	db.attemptTransaction(cc, transactionAmount);
+       	boolean wasSuccessful = db.attemptTransaction(cc, transactionAmount);
        	
        	db.closeConnection();
-		return;
+		return wasSuccessful;
     }
 }
