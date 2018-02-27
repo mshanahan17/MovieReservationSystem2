@@ -58,12 +58,30 @@ public class UserDB {
     }
     
     public void addAddressToUser(User u, Address a) {
-    		//TODO: Implement
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	db.addAddressToUser(u, a);
+       	db.closeConnection();
     		return;
     }
     
-    public void attemptTransaction(User u, CreditCard cc, double transactionAmount) {
-    		//TODO: Implement
-    		return;
+    public boolean validateCreditCard(User u, CreditCard cc) {		
+    		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	
+       	boolean isValid = db.validateCreditCard(u, cc);
+       	
+       	db.closeConnection();
+		return isValid;
+    }
+    
+    public boolean attemptTransaction(User u, CreditCard cc, double transactionAmount) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	
+       	boolean transactionSuccessful = db.attemptTransaction(u, cc, transactionAmount);
+       	
+       	db.closeConnection();
+		return transactionSuccessful;
     }
 }

@@ -630,9 +630,14 @@ public class DBAccess {
 		return;
 	}
 	
-	public void attemptTransaction(User u, CreditCard cc, double transactionAmount) {
+	public boolean validateCreditCard(User u, CreditCard cc) {
 		//TODO: Implement
-		return;
+		return false;
+	}
+	
+	public boolean attemptTransaction(User u, CreditCard cc, double transactionAmount) {
+		//TODO: Implement
+		return false;
 	}
 	
 	public CreditCard getCreditCardById(int id) {
