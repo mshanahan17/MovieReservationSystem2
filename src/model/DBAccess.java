@@ -625,6 +625,11 @@ public class DBAccess {
 		return;
 	}
 	
+	public void addAddressToUser(User u, Address a) {
+		//TODO: Implement
+		return;
+	}
+	
 	public CreditCard getCreditCardById(int id) {
 		//TODO: Test this
 		String sql = "select * from CreditCard where Id = ?";
