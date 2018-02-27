@@ -50,6 +50,11 @@ public class UpdateShoppingCart extends HttpServlet {
 		User user = (User) session.getAttribute("user");
 		MovieShowing movShow = (MovieShowing) session.getAttribute("movie");
 
+		if(movShow == null || qtyTickets == null || qtyTickets == "") {
+			request.getRequestDispatcher(path).forward(request,  response);
+			return;
+		}
+		
 		double total;
 		if(session.getAttribute("total") == null) {
 			total = 0;
@@ -68,6 +73,7 @@ public class UpdateShoppingCart extends HttpServlet {
 		if(partialOrders == null) {
 			partialOrders = new ArrayList();
 		}
+		
 		Order order = new Order();
 		double cost = movShow.getCost() * numTickets;
 		order.setCost(cost);

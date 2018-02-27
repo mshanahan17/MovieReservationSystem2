@@ -96,11 +96,13 @@ public class Registration extends HttpServlet {
         	String emailError = "E-mail Already Exists!";
             request.setAttribute("emailError", emailError);
             request.getRequestDispatcher("Registration.jsp").forward(request,response);
+            return;
         }
         else if(passwordMatch){
             String emailError = "E-mails do not match!";
             request.setAttribute("emailError", emailError);
             request.getRequestDispatcher("Registration.jsp").forward(request,response);
+            return;
         }
         else {
             String pwError = "Passwords do not match!";

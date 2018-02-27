@@ -28,12 +28,12 @@
       </header>
       <h1>${user.firstName} ${user.lastName}</h1>
       <main role="main" class="container">
-         <div id="loginForm">
-            <form id="loginForm" action="CustomerReview"
+         <div id="ReviewForm">
+            <form id="ReviewForm" action="CustomerReview"
                method="post" name="reviewForm">
                <fieldset>
                   <legend>Customer Review</legend>
-                  <b>Review:</b><br> <input type="text" name="review"><br>
+                  <b>Review:</b><br> <input type="textarea" name="review" style="height:100px"><br>
                   <b>Rating:</b>
                   <select name="rating">
                   	<option value="1">1</option>

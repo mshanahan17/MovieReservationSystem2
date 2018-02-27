@@ -6,6 +6,8 @@
    To change this template use File | Settings | File Templates.
    --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <html>
    <head>
       <title>Transaction Confirmation</title>
@@ -33,12 +35,15 @@
             <th>Theater Room</th>
          </thead>
          <tbody>
-            <tr>
-               <td>Star Wars: The Last Jedi</td>
-               <td>4</td>
-               <td>$60.00</td>
-               <td>Grand 3</td>
-            </tr>
+               <c:forEach items="${partialOrders}" var="order" varStatus="count">
+               <tr>
+                  <td>${movie.movie.title}</td>
+                  <td>${numTickets}</td>
+                  <td>$<fmt:formatNumber type="number" minFractionDigits="2" 
+                  maxFractionDigits="2" value="${order.cost}" /></td>
+                  <td>${movie.showroom.theater.name}</td>
+               </tr>
+      		   </c:forEach>
          </tbody>
       </table>
       <br>

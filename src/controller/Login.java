@@ -61,6 +61,8 @@ public class Login extends HttpServlet {
 				validateInput(request.getParameter("password"), "");
 		
 		boolean rememberMe = request.getParameter("rememberMe") != null;
+		boolean invalidEmail = email == null || email == "";
+		boolean invalidPassword = password == null || password == "";
 		
 		//Sets email into cookie to be remembered for next login attempt
 		if(rememberMe)
@@ -72,11 +74,18 @@ public class Login extends HttpServlet {
 
 
 		User user = (User) session.getAttribute("user");
-		TheaterDB theater = new TheaterDB();
+		List<Theater> theaters = (List<Theater>) session.getAttribute("theaters");
 		
-		List<Theater> theaters = theater.getTheaters();
-		session.setAttribute("theaters", theaters);
-				
+		
+		if(theaters == null) {
+			theaters = new TheaterDB().getTheaters();
+			session.setAttribute("theaters", theaters);
+		}
+		
+		if(user == null && invalidEmail && invalidPassword) {
+			request.getRequestDispatcher("Login.jsp").forward(request, response);
+			return;
+		}
 		//Validates login directing to registration if user is not found
 		//or displays a password error on ligin if user is found but wrong password
 		if(user == null) {
@@ -86,10 +95,12 @@ public class Login extends HttpServlet {
 
 			if(user == null) {
 				request.getRequestDispatcher(failure).forward(request, response);
+				return;
 			}
 			else if(!user.getPassword().equals(password)) {
 				session.setAttribute("pwError", "Incorrect Password");
 				request.getRequestDispatcher("Login.jsp").forward(request, response);
+				return;
 			}
 			
 			session.setAttribute("user", user);

@@ -21,6 +21,7 @@ import model.Movie;
 import model.MovieDB;
 import model.MovieShowing;
 import model.MovieShowingDB;
+import model.User;
 
 /**
  * Servlet implementation class MovieSearchQuery
@@ -58,11 +59,19 @@ public class MovieSearchQuery extends HttpServlet {
 		String theater = request.getParameter("theaters");
 		String date = request.getParameter("showDate");
 
-		List<MovieShowing> movieShowings = (new MovieShowingDB()).searchMovieShowings(theater, query, date);
 		HttpSession session = request.getSession();
+		List<MovieShowing> movieShowings = (List<MovieShowing>) session.getAttribute("movieShowing");
+		
+		User user = (User) session.getAttribute("user");
+		if(user == null) {
+			request.getRequestDispatcher("Login.jsp").forward(request,  response);
 
-		System.out.println(movieShowings.get(0).getNumOfPurchasedSeats());
-		System.out.println(movieShowings.get(0).getShowroom());
+		}
+		
+		if(movieShowings == null) {
+			movieShowings = new MovieShowingDB().searchMovieShowings(theater, query, date);
+		}
+
 		session.setAttribute("movieShowings", movieShowings);
 		
 		request.getRequestDispatcher("WEB-INF/Customer/MovieSearchResults.jsp").forward(request,  response);

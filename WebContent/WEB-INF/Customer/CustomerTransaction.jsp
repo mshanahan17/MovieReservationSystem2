@@ -7,6 +7,8 @@
    To change this template use File | Settings | File Templates.
    --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <html>
    <head>
       <title>Payment</title>
@@ -34,16 +36,20 @@
             <th>Theater Room</th>
          </thead>
          <tbody>
-            <tr>
-               <td>Star Wars: The Last Jedi</td>
-               <td>4</td>
-               <td>$60.00</td>
-               <td>Grand 3</td>
-            </tr>
+               <c:forEach items="${partialOrders}" var="order" varStatus="count">
+               <tr>
+                  <td>${movie.movie.title}</td>
+                  <td>${numTickets}</td>
+                  <td>$<fmt:formatNumber type="number" minFractionDigits="2" 
+                  maxFractionDigits="2" value="${order.cost}" /></td>
+                  <td>${movie.showroom.theater.name}</td>
+               </tr>
+      		   </c:forEach>
          </tbody>
       </table>
       <br>
-      <h3>Total: $60.00</h3>
+      <h3>Total: $<fmt:formatNumber type="number" minFractionDigits="2" 
+                  maxFractionDigits="2" value="${total}" /></h3>
       <br>
       <fieldset>
          <legend>Payment Information</legend>
@@ -176,6 +182,7 @@
             </select>
             <br>
             <input type="text" placeholder="Zip" name="shipZip"><br>
+            First Time Credit Card : <input type="checkbox" name="firstCC"><br>
             <input type="submit" value="Confirm Payment">
             <a href="UpdateShoppingCart">
             <input type="button" value="Cancel Payment" />
