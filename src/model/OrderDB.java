@@ -37,11 +37,11 @@ public class OrderDB {
        	db.createConnection();
        	
        	String todayDate = getDateTime();
-       	db.addOrdersToUser(orders, totalCost, getDateTime());
+       	int orderId = db.addOrderToUser(orders, totalCost, getDateTime());
        	
        	for(Order o : orders) {
-       		db.addQuantityToOrderItemTable(o, totalCost, getDateTime());	
-       	}       	
+       		db.addQuantityToOrderItemTable(o, totalCost, getDateTime(), orderId);
+       	}
        	
        	db.closeConnection();
        	return;

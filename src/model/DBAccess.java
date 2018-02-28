@@ -28,7 +28,8 @@ public class DBAccess {
 	private static final String USER = "mshanahan"; // Replace with your CSE_LOGIN
 	private static final String PASS = "k8ErVH";   // Replace with your CSE MySQL_PASSWORD
 
-	private static final double INVALID_VALUE = -777.7777;
+	private static final double INVALID_DOUBLE_VALUE = -777.7777;
+	private static final int INVALID_INT_VALUE = -777;
 	
 	public static void main(String[] args) { 
 		
@@ -563,8 +564,8 @@ public class DBAccess {
 			ps.setString(2, o.getCustomer().getPassword());
 			ps.setDouble(3, o.getCost()); // TODO: Okay?
 			ps.setString(4, o.getDate()); 
-			ps.setString(5, o.getBillingAddress());
-			ps.setString(6, o.getCreditCardNumber());
+			ps.setString(5, o.getCustomer().getBillingAddress().getStreetAddress());
+			ps.setString(6, o.getCustomer().getCreditCard().getCardNumber());
 			ps.setString(7, o.getMovieShowing().getMovie().getTitle());
 			ps.setString(8, o.getMovieShowing().getStartTime());
 			ps.setDouble(9, o.getMovieShowing().getCost()); //TODO: OKay?
@@ -598,8 +599,8 @@ public class DBAccess {
 			ps.setString(3, o.getCustomer().getPassword());
 			ps.setDouble(4, o.getCost()); //TODO: Is this okay?
 			ps.setString(5, o.getDate());
-			ps.setString(6, o.getBillingAddress());
-			ps.setString(7, o.getCreditCardNumber());
+			ps.setString(6, o.getCustomer().getBillingAddress().getStreetAddress());
+			ps.setString(7, o.getCustomer().getCreditCard().getCardNumber());
 			
 			
 			ps.executeUpdate();
@@ -819,7 +820,7 @@ public class DBAccess {
 		
 	    PreparedStatement ps;
 	    
-	    double balance = INVALID_VALUE;
+	    double balance = INVALID_DOUBLE_VALUE;
 	    
 		try {
 			ps = conn.prepareStatement(sql);
@@ -863,7 +864,7 @@ public class DBAccess {
 		return;
 	}
 	
-	public void addOrdersToUser(List<Order> orders, double totalCost, String date) {
+	public int addOrderToUser(List<Order> orders, double totalCost, String date) {
 		//TODO: Test this
 		
 		// ======================================================
@@ -882,6 +883,8 @@ public class DBAccess {
 
 	    User purchaser = orders.get(0).getCustomer();
 	    
+	    int id = INVALID_INT_VALUE;
+	    
 	    PreparedStatement ps;
 		try {
 			ps = conn.prepareStatement(sql);
@@ -889,52 +892,59 @@ public class DBAccess {
 			ps.setString(2, purchaser.getPassword());
 			ps.setDouble(3, totalCost); //TODO: This may need to be an int?
 			ps.setString(4, date);
-			ps.setString(5, orders.get(0).getBillingAddress());
-			ps.setString(6, orders.get(0).getCreditCardNumber());
+			ps.setString(5, orders.get(0).getCustomer().getBillingAddress().getStreetAddress());
+			ps.setString(6, orders.get(0).getCustomer().getCreditCard().getCardNumber());
 			
 			ps.executeUpdate();
-									
+						
+			
+			id = ps.getGeneratedKeys().findColumn("Id");
 		    ps.close();
 		        
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		return;
+				
+		return id;
 	}
 	
-	public void addQuantityToOrderItemTable(Order o, double totalCost, String dateTime) {
+	public void addQuantityToOrderItemTable(Order o, double totalCost, String dateTime, int orderId) {
 		//TODO: Test this
 				 
+//		String sql = "insert into OrderItem (OrderId, ShowingID, Quantity) \n" + 
+//				"values( \n" + 
+//				"	(select Id from `Order`\n" + 
+//				"    where CustomerId = \n" + 
+//				"		(select Id from User where EmailAddress = ? and `Password` = ?)\n" + 
+//				"    and TotalCost = ?\n" + 
+//				"    and OrderDate = ?\n" + 
+//				"    and BillingAddress = ?\n" + 
+//				"    and CreditCardNumber = ?),\n" + 
+//				"    (select Id from MovieShowing\n" + 
+//				"    where movieID = \n" + 
+//				"		(select Id from Movie where `Movie name` = ?)\n" + 				 
+//				"    and StartTime = ?\n" + 
+//				"    and Price = ?),\n" + 
+//				"    ?)";
+		
 		String sql = "insert into OrderItem (OrderId, ShowingID, Quantity) \n" + 
-				"values( \n" + 
-				"	(select Id from `Order`\n" + 
-				"    where CustomerId = \n" + 
-				"		(select Id from User where EmailAddress = ? and `Password` = ?)\n" + 
-				"    and TotalCost = ?\n" + 
-				"    and OrderDate = ?\n" + 
-				"    and BillingAddress = ?\n" + 
-				"    and CreditCardNumber = ?),\n" + 
+				"values( ?,\n" + 
 				"    (select Id from MovieShowing\n" + 
 				"    where movieID = \n" + 
-				"		(select Id from Movie where `Movie name` = ?)\n" + 				 
+				"		(select Id from Movie where `Movie name` = ?)\n" + 
+				"    and showroomID = ?\n" + 
 				"    and StartTime = ?\n" + 
 				"    and Price = ?),\n" + 
-				"    ?)";
+				"    ?);";
 	    
 	    PreparedStatement ps;
 		try {
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, o.getCustomer().getEmailAddress());
-			ps.setString(2, o.getCustomer().getPassword());
-			ps.setDouble(3, totalCost); //TODO: Does this work?
-			ps.setString(4, dateTime);
-			ps.setString(5, o.getBillingAddress());
-			ps.setString(6, o.getCreditCardNumber());
-			ps.setString(7, o.getMovieShowing().getMovie().getTitle());
-			ps.setString(8, o.getMovieShowing().getStartTime());
-			ps.setDouble(9, o.getMovieShowing().getCost());
-			ps.setInt(10, o.getTicketQuantity());			
+			ps.setInt(1, orderId);
+			ps.setString(2, o.getMovieShowing().getMovie().getTitle());
+			ps.setString(3, o.getMovieShowing().getStartTime());
+			ps.setDouble(4, o.getMovieShowing().getCost());
+			ps.setInt(5, o.getTicketQuantity());			
 			
 			ps.executeUpdate();
 									
