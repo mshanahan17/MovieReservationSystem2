@@ -2,13 +2,40 @@ package model;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class OrderDB {
 
 	public static void main(String[] args) {
-		//System.out.println(getDate());
+		
+		OrderDB odb = new OrderDB();	
+		UserDB udb = new UserDB();		
+		DBAccess db = new DBAccess();
+		MovieShowingDB msdb = new MovieShowingDB();
+		
+       	db.createConnection();
+       	
+		List<Order> orders = new ArrayList<Order>();
+		Order o1 = new Order();
+		o1.setBillingAddress("blahblahblah");
+		o1.setCost(25);
+		o1.setCreditCardNumber("1111222233334444");
+		o1.setCustomer(udb.getUserById(3));
+		o1.setDate("1111-11-11");
+		o1.setMovieShowing(msdb.getMovieShowingById(4));
+		o1.setTicketQuantity(3);
+				
+		
+		System.out.println(o1.getCustomer());
+		System.exit(0);
+		
+		orders.add(o1);				
+		
+       	odb.addOrdersToUser(orders, 55);
+       	       	
+       	db.closeConnection();		
 		return;
 	}
 	//TODO: Load up MovieShowing object upon creation from DB
@@ -37,7 +64,9 @@ public class OrderDB {
        	db.createConnection();
        	
        	String todayDate = getDateTime();
-       	int orderId = db.addOrderToUser(orders, totalCost, getDateTime());
+       	int orderId = db.addOrderToUser(orders.get(0), totalCost, getDateTime());
+       	
+       	//System.out.println("\n-----------------\nORDER ID = " + orderId + "\n-------------------\n");
        	
        	for(Order o : orders) {
        		db.addQuantityToOrderItemTable(o, totalCost, getDateTime(), orderId);

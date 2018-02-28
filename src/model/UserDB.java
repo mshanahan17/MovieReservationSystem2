@@ -6,26 +6,36 @@ import model.User;
 public class UserDB {
 		
 	public static void main(String[] args) {
-		UserDB udb = new UserDB();
+		UserDB udb = new UserDB();		
+       	
+		Address a = new Address();
+		a.setStreetAddress("testest");
+		a.setCity("Lincoln");
+		a.setState("NE");
+		a.setZip("555555");				
 		
-		// User u = udb.getUserById(4);
-		
-		User u = new User();
-		u.setEmailAddress("mattshanahan@hotmail.com");
-		u.setPassword("123");
-		
-		CreditCard cc = new CreditCard();
-		cc.setCardNumber("23452");
-		cc.setBalance(300.0);
-		cc.setCardHolderName("Jeff Bezos");
-		cc.setCardType("Visa");
-		cc.setCvv("452");
-		cc.setExpirationDate("2018-04-01");
-		cc.setOwner(u);
-		
-		System.out.println(cc);
-		
-		udb.addCreditCardToUser(u, cc);
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	udb.addAddressToUser(udb.getUserById(3), a);
+       	db.closeConnection();
+//		// User u = udb.getUserById(4);
+//		
+//		User u = new User();
+//		u.setEmailAddress("mattshanahan@hotmail.com");
+//		u.setPassword("123");
+//		
+//		CreditCard cc = new CreditCard();
+//		cc.setCardNumber("23452");
+//		cc.setBalance(300.0);
+//		cc.setCardHolderName("Jeff Bezos");
+//		cc.setCardType("Visa");
+//		cc.setCvv("452");
+//		cc.setExpirationDate("2018-04-01");
+//		cc.setOwner(u);
+//		
+//		System.out.println(cc);
+//		
+//		udb.addCreditCardToUser(u, cc);
 	}
 	
     public void registerUser(User user) {

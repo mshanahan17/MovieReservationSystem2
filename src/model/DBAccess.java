@@ -194,6 +194,19 @@ public class DBAccess {
 				user.setLastName(rs.getString("LastName"));
 				user.setEmailAddress(rs.getString("EmailAddress"));
 				user.setPassword(rs.getString("Password"));
+				user.setPhoneNumber(rs.getString("PhoneNumber"));				
+				
+				Address billingAddress = new Address();				
+				billingAddress.setStreetAddress(rs.getString("Address"));
+				billingAddress.setCity(rs.getString("City"));
+				billingAddress.setState(rs.getString("State"));
+				billingAddress.setZip(rs.getString("PostalCode"));
+				
+				user.setBillingAddress(billingAddress);
+								
+				user.setCreditCard(getCreditCardByUserId(Id));
+				
+				
 				//TODO: Get the rest of the user data stored in the object
 		    }
 			
@@ -205,6 +218,39 @@ public class DBAccess {
 		}
 		
 		return user;
+	}
+	
+	public CreditCard getCreditCardByUserId(int userId) {		
+		//TODO: Test this
+		
+		String sql = "select * from CreditCard where UserId = ?";
+	    PreparedStatement ps;
+	   
+	    CreditCard cc = new CreditCard();
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, userId);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				cc.setCardNumber(rs.getString("CreditCardNumber"));
+				cc.setBalance(rs.getDouble("Balance"));
+				cc.setCardHolderName(rs.getString("CardHolderName"));
+				cc.setCardType(rs.getString("CardType"));
+				cc.setCvv(rs.getString("CVV"));
+				cc.setExpirationDate(rs.getString("ExpirationDate"));
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return cc;
 	}
 	
 	public void displayAllUsers() {
@@ -739,18 +785,16 @@ public class DBAccess {
 				"set Address = ?, City = ?, State = ?, PostalCode = ?\n" + 
 				"where EmailAddress = ? and Password = ?"; 
 		
-	    PreparedStatement ps;
-	    
-	    Address ba = u.getBillingAddress();
+	    PreparedStatement ps;	    
 	    
 		try {
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, ba.getStreetAddress());
-			ps.setString(2, ba.getCity());
-			ps.setString(2, ba.getState());
-			ps.setString(2, ba.getZip());
-			ps.setString(2, u.getEmailAddress());
-			ps.setString(2, u.getPassword());
+			ps.setString(1, a.getStreetAddress());
+			ps.setString(2, a.getCity());
+			ps.setString(3, a.getState());
+			ps.setString(4, a.getZip());
+			ps.setString(5, u.getEmailAddress());
+			ps.setString(6, u.getPassword());
 			
 			ps.executeUpdate();
 									
@@ -864,7 +908,7 @@ public class DBAccess {
 		return;
 	}
 	
-	public int addOrderToUser(List<Order> orders, double totalCost, String date) {
+	public int addOrderToUser(Order firstOrder, double totalCost, String date) {
 		//TODO: Test this
 		
 		// ======================================================
@@ -881,24 +925,29 @@ public class DBAccess {
 //				"values(?, ?, ?);";
 		// ======================================================
 
-	    User purchaser = orders.get(0).getCustomer();
+	    User purchaser = firstOrder.getCustomer();
 	    
 	    int id = INVALID_INT_VALUE;
 	    
 	    PreparedStatement ps;
 		try {
-			ps = conn.prepareStatement(sql);
+			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, purchaser.getEmailAddress());
 			ps.setString(2, purchaser.getPassword());
 			ps.setDouble(3, totalCost); //TODO: This may need to be an int?
 			ps.setString(4, date);
-			ps.setString(5, orders.get(0).getCustomer().getBillingAddress().getStreetAddress());
-			ps.setString(6, orders.get(0).getCustomer().getCreditCard().getCardNumber());
-			
+			ps.setString(5, firstOrder.getCustomer().getBillingAddress().getStreetAddress());
+			ps.setString(6, firstOrder.getCustomer().getCreditCard().getCardNumber());
+								
 			ps.executeUpdate();
 						
 			
-			id = ps.getGeneratedKeys().findColumn("Id");
+			ResultSet rs = ps.getGeneratedKeys();
+			
+			while(rs.next()) {
+				id = rs.getInt(1);
+			}
+			
 		    ps.close();
 		        
 		} catch (SQLException e) {
@@ -927,12 +976,27 @@ public class DBAccess {
 //				"    and Price = ?),\n" + 
 //				"    ?)";
 		
+//		String sql = "insert into OrderItem (OrderId, ShowingID, Quantity) \n" + 
+//				"values( ?,\n" + 
+//				"    (select Id from MovieShowing\n" + 
+//				"    where movieID = \n" + 
+//				"		(select Id from Movie where `Movie name` = ?)\n" + 
+//				"    and showroomID = ?\n" + 
+//				"    and StartTime = ?\n" + 
+//				"    and Price = ?),\n" + 
+//				"    ?);";
+		
 		String sql = "insert into OrderItem (OrderId, ShowingID, Quantity) \n" + 
 				"values( ?,\n" + 
 				"    (select Id from MovieShowing\n" + 
 				"    where movieID = \n" + 
 				"		(select Id from Movie where `Movie name` = ?)\n" + 
-				"    and showroomID = ?\n" + 
+				"    and showroomID = \n" + 
+				"		(select Id from Showroom \n" + 
+				"        where availableSeats = ? \n" + 
+				"        and theaterBuilding = \n" + 
+				"			(select Id from TheaterBuilding\n" + 
+				"            where `Name` = ?))\n" + 
 				"    and StartTime = ?\n" + 
 				"    and Price = ?),\n" + 
 				"    ?);";
@@ -942,9 +1006,17 @@ public class DBAccess {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, orderId);
 			ps.setString(2, o.getMovieShowing().getMovie().getTitle());
-			ps.setString(3, o.getMovieShowing().getStartTime());
-			ps.setDouble(4, o.getMovieShowing().getCost());
-			ps.setInt(5, o.getTicketQuantity());			
+			ps.setInt(3, o.getMovieShowing().getShowroom().getCapacity());
+			ps.setString(4, o.getMovieShowing().getShowroom().getTheater().getName());
+			ps.setString(5, o.getMovieShowing().getStartTime());
+			ps.setDouble(6, o.getMovieShowing().getCost()); //Double check this cost value is correct
+			ps.setInt(7, o.getTicketQuantity());
+			
+//			ps.setInt(1, orderId);
+//			ps.setString(2, o.getMovieShowing().getMovie().getTitle());
+//			ps.setString(3, o.getMovieShowing().getStartTime());
+//			ps.setDouble(4, o.getMovieShowing().getCost());
+//			ps.setInt(5, o.getTicketQuantity());			
 			
 			ps.executeUpdate();
 									

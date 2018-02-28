@@ -100,7 +100,8 @@ public class User {
 				+ "\nnumOfVisits: " + numOfVisits
 				+ "\nphoneNumber: " + phoneNumber
 				+ "\nbillingAddress: " + billingAddress
-				+ "\nshippingAddress: " + shippingAddress;
+				+ "\nshippingAddress: " + shippingAddress
+				+ "\ncreditCard: " + creditCard;
 	}
 		
 }
