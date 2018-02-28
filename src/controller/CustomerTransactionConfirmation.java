@@ -65,6 +65,7 @@ public class CustomerTransactionConfirmation extends HttpServlet {
 		
 		if(user == null) {
 			request.getRequestDispatcher("Login.jsp").forward(request,  response);
+			return;
 		}
 		
 		CreditCard creditCard = new CreditCard();
@@ -91,8 +92,10 @@ public class CustomerTransactionConfirmation extends HttpServlet {
 		 * if this is their first card or new card.
 		 * Also update their address if this is first time entering info
 		 */
+		System.out.println(firstCC);
 		if(firstCC != null) {
-			creditCard.setBalance(300);
+			System.out.println("test");
+			creditCard.setBalance(200);
 			user.setBillingAddress(billingAddress);
 			user.setShippingAddress(shippingAddress);
 			user.setCreditCard(creditCard);
@@ -100,7 +103,7 @@ public class CustomerTransactionConfirmation extends HttpServlet {
 		}
 		
 		if(!userDB.validateCreditCard(user, creditCard)) {
-			String invalidCard = "Credit Card Doesn't Match Records";
+			String invalidCard = "Credit Card Doesn't Match Records or No Card On File!";
 			session.setAttribute("ccError", invalidCard);
 			request.getRequestDispatcher("WEB-INF/Customer/CustomerTransaction.jsp").forward(request,  response);
 			return;
@@ -110,7 +113,7 @@ public class CustomerTransactionConfirmation extends HttpServlet {
 		
 		if(!userDB.attemptTransaction(user, creditCard, total)) {
 			String failedTransaction = "Insufficient Balance On Credit Card";
-			session.setAttribute("transActionError", failedTransaction);
+			session.setAttribute("transactionError", failedTransaction);
 			request.getRequestDispatcher("WEB-INF/Customer/CustomerTransaction.jsp").forward(request,  response);
 			return;
 		}
