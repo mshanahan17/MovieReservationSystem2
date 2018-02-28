@@ -92,6 +92,9 @@ public class Order {
 			+ "\ndate: " + date
 			+ "\ncost: " + cost
 			+ "\nbillingAddress: " + billingAddress
-			+ "\ncreditCardNumber: " + creditCardNumber;
+			+ "\ncreditCardNumber: " + creditCardNumber
+			+ "\nmovieShowing: " + movieShowing
+			+ "\nticketQuantity: " + ticketQuantity
+			+ "\nid: " + id;
 	}
 }

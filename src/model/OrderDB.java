@@ -11,31 +11,40 @@ public class OrderDB {
 	public static void main(String[] args) {
 		
 		OrderDB odb = new OrderDB();	
-		UserDB udb = new UserDB();		
-		DBAccess db = new DBAccess();
-		MovieShowingDB msdb = new MovieShowingDB();
 		
-       	db.createConnection();
-       	
-		List<Order> orders = new ArrayList<Order>();
-		Order o1 = new Order();
-		o1.setBillingAddress("blahblahblah");
-		o1.setCost(25);
-		o1.setCreditCardNumber("1111222233334444");
-		o1.setCustomer(udb.getUserById(3));
-		o1.setDate("1111-11-11");
-		o1.setMovieShowing(msdb.getMovieShowingById(4));
-		o1.setTicketQuantity(3);
-				
+		List<Order> orders = odb.getOrdersByOrderId(18);
 		
-		System.out.println(o1.getCustomer());
-		System.exit(0);
+		for(Order o : orders) {
+			System.out.println("ORDER\n----------------\n " + o);
+		}
 		
-		orders.add(o1);				
 		
-       	odb.addOrdersToUser(orders, 55);
-       	       	
-       	db.closeConnection();		
+//		OrderDB odb = new OrderDB();	
+//		UserDB udb = new UserDB();		
+//		DBAccess db = new DBAccess();
+//		MovieShowingDB msdb = new MovieShowingDB();
+//		
+//       	db.createConnection();
+//       	
+//		List<Order> orders = new ArrayList<Order>();
+//		Order o1 = new Order();
+//		o1.setBillingAddress("blahblahblah");
+//		o1.setCost(25);
+//		o1.setCreditCardNumber("1111222233334444");
+//		o1.setCustomer(udb.getUserById(3));
+//		o1.setDate("1111-11-11");
+//		o1.setMovieShowing(msdb.getMovieShowingById(4));
+//		o1.setTicketQuantity(3);
+//				
+//		
+//		System.out.println(o1.getCustomer());
+//		System.exit(0);
+//		
+//		orders.add(o1);				
+//		
+//       	odb.addOrdersToUser(orders, 55);
+//       	       	
+//       	db.closeConnection();		
 		return;
 	}
 	//TODO: Load up MovieShowing object upon creation from DB
@@ -48,13 +57,23 @@ public class OrderDB {
 		return o;
 	}
 	
+	public List<Order> getOrdersByOrderId(int orderId) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	
+       	List<Order> orders = db.getOrdersByOrderId(orderId);
+       	
+       	db.closeConnection();
+		return orders;
+	}
+	
 	public List<Order> getOrdersByUser(User u) {
 		DBAccess db = new DBAccess();
        	db.createConnection();
        	List<Order> orders = db.getOrdersByUser(u);
        	db.closeConnection();
 		return orders;
-	}
+	}	
 
 	public void addOrdersToUser(List<Order> orders, double totalCost) {
 		//TODO: Implement

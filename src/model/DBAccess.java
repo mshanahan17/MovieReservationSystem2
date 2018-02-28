@@ -501,6 +501,49 @@ public class DBAccess {
 		return r;
 	}
 	
+	public List<Order> getOrdersByOrderId(int orderId) {
+		//TODO: Implement
+		String sql = "select * from OrderItem\n" + 
+				"where OrderId = ?";
+		
+	    PreparedStatement ps;	   	    
+	    
+	    List<Order> orders = new ArrayList<Order>();
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, orderId);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			Order refOrder = getOrderById(orderId);
+			
+			while(rs.next()) {	
+				Order o = new Order();				
+				
+				o.setTicketQuantity(rs.getInt("Quantity"));
+				
+				o.setBillingAddress(refOrder.getBillingAddress());
+				o.setCost(refOrder.getCost());
+				o.setCreditCardNumber(refOrder.getCreditCardNumber());
+				o.setCustomer(refOrder.getCustomer());
+				o.setDate(refOrder.getDate());
+				o.setId(refOrder.getId());
+				o.setMovieShowing(getMovieShowingById(rs.getInt("ShowingID")));				
+								
+				orders.add(o);
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+		return orders;
+	}
+	
 	public List<Order> getOrdersByUser(User u) {
 		//TODO: test this
 		String sql = "select * from `Order` o\n" + 
@@ -552,7 +595,7 @@ public class DBAccess {
 	
 	public Order getOrderById(int id) {
 		//TODO: test this
-		String sql = "select * from Order where Id = ?";
+		String sql = "select * from `Order` where Id = ?";
 		
 	    PreparedStatement ps;	   	    
 	    
@@ -561,6 +604,8 @@ public class DBAccess {
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, id);
+			
+			System.out.println(ps.toString());
 			
 			ResultSet rs = ps.executeQuery();
 			
