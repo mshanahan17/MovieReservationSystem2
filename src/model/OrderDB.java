@@ -46,6 +46,16 @@ public class OrderDB {
        	db.closeConnection();
        	return;
 	}
+
+	public void removeOrder() {
+		//TODO: Implement
+		return;
+	}
+	
+	public void updateTotalCostOfOrder() {
+		//TODO: Implement
+		return;
+	}		
 	
 	private String getDateTime() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
