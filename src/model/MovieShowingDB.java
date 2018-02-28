@@ -36,5 +36,10 @@ public class MovieShowingDB {
 		
 		return movieShowings;
 	}
+	
+	public void updateNumberPurchasedSeats() {
+		//TODO: Implement
+		return;
+	}
 
 }

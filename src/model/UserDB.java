@@ -72,12 +72,30 @@ public class UserDB {
 		return u;
     }
 
-    public void addCreditCardToUser(User u, CreditCard cc) {
+    public boolean addCreditCardToUser(User u, CreditCard cc) {
     		DBAccess db = new DBAccess();
        	db.createConnection();
-       	db.addCreditCardToUser(u, cc);
+       	
+       	if(isValidCreditCardFormatting(cc)) {
+       		db.addCreditCardToUser(u, cc);	
+       	} else {
+       		return false;
+       	}
+       	       	
        	db.closeConnection();
-		return;
+		return true;
+    }
+    
+    private boolean isValidCreditCardFormatting(CreditCard cc) {
+    		//TODO: Do more crap in here
+    		
+    		String cardNumber = cc.getCardNumber().trim().replaceAll(" ", "");
+    		if(cardNumber.length() == 16) {
+    			return true;
+    		} else {
+    			return false;	
+    		}
+    		
     }
     
     public void addAddressToUser(User u, Address a) {

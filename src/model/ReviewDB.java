@@ -4,6 +4,14 @@ import java.util.List;
 
 public class ReviewDB {
 
+	public boolean addReview(Review r) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	boolean success = db.addReview(r);
+       	db.closeConnection();
+		return success;
+	}
+	
 	public Review getReviewById(int id) {
 		DBAccess db = new DBAccess();
        	db.createConnection();
