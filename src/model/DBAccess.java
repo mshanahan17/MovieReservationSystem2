@@ -539,6 +539,79 @@ public class DBAccess {
 		return o;
 	}
 	
+	public void removeOrderItem(Order o) {
+		String sql = "DELETE FROM `OrderItem`\n" + 
+				"WHERE OrderId = \n" + 
+				"	(select Id from `Order` \n" + 
+				"    WHERE CustomerId = (select Id from User where EmailAddress = ? and `Password` = ?)\n" + 
+				"    and TotalCost = ?\n" + 
+				"    and OrderDate = ?\n" + 
+				"    and BillingAddress = ?\n" + 
+				"    and CreditCardNumber = ?)\n" + 
+				"AND ShowingID = \n" + 
+				"	(select Id from MovieShowing where movieID = \n" + 
+				"		(select Id from Movie where `Movie name` = ?)\n" + 
+				"    and StartTime = ?\n" + 
+				"    and Price = ?)\n" + 
+				"AND Quantity = ?";
+		
+		PreparedStatement ps;	   	    	    	    
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, o.getCustomer().getEmailAddress()); 
+			ps.setString(2, o.getCustomer().getPassword());
+			ps.setDouble(3, o.getCost()); // TODO: Okay?
+			ps.setString(4, o.getDate()); 
+			ps.setString(5, o.getBillingAddress());
+			ps.setString(6, o.getCreditCardNumber());
+			ps.setString(7, o.getMovieShowing().getMovie().getTitle());
+			ps.setString(8, o.getMovieShowing().getStartTime());
+			ps.setDouble(9, o.getMovieShowing().getCost()); //TODO: OKay?
+			ps.setInt(10, o.getTicketQuantity());
+						
+			ps.executeUpdate();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return;
+	}
+	
+	public void updateTotalCostOfOrder(Order o, double changeInCost) {
+		String sql = "UPDATE `Order`\n" + 
+				"SET TotalCost = ?\n" + 
+				"WHERE CustomerId = (select Id from User where EmailAddress = ? and `Password` = ?)\n" + 
+				"    and TotalCost = ?\n" + 
+				"    and OrderDate = ?\n" + 
+				"    and BillingAddress = ?\n" + 
+				"    and CreditCardNumber = ?";
+		
+	    PreparedStatement ps;	   	    	    	    
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setDouble(1, o.getCost() + changeInCost); // TODO: Is this okay?
+			ps.setString(2, o.getCustomer().getEmailAddress());
+			ps.setString(3, o.getCustomer().getPassword());
+			ps.setDouble(4, o.getCost()); //TODO: Is this okay?
+			ps.setString(5, o.getDate());
+			ps.setString(6, o.getBillingAddress());
+			ps.setString(7, o.getCreditCardNumber());
+			
+			
+			ps.executeUpdate();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return;
+	}
+	
 	public Theater getTheaterById(int id) {
 		//TODO: Test this
 		String sql = "select * from TheaterBuilding where Id = ?";

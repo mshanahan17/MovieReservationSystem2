@@ -47,13 +47,20 @@ public class OrderDB {
        	return;
 	}
 
-	public void removeOrder() {
-		//TODO: Implement
-		return;
+	public void removeOrderItem(Order o) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	db.removeOrderItem(o);
+       	db.updateTotalCostOfOrder(o, o.getCost() * -1);
+       	db.closeConnection();
+       	return;
 	}
 	
-	public void updateTotalCostOfOrder() {
-		//TODO: Implement
+	public void updateTotalCostOfOrder(Order o, double changeInCost) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	db.updateTotalCostOfOrder(o, changeInCost);
+       	db.closeConnection();
 		return;
 	}		
 	
