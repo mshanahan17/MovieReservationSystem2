@@ -35,8 +35,7 @@ public class ReviewServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		request.getRequestDispatcher("WEB-INF/Customer/CustomerReview.jsp")
-			   .forward(request,  response);
+		request.getRequestDispatcher("WEB-INF/Customer/CustomerReview.jsp").forward(request, response);
 	}
 
 }

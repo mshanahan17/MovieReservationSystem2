@@ -60,7 +60,7 @@ public class Checkout extends HttpServlet {
 		String button3 = request.getParameter("button3");
 		String button4 = request.getParameter("button4");
 		boolean orderRemoved = false;
-		List<Order> orders = (List<Order>) session.getAttribute("partialOrders");
+		List<Order> orders = (List<Order>) session.getAttribute("shoppingCart");
 		double total = (double) session.getAttribute("total");
 		
 		if(button0 != null) {

@@ -35,7 +35,7 @@
             <th>Theater Room</th>
          </thead>
          <tbody>
-               <c:forEach items="${partialOrders}" var="order" varStatus="count">
+               <c:forEach items="${shoppingCart}" var="order" varStatus="count">
                <tr>
                   <td>${movie.movie.title}</td>
                   <td>${order.ticketQuantity}</td>
