@@ -1029,6 +1029,44 @@ public class DBAccess {
 		return;
 	}
 	
+	public void updateMovieShowingSeatsPurchased(MovieShowing ms, int updateValue) {
+		
+		String sql = "UPDATE `MovieShowing`\n" + 
+				"SET `NumberPurchased` = ?\n" + 
+				"WHERE Price = ?\n" + 
+				"    and NumberPurchased = ?\n" + 
+				"    and StartTime = ?\n" + 
+				"    and movieID = (select Id from Movie where `Movie name` = ?)\n" + 
+				"    and showroomID = \n" + 
+				"		(select Id from Showroom \n" + 
+				"        where availableSeats = ? \n" + 
+				"        and theaterBuilding = \n" + 
+				"			(select Id from TheaterBuilding\n" + 
+				"            where `Name` = ?))";
+		
+		PreparedStatement ps;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, ms.getNumOfPurchasedSeats() + updateValue);
+			ps.setDouble(2, ms.getCost());
+			ps.setInt(3, ms.getNumOfPurchasedSeats());
+			ps.setString(4, ms.getStartTime());
+			ps.setString(5, ms.getMovie().getTitle());
+			ps.setInt(6, ms.getShowroom().getCapacity());
+			ps.setString(7, ms.getShowroom().getTheater().getName());
+			
+			ps.executeUpdate();
+						
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return;
+	}
+	
 	public CreditCard getCreditCardById(int id) {
 		//TODO: Test this
 		String sql = "select * from CreditCard where Id = ?";

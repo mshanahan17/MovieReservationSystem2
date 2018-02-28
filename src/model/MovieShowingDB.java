@@ -6,13 +6,20 @@ import java.util.List;
 public class MovieShowingDB {
 
 	public static void main(String[] args) {
+		
 		MovieShowingDB mdb = new MovieShowingDB();
+		DBAccess dba = new DBAccess();
+		dba.createConnection();
 		
-		List<MovieShowing> movieShowings = mdb.searchMovieShowings("    theater", "  scared kitten  ", " 2018-04-04     17:30:00  ");
+		mdb.updateNumberPurchasedSeats(dba.getMovieShowingById(3), -3);
 		
-		for(MovieShowing movieShowing : movieShowings) {
-			System.out.println(movieShowing);
-		}
+		dba.closeConnection();
+		return;
+//		List<MovieShowing> movieShowings = mdb.searchMovieShowings("    theater", "  scared kitten  ", " 2018-04-04     17:30:00  ");
+//		
+//		for(MovieShowing movieShowing : movieShowings) {
+//			System.out.println(movieShowing);
+//		}
 	}
 	
 	public MovieShowing getMovieShowingById(int id) {
@@ -37,8 +44,15 @@ public class MovieShowingDB {
 		return movieShowings;
 	}
 	
-	public void updateNumberPurchasedSeats() {
-		//TODO: Implement
+	public void updateNumberPurchasedSeats(MovieShowing ms, int updateValue) {
+	
+	   	DBAccess db = new DBAccess();
+	   	db.createConnection();
+	   	
+	   	db.updateMovieShowingSeatsPurchased(ms, updateValue);
+	   	
+	   	db.closeConnection();
+		
 		return;
 	}
 
