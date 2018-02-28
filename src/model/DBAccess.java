@@ -528,6 +528,7 @@ public class DBAccess {
 				o.setDate(rs.getString("OrderDate"));
 				o.setBillingAddress(rs.getString("BillingAddress"));
 				o.setCreditCardNumber(rs.getString("CreditCardNumber"));
+				o.setId(rs.getInt("Id"));
 				
 				// TODO: HERE
 				int showingId = rs.getInt("ShowingId"); // get MovieShowing with this
@@ -574,6 +575,7 @@ public class DBAccess {
 				o.setDate(rs.getString("OrderDate"));				
 				o.setBillingAddress(rs.getString("BillingAddress"));
 				o.setCreditCardNumber(rs.getString("CreditCardNumber"));
+				o.setId(rs.getInt("Id"));
 		    }
 			
 			rs.close();
