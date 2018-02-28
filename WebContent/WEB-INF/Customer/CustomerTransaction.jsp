@@ -16,6 +16,29 @@
          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
          crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/CSS/customer.css">
+  <script>
+    function validateForm()
+    {
+        var a=document.forms["Form"]["fName"].value;
+        var b=document.forms["Form"]["lName"].value;
+        var c=document.forms["Form"]["ccNum"].value;
+        var d=document.forms["Form"]["secCode"].value;
+        var e=document.forms["Form"]["billStreet"].value;
+        var f=document.forms["Form"]["billCity"].value;
+        var g=document.forms["Form"]["billZip"].value;
+        var h=document.forms["Form"]["shipStreet"].value;
+        var i=document.forms["Form"]["shipCity"].value;
+        var j=document.forms["Form"]["shipZip"].value;
+
+        if (a==null || a=="",b==null || b=="",c==null || c=="",d==null || d=="",
+        	e==null || e=="",f==null || f=="",g==null || g=="",h==null || h=="",
+        	i==null || i=="",j==null || j=="")
+        {
+            alert("Please Fill All Fields");
+            return false;
+        }
+    }
+    </script>
    </head>
    <body>
       <header>
@@ -36,7 +59,7 @@
             <th>Theater Room</th>
          </thead>
          <tbody>
-               <c:forEach items="${partialOrders}" var="order" varStatus="count">
+               <c:forEach items="${shoppingCart}" var="order" varStatus="count">
                <tr>
                   <td>${order.movieShowing.movie.title}</td>
                   <td>${order.ticketQuantity}</td>
@@ -54,7 +77,8 @@
       <fieldset>
          <legend>Payment Information</legend>
          <h3 style="color:red">${ccError} ${transactionError}</h3>
-         <form action="CustomerTransactionConfirmation" id="checkoutForm" method="post">
+         <form action="CustomerTransactionConfirmation" id="checkoutForm" 
+         method="post" name="Form" onSubmit="return validateForm()">
             <input type="text" placeholder="First Name" name="fName">
             <input type="text" placeholder="Last Name" name="lName"><br>
             Select Card Type:<br> 

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.Movie;
+import model.MovieShowing;
 import model.Review;
 import model.User;
 
@@ -18,13 +19,13 @@ import model.User;
  * Servlet implementation class CustomerReview
  */
 @WebServlet("/CustomerReview")
-public class CustomerReview extends HttpServlet {
+public class CustomerReviewServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CustomerReview() {
+    public CustomerReviewServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -48,19 +49,20 @@ public class CustomerReview extends HttpServlet {
 		
 		String confirmationResponse = "Success";
 		String date = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
-		System.out.println(date);
+		
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
-		Movie movie = (Movie) session.getAttribute("movie");
+		MovieShowing movieShowing = (MovieShowing) session.getAttribute("movie");
 		if(user == null) {
 			request.getRequestDispatcher("Login.jsp")
 			   .forward(request, response);
+			return;
 		}
 		
 		Review movieReview = new Review();
 		movieReview.setContent(review);
 		movieReview.setDate(date);
-		movieReview.setMovie(movie);
+		movieReview.setMovie(movieShowing.getMovie());
 		movieReview.setRating(rating);
 		movieReview.setUser(user);
 		

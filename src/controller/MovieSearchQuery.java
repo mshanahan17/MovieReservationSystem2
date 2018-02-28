@@ -65,7 +65,7 @@ public class MovieSearchQuery extends HttpServlet {
 		User user = (User) session.getAttribute("user");
 		if(user == null) {
 			request.getRequestDispatcher("Login.jsp").forward(request,  response);
-
+			return;
 		}
 		
 		if(movieShowings == null) {

@@ -6,6 +6,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import model.User;
 
 /**
  * Servlet implementation class ManageOrder
@@ -35,6 +38,12 @@ public class ManageOrder extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		if(user == null) {
+			request.getRequestDispatcher("Login.jsp").forward(request,  response);
+			return;
+		}
 		request.getRequestDispatcher("WEB-INF/Customer/ManageOrder.jsp")
 			   .forward(request, response);
 	}

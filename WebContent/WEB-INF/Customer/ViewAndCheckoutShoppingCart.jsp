@@ -41,7 +41,7 @@
             </thead>
             <tbody>
             <h1 style="color:red">${cartError}</h1>
-              <c:forEach items="${partialOrders}" var="order" varStatus="count">
+              <c:forEach items="${shoppingCart}" var="order" varStatus="count">
                <tr>
                   <td>${order.movieShowing.movie.title}</td>
                   <td><img src="data:image/gif; base64,${order.movieShowing.movie.thumbnail}" style="max-height: 75px"></td>

@@ -88,14 +88,12 @@ public class CustomerTransactionConfirmation extends HttpServlet {
 		
 		UserDB userDB = new UserDB();
 		/*
-		 * Given user an initial credit card to use with a balanace of 300
+		 * Given user an initial credit card to use with a balanace of 150
 		 * if this is their first card or new card.
 		 * Also update their address if this is first time entering info
 		 */
-		System.out.println(firstCC);
 		if(firstCC != null) {
-			System.out.println("test");
-			creditCard.setBalance(200);
+			creditCard.setBalance(150);
 			user.setBillingAddress(billingAddress);
 			user.setShippingAddress(shippingAddress);
 			user.setCreditCard(creditCard);

@@ -29,7 +29,7 @@
       <h1>${user.firstName} ${user.lastName}</h1>
       <main role="main" class="container">
          <div id="ReviewForm">
-            <form id="ReviewForm" action="CustomerReview"
+            <form id="ReviewForm" action="CustomerReviewServlet"
                method="post" name="reviewForm">
                <fieldset>
                   <legend>Customer Review</legend>

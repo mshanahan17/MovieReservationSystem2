@@ -83,13 +83,13 @@ public class UpdateShoppingCart extends HttpServlet {
 			}
 		}
 		
-		ArrayList<Order> partialOrders = (ArrayList<Order>) session.getAttribute("partialOrders");
+		ArrayList<Order> shoppingCart = (ArrayList<Order>) session.getAttribute("shoppingCart");
 		
-		if(partialOrders == null) {
-			partialOrders = new ArrayList();
+		if(shoppingCart == null) {
+			shoppingCart = new ArrayList();
 		}
 		
-		if(partialOrders.size() > 4) {
+		if(shoppingCart.size() > 4) {
 			String orderError = "Maximum of 5 orders please remove an item from your cart to add another!";
 			session.setAttribute("orderError", orderError);
 			request.getRequestDispatcher(path).forward(request,  response);
@@ -103,8 +103,8 @@ public class UpdateShoppingCart extends HttpServlet {
 		total += cost;
 		order.setCustomer(user);
 		order.setDate(movShow.getStartTime());
-		partialOrders.add(order);
-		session.setAttribute("partialOrders", partialOrders);
+		shoppingCart.add(order);
+		session.setAttribute("shoppingCart", shoppingCart);
 		session.setAttribute("total", total);
 
 		request.getRequestDispatcher(path).forward(request,  response);
