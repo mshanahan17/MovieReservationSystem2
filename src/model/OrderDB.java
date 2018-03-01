@@ -70,6 +70,7 @@ public class OrderDB {
 //       	db.closeConnection();		
 		return;
 	}
+	
 	//TODO: Load up MovieShowing object upon creation from DB
 	
 	public Order getOrderById(int id) {
@@ -144,7 +145,10 @@ public class OrderDB {
 	
 	public void updateCreditCardBalance(Order o, double changeInCost) {
 		//TODO: Implement
-		
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	//db.updateTotalCostOfOrder(o, changeInCost);
+       	db.closeConnection();
 		return;
 	}
 	
