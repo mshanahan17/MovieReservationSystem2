@@ -6,6 +6,8 @@
    To change this template use File | Settings | File Templates.
    --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
    <head>
       <title>Title</title>
@@ -25,7 +27,7 @@
       	 </nav>
       </header>
       <h1>${user.firstName} ${user.lastName}</h1>
-      <h2>Order #: 422334</h2>
+      <h2>Order #: ${orderId}</h2>
       <table class="table table-bordered table-striped">
          <thead>
             <th>Movie</th>
@@ -37,29 +39,34 @@
             <th></th>
          </thead>
          <tbody>
-            <tr>
-               <td>Star Wars: The Last Jedi</td>
-               <td>4</td>
-               <td>$60.00</td>
-               <td>Grand Theater: 1</td>
-               <td>05/19/2019 12:30 PM</td>
-               <td><a href="MovieSearchResults" class="btn btn-primary btn-sm" role="button">View</a> </td>
-               <td><a href="CancelOrder" class="btn btn-primary btn-sm" role="button">Cancel</a> </td>
-            </tr>
-            <tr>
-               <td>The Land Before Time</td>
-               <td>2</td>
-               <td>$30.00</td>
-               <td>Grand Theater: 4</td>
-               <td>05/22/2019 4:30 PM</td>
-               <td><a href="MovieSearchResults" class="btn btn-primary btn-sm" role="button">View</a> </td>
-               <td><a href="CancelOrder" class="btn btn-primary btn-sm" role="button">Cancel</a> </td>
-            </tr>
+              <c:forEach items="${orderItems}" var="order" varStatus="count">
+         		<tr>
+               <td>${order.movieShowing.movie.title}</td>
+               <td>${order.ticketQuantity}</td>
+               <td>$<fmt:formatNumber type="number" minFractionDigits="2" 
+                  maxFractionDigits="2" value="${order.ticketQuantity * order.movieShowing.cost}" />
+               </td>
+               <td>${order.movieShowing.showroom.theater.name}</td>
+               <td>${order.movieShowing.startTime}</td>
+                  <td> 
+                  	   <form action="MovieSearchResults" method="post">
+                  			<input type="submit" name="buttons${count.index}" value="View">
+                  	   </form>
+                  </td>
+                  <td> 
+                  	   <form action="CancelOrder" method="post">
+                  			<input type="submit" name="button${count.index}" value="Cancel">
+                  	   </form>
+                  </td>
+               </tr>
+      		  </c:forEach>
          </tbody>
       </table>
       <br>
-      <h2> Order Total: $155.34 </h2>
-      <h2> Order Date: 04/22/2019 </h2>
+      <h2> Order Total: $<fmt:formatNumber type="number" minFractionDigits="2" 
+                  maxFractionDigits="2" value="${singleOrder.cost}"/>
+      </h2>
+      <h2> Order Date: ${singleOrder.date} </h2>
       <footer class="footer">
          <div class="container">
             <span style="font: Britannic Bold; font-size: 12px; color: white">IMAX®

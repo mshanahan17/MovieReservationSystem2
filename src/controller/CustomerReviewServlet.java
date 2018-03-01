@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import model.Movie;
 import model.MovieShowing;
 import model.Review;
+import model.ReviewDB;
 import model.User;
 
 /**
@@ -47,8 +48,10 @@ public class CustomerReviewServlet extends HttpServlet {
 				request.getParameter("review"), "");
 		String rating = request.getParameter("rating");
 		
-		String confirmationResponse = "Success";
+		String successResponse = "Your Review Was Successfully Submitted!";
+		String failResponse = "An error was encountered submitting your review!";
 		String date = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
+		String confirmationResponse;
 		
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
@@ -66,6 +69,12 @@ public class CustomerReviewServlet extends HttpServlet {
 		movieReview.setRating(rating);
 		movieReview.setUser(user);
 		
+		if(new ReviewDB().addReview(movieReview)) {
+			confirmationResponse = successResponse;
+		}
+		else {
+			confirmationResponse = failResponse;
+		}
 		session.setAttribute("review", confirmationResponse);
 		
 		request.getRequestDispatcher("WEB-INF/Customer/CustomerReviewConfirmation.jsp")

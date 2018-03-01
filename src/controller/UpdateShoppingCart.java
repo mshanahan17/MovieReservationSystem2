@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.MovieShowing;
+import model.MovieShowingDB;
 import model.Order;
 import model.User;
 
@@ -47,6 +48,7 @@ public class UpdateShoppingCart extends HttpServlet {
 		String qtyTickets = request.getParameter("ticketQty");
 		HttpSession session = request.getSession();
 		
+		
 		User user = (User) session.getAttribute("user");
 		if(user == null) {
 			request.getRequestDispatcher("Login.jsp").forward(request,  response);
@@ -66,19 +68,21 @@ public class UpdateShoppingCart extends HttpServlet {
 		else {
 			total = (Double) session.getAttribute("total");
 		}
+		
 		int numTickets = 0;
 		if(qtyTickets != null) {
 			numTickets = Integer.parseInt(qtyTickets);
-			movShow.setNumOfPurchasedSeats(numTickets);
 			int capacity = movShow.getShowroom().getCapacity();
 			int available = capacity - movShow.getNumOfPurchasedSeats();
 			if(numTickets > available) {
-				
-				session.setAttribute("noCapactiy", "Only " + available + " tickets remaining");
+				String error = "Not enough tickets remaining, only " + available + " tickets remaining.";
+				session.setAttribute("noCapacity", error);
 				request.getRequestDispatcher("WEB-INF/Customer/MovieDetailsSelection.jsp").forward(request, response);
 				return;
 			}
 			else {
+				MovieShowingDB movDB = new MovieShowingDB();
+				movDB.updateNumberPurchasedSeats(movShow, numTickets);
 				movShow.updatePurchasedSeatCount(numTickets);
 			}
 		}

@@ -559,7 +559,7 @@ public class DBAccess {
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, u.getEmailAddress());
-			ps.setString(1, u.getPassword());
+			ps.setString(2, u.getPassword());
 			
 			ResultSet rs = ps.executeQuery();
 			

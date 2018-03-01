@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.MovieShowingDB;
 import model.Order;
 import model.ReviewDB;
 import model.User;
@@ -62,29 +63,49 @@ public class Checkout extends HttpServlet {
 		boolean orderRemoved = false;
 		List<Order> orders = (List<Order>) session.getAttribute("shoppingCart");
 		double total = (double) session.getAttribute("total");
+		MovieShowingDB movDB = new MovieShowingDB();
+		int numTix;
+		session.removeAttribute("movie");
 		
 		if(button0 != null) {
 			total -= orders.get(0).getCost();
+			numTix = -orders.get(0).getTicketQuantity();
+			System.out.print(orders.get(0).getMovieShowing());
+			System.out.println(numTix + "TICKET NUM");
+			movDB.updateNumberPurchasedSeats(orders.get(0).getMovieShowing()
+					, numTix);
 			orders.remove(0);
 			orderRemoved = true;
 		}
 		else if(button1 != null) {
 			total -= orders.get(1).getCost();
+			numTix = -orders.get(1).getTicketQuantity();
+			movDB.updateNumberPurchasedSeats(orders.get(1).getMovieShowing()
+					, numTix);
 			orders.remove(1);
 			orderRemoved = true;
 		}
 		else if(button2 != null) {
 			total -= orders.get(2).getCost();
+			numTix = -orders.get(2).getTicketQuantity();
+			movDB.updateNumberPurchasedSeats(orders.get(2).getMovieShowing()
+					, numTix);
 			orders.remove(2);
 			orderRemoved = true;
 		}
 		else if(button3 != null) {
 			total -= orders.get(3).getCost();
+			numTix = -orders.get(3).getTicketQuantity();
+			movDB.updateNumberPurchasedSeats(orders.get(3).getMovieShowing()
+					, numTix);
 			orders.remove(3);
 			orderRemoved = true;
 		}
 		else if(button4 != null) {
 			total -= orders.get(4).getCost();
+			numTix = -orders.get(4).getTicketQuantity();
+			movDB.updateNumberPurchasedSeats(orders.get(4).getMovieShowing()
+					, numTix);
 			orders.remove(4);
 			orderRemoved = true;
 		}

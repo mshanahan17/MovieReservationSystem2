@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.Order;
+import model.OrderDB;
 import model.User;
 
 /**
@@ -43,6 +45,13 @@ public class CancelOrderTransaction extends HttpServlet {
 		if(user == null) {
 			request.getRequestDispatcher("Login.jsp").forward(request,  response);
 			return;
+		}
+		
+		Order movOrder = (Order) session.getAttribute("movieOrder");
+		
+		if(movOrder != null) {
+			OrderDB orderDB = new OrderDB();
+			orderDB.removeOrderItem(movOrder);
 		}
 		request.getRequestDispatcher("WEB-INF/Customer/CancellationConfirmation.jsp")
 			   .forward(request, response);

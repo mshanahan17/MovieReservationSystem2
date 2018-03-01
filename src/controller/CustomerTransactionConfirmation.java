@@ -1,6 +1,8 @@
 package controller;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +12,8 @@ import javax.servlet.http.HttpSession;
 
 import model.Address;
 import model.CreditCard;
+import model.Order;
+import model.OrderDB;
 import model.User;
 import model.UserDB;
 
@@ -61,6 +65,7 @@ public class CustomerTransactionConfirmation extends HttpServlet {
 		HttpSession session = request.getSession();
 		session.removeAttribute("ccError");
 		session.removeAttribute("transactionError");
+		session.removeAttribute("completeOrder");
 		User user = (User) session.getAttribute("user");
 		
 		if(user == null) {
@@ -116,6 +121,11 @@ public class CustomerTransactionConfirmation extends HttpServlet {
 			return;
 		}
 		
+		List<Order> orders = (List<Order>) session.getAttribute("shoppingCart");
+		OrderDB orderDB = new OrderDB();
+		orderDB.addOrdersToUser(orders, total);
+		session.setAttribute("completeOrder", orders);
+		session.removeAttribute("shoppingCart");
 		request.getRequestDispatcher("WEB-INF/Customer/CustomerTransactionConfirmation.jsp").forward(request,  response);
 	}
 
