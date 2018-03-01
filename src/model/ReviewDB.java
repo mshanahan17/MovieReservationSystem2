@@ -4,9 +4,7 @@ import java.util.List;
 
 public class ReviewDB {
 
-<<<<<<< HEAD
-	public boolean addReview(Review r, String rating) {
-=======
+
 	public static void main(String[] args) {
 //		Review r = new Review();
 //		r.set
@@ -14,8 +12,7 @@ public class ReviewDB {
 		return;
 	}
 	
-	public boolean addReview(Review r) {
->>>>>>> 83eb57f90fddd658c90e466b4bdc3087d29a08b1
+	public boolean addReview(Review r, String rating) {
 		DBAccess db = new DBAccess();
        	db.createConnection();
        	boolean success = db.addReview(r, rating);
