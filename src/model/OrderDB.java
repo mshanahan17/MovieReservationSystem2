@@ -11,8 +11,9 @@ public class OrderDB {
 	public static void main(String[] args) {
 		
 		OrderDB odb = new OrderDB();	
+		UserDB udb = new UserDB();
 		
-		List<Order> orders = odb.getOrdersByOrderId(18);
+		List<Order> orders = odb.getOrdersByUser(udb.getUserById(3));
 		
 		for(Order o : orders) {
 			System.out.println("ORDER\n----------------\n " + o);

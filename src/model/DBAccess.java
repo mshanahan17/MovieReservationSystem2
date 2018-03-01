@@ -546,11 +546,16 @@ public class DBAccess {
 	
 	public List<Order> getOrdersByUser(User u) {
 		//TODO: test this
-		String sql = "select * from `Order` o\n" + 
-				"join User u on o.CustomerId = u.Id\n" + 
-				"join OrderItem oi on o.Id = oi.OrderId\n" + 
-				"where u.EmailAddress = ?\n" + 
-				"and u.`Password` = ?;";
+//		String sql = "select * from `Order` o\n" + 
+//				"join User u on o.CustomerId = u.Id\n" + 
+//				"join OrderItem oi on o.Id = oi.OrderId\n" + 
+//				"where u.EmailAddress = ?\n" + 
+//				"and u.`Password` = ?";
+		
+		String sql = "    select * from `Order` o\n" + 
+				"    join User u on o.CustomerId = u.Id\n" + 
+				"    where u.EmailAddress = ?\n" + 
+				"    and u.`Password` = ?;";
 		
 	    PreparedStatement ps;	   	    
 	    
@@ -559,7 +564,7 @@ public class DBAccess {
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, u.getEmailAddress());
-			ps.setString(1, u.getPassword());
+			ps.setString(2, u.getPassword());
 			
 			ResultSet rs = ps.executeQuery();
 			
@@ -573,12 +578,12 @@ public class DBAccess {
 				o.setCreditCardNumber(rs.getString("CreditCardNumber"));
 				o.setId(rs.getInt("Id"));
 				
-				// TODO: HERE
-				int showingId = rs.getInt("ShowingId"); // get MovieShowing with this
-				MovieShowing ms = getMovieShowingById(showingId);
-				o.setMovieShowing(ms);
-				
-				o.setTicketQuantity(rs.getInt("Quantity")); // This is how many tickets they bought of a particular showing
+//				// TODO: HERE
+//				int showingId = rs.getInt("ShowingId"); // get MovieShowing with this
+//				MovieShowing ms = getMovieShowingById(showingId);
+//				o.setMovieShowing(ms);
+//				
+//				o.setTicketQuantity(rs.getInt("Quantity")); // This is how many tickets they bought of a particular showing
 				
 				orders.add(o);
 		    }
