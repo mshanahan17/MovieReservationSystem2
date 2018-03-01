@@ -91,19 +91,19 @@ public class MovieSearchResults extends HttpServlet {
 			session.setAttribute("movie", movieShowings.get(4));
 			reviews = new ReviewDB().getReviewsByMovieTitle(movieShowings.get(4).getMovie().getTitle());
 		} else if (buttons0 != null) {
-			session.setAttribute("movie", orderItems.get(0).getMovieShowing().getMovie());
+			session.setAttribute("movie", orderItems.get(0).getMovieShowing());
 			reviews = new ReviewDB().getReviewsByMovieTitle(orderItems.get(0).getMovieShowing().getMovie().getTitle());
 		} else if (buttons1 != null) {
-			session.setAttribute("movie", orderItems.get(1).getMovieShowing().getMovie());
+			session.setAttribute("movie", orderItems.get(1).getMovieShowing());
 			reviews = new ReviewDB().getReviewsByMovieTitle(orderItems.get(1).getMovieShowing().getMovie().getTitle());
 		} else if (buttons2 != null) {
-			session.setAttribute("movie", orderItems.get(2).getMovieShowing().getMovie());
+			session.setAttribute("movie", orderItems.get(2).getMovieShowing());
 			reviews = new ReviewDB().getReviewsByMovieTitle(orderItems.get(2).getMovieShowing().getMovie().getTitle());
 		} else if (buttons3 != null) {
-			session.setAttribute("movie", orderItems.get(3).getMovieShowing().getMovie());
+			session.setAttribute("movie", orderItems.get(3).getMovieShowing());
 			reviews = new ReviewDB().getReviewsByMovieTitle(orderItems.get(3).getMovieShowing().getMovie().getTitle());
 		} else if (buttons4 != null) {
-			session.setAttribute("movie", orderItems.get(4).getMovieShowing().getMovie());
+			session.setAttribute("movie", orderItems.get(4).getMovieShowing());
 			reviews = new ReviewDB().getReviewsByMovieTitle(orderItems.get(4).getMovieShowing().getMovie().getTitle());
 		}
 		

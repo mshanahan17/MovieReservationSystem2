@@ -50,6 +50,7 @@ public class CancelOrderTransaction extends HttpServlet {
 		Order movOrder = (Order) session.getAttribute("movieOrder");
 		
 		if(movOrder != null) {
+			System.out.println(movOrder);
 			OrderDB orderDB = new OrderDB();
 			orderDB.removeOrderItem(movOrder);
 		}

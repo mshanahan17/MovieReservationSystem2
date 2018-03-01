@@ -44,7 +44,7 @@
                maxFractionDigits="2" 
                value="${movieOrder.ticketQuantity * movieOrder.movieShowing.cost}" />
                </td>
-               <td>${movieOrder.movieShowing.theater.name}</td>
+               <td>${movieOrder.movieShowing.showroom.theater.name}</td>
             </tr>
          </tbody>
       </table>
@@ -53,7 +53,7 @@
         <input type="submit" name="button" value="Confirm Cancelation">
       </form>
       <form action="ManageOrder" method="post">
-        <input type="submit" name="button" value="Discard Cancellation">
+        <input type="submit" name="discard" value="Discard Cancellation">
       </form>
       <footer class="footer">
          <div class="container">

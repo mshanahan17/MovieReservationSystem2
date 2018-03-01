@@ -4,10 +4,10 @@ import java.util.List;
 
 public class ReviewDB {
 
-	public boolean addReview(Review r) {
+	public boolean addReview(Review r, String rating) {
 		DBAccess db = new DBAccess();
        	db.createConnection();
-       	boolean success = db.addReview(r);
+       	boolean success = db.addReview(r, rating);
        	db.closeConnection();
 		return success;
 	}

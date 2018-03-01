@@ -33,7 +33,7 @@
                method="post" name="reviewForm">
                <fieldset>
                   <legend>Customer Review</legend>
-                  <b>Review:</b><br> <textarea form="reviewForm" name="review" style="height:100px; width:20vw; margin:5px"></textarea><br>
+                  <b>Review:</b><br> <input type="text" name="review" style="width:30vw; margin:5px"><br>
                   <b style="margin: 5px">Rating:</b>
                   <select name="rating" style="margin: 5px">
                   	<option value="1">1</option>

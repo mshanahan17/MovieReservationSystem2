@@ -66,20 +66,20 @@ public class CancelOrder extends HttpServlet {
 		}
 		
 		Order movOrder = new Order();
-		
-		if(button0 != null || button0 != "") {
+
+		if(button0 != null && button0 != "") {
 			movOrder = orderItems.get(0);
 		}
-		if(button1 != null || button1 != "") {
+		if(button1 != null && button1 != "") {
 			movOrder = orderItems.get(1);
 		}
-		if(button2 != null || button2 != "") {
+		if(button2 != null && button2 != "") {
 			movOrder = orderItems.get(2);
 		}
-		if(button3 != null || button3 != "") {
+		if(button3 != null && button3 != "") {
 			movOrder = orderItems.get(3);
 		}
-		if(button4 != null || button4 != "") {
+		if(button4 != null && button4 != "") {
 			movOrder = orderItems.get(4);
 		}
 		

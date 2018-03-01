@@ -1158,12 +1158,12 @@ public class DBAccess {
 		return cc;
 	}
 	
-	public boolean addReview(Review r) {
+	public boolean addReview(Review r, String rating) {
 		//TODO: Test this
 		String sql = "insert into CustomerReview (movieID, userID, ReviewDate, Rating, Review) \n" + 
 				"values (\n" + 
 				"	(select Id from Movie where `Movie name` = ?),\n" + 
-				"    (select Id from User where EmailAddress = ? and `Password `= ?),\n" + 
+				"    (select Id from User where EmailAddress = ? and `Password`= ?),\n" + 
 				"    ?, ?, ?)";
 		
 	    PreparedStatement ps;	   	    
@@ -1174,7 +1174,7 @@ public class DBAccess {
 			ps.setString(2, r.getUser().getEmailAddress());
 			ps.setString(3, r.getUser().getPassword());
 			ps.setString(4, r.getDate());
-			ps.setInt(5, Integer.parseInt(r.getRating()));
+			ps.setInt(5, Integer.parseInt(rating));
 			ps.setString(6, r.getContent());			
 			
 			ps.executeUpdate();

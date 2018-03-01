@@ -44,7 +44,7 @@
                maxFractionDigits="2" 
                value="${movieOrder.ticketQuantity * movieOrder.movieShowing.cost}" />
                </td>
-               <td>${movieOrder.movieShowing.theater.name}</td>
+               <td>${movieOrder.movieShowing.showroom.theater.name}</td>
             </tr>
          </tbody>
       </table>

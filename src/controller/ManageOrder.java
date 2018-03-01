@@ -54,7 +54,7 @@ public class ManageOrder extends HttpServlet {
 			return;
 		}
 		
-		if(buttonVal != null || buttonVal != "") {
+		if(buttonVal != null && buttonVal != "") {
 			String[] buttonSplit = buttonVal.split(" ");
 			int orderId = Integer.parseInt(buttonSplit[2]);
 			List<Order> orderItems = new OrderDB().getOrdersByOrderId(orderId);

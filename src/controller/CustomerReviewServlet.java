@@ -19,7 +19,7 @@ import model.User;
 /**
  * Servlet implementation class CustomerReview
  */
-@WebServlet("/CustomerReview")
+@WebServlet("/CustomerReviewServlet")
 public class CustomerReviewServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -45,7 +45,7 @@ public class CustomerReviewServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String review = ServletUtils.validateInput(
-				request.getParameter("review"), "");
+				request.getParameter("review".trim()), "");
 		String rating = request.getParameter("rating");
 		
 		String successResponse = "Your Review Was Successfully Submitted!";
@@ -55,6 +55,7 @@ public class CustomerReviewServlet extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
+		System.out.print(review);
 		MovieShowing movieShowing = (MovieShowing) session.getAttribute("movie");
 		if(user == null) {
 			request.getRequestDispatcher("Login.jsp")
@@ -69,7 +70,7 @@ public class CustomerReviewServlet extends HttpServlet {
 		movieReview.setRating(rating);
 		movieReview.setUser(user);
 		
-		if(new ReviewDB().addReview(movieReview)) {
+		if(new ReviewDB().addReview(movieReview, rating)) {
 			confirmationResponse = successResponse;
 		}
 		else {
