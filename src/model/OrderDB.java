@@ -20,7 +20,7 @@ public class OrderDB {
 		
 //		odb.addTestOrdersToDB();
 
-		List<Order> orders = odb.getOrdersByOrderId(45);		
+		List<Order> orders = odb.getOrdersByOrderId(47);		
 		System.out.println(odb.removeOrderItem(orders.get(0)));
 
 		
@@ -138,9 +138,8 @@ public class OrderDB {
 	}
 
 	public boolean removeOrderItem(Order o) {
-		OrderDB odb = new OrderDB();
 		
-		if(odb.isPassedMovieShowingTime(o.getMovieShowing().getStartTime(), odb.getDateTime())) {
+		if(this.isPassedMovieShowingTime(o.getMovieShowing().getStartTime(), this.getDateTime())) {
 			return false;
 		} else {
 			DBAccess db = new DBAccess();

@@ -760,6 +760,8 @@ public class DBAccess {
 		
 	    PreparedStatement ps;	   	    	    	    
 	    
+	    System.out.println("Updating Order Cost...\nProvided values--\nCHANGE IN COST: " + changeInCost + "\nORDER: \n" + o);
+	    
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setDouble(1, o.getCost() + changeInCost); // TODO: Is this okay?
@@ -906,6 +908,12 @@ public class DBAccess {
 				"where EmailAddress = ? and Password = ?"; 
 		
 	    PreparedStatement ps;	    
+	    
+	    System.out.println("ADDING ADDRESS TO USER:");
+	    System.out.println("ADDING ADDRESS TO USER:\n=============================\n");
+	    System.out.println("PROVIDED ADDRESS: " + a);
+	    System.out.println("PROVIDED USER: " + u);
+	    System.out.println("=============================");
 	    
 		try {
 			ps = conn.prepareStatement(sql);
