@@ -40,6 +40,8 @@ public class CancelOrderTransaction extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		String error = "Can no longer cancel that order!";
+		String successMsg = "Your order has been cancelled!";
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		if(user == null) {
@@ -48,11 +50,17 @@ public class CancelOrderTransaction extends HttpServlet {
 		}
 		
 		Order movOrder = (Order) session.getAttribute("movieOrder");
-		
+		boolean success = false;
 		if(movOrder != null) {
-			System.out.println(movOrder);
 			OrderDB orderDB = new OrderDB();
-			orderDB.removeOrderItem(movOrder);
+			success = orderDB.removeOrderItem(movOrder);
+		}
+		
+		if(!success) {
+			session.setAttribute("cancellationMsg", error);
+		}
+		else {
+			session.setAttribute("cancellationMsg", successMsg);
 		}
 		request.getRequestDispatcher("WEB-INF/Customer/CancellationConfirmation.jsp")
 			   .forward(request, response);

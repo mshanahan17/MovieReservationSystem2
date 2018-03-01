@@ -53,6 +53,10 @@ public class Login extends HttpServlet {
 		session.removeAttribute("pwError");
 		String success = "WEB-INF/Customer/CustomerHomePage.jsp";
 		String failure = "Registraion.jsp";
+		String button = request.getParameter("login");
+		if(button != null && button != "") {
+			session.removeAttribute("total");
+		}
 		/*
 		 * recieves and validates login information
 		 */
