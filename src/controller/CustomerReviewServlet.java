@@ -55,7 +55,7 @@ public class CustomerReviewServlet extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
-		System.out.print(review);
+
 		MovieShowing movieShowing = (MovieShowing) session.getAttribute("movie");
 		if(user == null) {
 			request.getRequestDispatcher("Login.jsp")
@@ -76,7 +76,7 @@ public class CustomerReviewServlet extends HttpServlet {
 		else {
 			confirmationResponse = failResponse;
 		}
-		session.setAttribute("review", confirmationResponse);
+		session.setAttribute("reviewMessage", confirmationResponse);
 		
 		request.getRequestDispatcher("WEB-INF/Customer/CustomerReviewConfirmation.jsp")
 			   .forward(request, response);

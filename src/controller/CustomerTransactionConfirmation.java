@@ -103,6 +103,7 @@ public class CustomerTransactionConfirmation extends HttpServlet {
 			user.setShippingAddress(shippingAddress);
 			user.setCreditCard(creditCard);
 			userDB.addCreditCardToUser(user, creditCard);
+			userDB.addAddressToUser(user, billingAddress);
 		}
 		
 		if(!userDB.validateCreditCard(user, creditCard)) {
@@ -126,6 +127,7 @@ public class CustomerTransactionConfirmation extends HttpServlet {
 		orderDB.addOrdersToUser(orders, total);
 		session.setAttribute("completeOrder", orders);
 		session.removeAttribute("shoppingCart");
+		session.removeAttribute("total");
 		request.getRequestDispatcher("WEB-INF/Customer/CustomerTransactionConfirmation.jsp").forward(request,  response);
 	}
 

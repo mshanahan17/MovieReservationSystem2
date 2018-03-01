@@ -48,6 +48,7 @@ public class UpdateShoppingCart extends HttpServlet {
 		String qtyTickets = request.getParameter("ticketQty");
 		HttpSession session = request.getSession();
 		session.removeAttribute("cartError");
+		session.removeAttribute("orderError");
 		
 		
 		User user = (User) session.getAttribute("user");
@@ -71,22 +72,27 @@ public class UpdateShoppingCart extends HttpServlet {
 		}
 		
 		int numTickets = 0;
-		if(qtyTickets != null) {
-			numTickets = Integer.parseInt(qtyTickets);
-			int capacity = movShow.getShowroom().getCapacity();
-			int available = capacity - movShow.getNumOfPurchasedSeats();
-			if(numTickets > available) {
-				String error = "Not enough tickets remaining, only " + available + " tickets remaining.";
-				session.setAttribute("noCapacity", error);
-				request.getRequestDispatcher("WEB-INF/Customer/MovieDetailsSelection.jsp").forward(request, response);
-				return;
-			}
-			else {
-				MovieShowingDB movDB = new MovieShowingDB();
-				movDB.updateNumberPurchasedSeats(movShow, numTickets);
-				movShow.updatePurchasedSeatCount(numTickets);
+		
+		//prevents race conditions for purchasing last tickets.
+		synchronized(this) {
+			if(qtyTickets != null) {
+				numTickets = Integer.parseInt(qtyTickets);
+				int capacity = movShow.getShowroom().getCapacity();
+				int available = capacity - movShow.getNumOfPurchasedSeats();
+				if(numTickets > available) {
+					String error = "Not enough tickets remaining, only " + available + " tickets remaining.";
+					session.setAttribute("noCapacity", error);
+					request.getRequestDispatcher("WEB-INF/Customer/MovieDetailsSelection.jsp").forward(request, response);
+					return;
+				}
+				else {
+					MovieShowingDB movDB = new MovieShowingDB();
+					movDB.updateNumberPurchasedSeats(movShow, numTickets);
+					movShow.updatePurchasedSeatCount(numTickets);
+				}
 			}
 		}
+
 		
 		ArrayList<Order> shoppingCart = (ArrayList<Order>) session.getAttribute("shoppingCart");
 		
