@@ -70,8 +70,7 @@ public class Checkout extends HttpServlet {
 		if(button0 != null) {
 			total -= orders.get(0).getCost();
 			numTix = -orders.get(0).getTicketQuantity();
-			System.out.print(orders.get(0).getMovieShowing());
-			System.out.println(numTix + "TICKET NUM");
+
 			movDB.updateNumberPurchasedSeats(orders.get(0).getMovieShowing()
 					, numTix);
 			orders.remove(0);

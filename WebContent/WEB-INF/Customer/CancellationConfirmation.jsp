@@ -49,7 +49,7 @@
          </tbody>
       </table>
       <br>
-      <h2>Your ticket order has been cancelled!</h2>
+      <h2 style="color:red">${cancellationMsg}</h3>
       <p>
        $<fmt:formatNumber type="number" minFractionDigits="2" 
        maxFractionDigits="2" 

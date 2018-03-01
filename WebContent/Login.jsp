@@ -52,7 +52,7 @@
                   <input type="password" name="password"> <span
                      style="color: red">${pwError}</span><br>
                      <input type="checkbox" name="rememberMe">Remember Me<br>
-                     <input type="submit">
+                     <input type="submit" name="login">
                </fieldset>
             </form>
          </div>

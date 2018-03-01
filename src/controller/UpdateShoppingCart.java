@@ -47,6 +47,7 @@ public class UpdateShoppingCart extends HttpServlet {
 		String path = "WEB-INF/Customer/ViewAndCheckoutShoppingCart.jsp";
 		String qtyTickets = request.getParameter("ticketQty");
 		HttpSession session = request.getSession();
+		session.removeAttribute("cartError");
 		
 		
 		User user = (User) session.getAttribute("user");
@@ -89,8 +90,7 @@ public class UpdateShoppingCart extends HttpServlet {
 		
 		ArrayList<Order> shoppingCart = (ArrayList<Order>) session.getAttribute("shoppingCart");
 		
-		if(shoppingCart == null || shoppingCart.size() < 1) {
-			session.removeAttribute("total");
+		if(shoppingCart == null) {
 			shoppingCart = new ArrayList();
 		}
 		

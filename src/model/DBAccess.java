@@ -610,8 +610,6 @@ public class DBAccess {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, id);
 			
-			System.out.println(ps.toString());
-			
 			ResultSet rs = ps.executeQuery();
 			
 			while(rs.next()) {	
@@ -861,8 +859,6 @@ public class DBAccess {
 			
 			ps.setString(7, cc.getCvv());
 			ps.setString(8, cc.getExpirationDate());			
-			
-			System.out.println(ps);
 			
 			ps.executeUpdate();						
 			
