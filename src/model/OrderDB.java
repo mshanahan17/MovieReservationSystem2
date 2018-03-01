@@ -11,13 +11,33 @@ public class OrderDB {
 	public static void main(String[] args) {
 		
 		OrderDB odb = new OrderDB();	
-		UserDB udb = new UserDB();
+		UserDB udb = new UserDB();		
+		DBAccess db = new DBAccess();
+		MovieShowingDB msdb = new MovieShowingDB();
 		
-		List<Order> orders = odb.getOrdersByUser(udb.getUserById(3));
+		Order o = odb.getOrdersByOrderId(24).get(0);
+		// System.out.println(o);
+		odb.removeOrderItem(o);
 		
-		for(Order o : orders) {
-			System.out.println("ORDER\n----------------\n " + o);
-		}
+       	
+		// STRING DATE COMPARISON TESTING
+//		String movieDate = "2018-04-04 17:30:00.0";
+//		String orderDate = "";
+//		
+//		OrderDB odb = new OrderDB();	
+//		UserDB udb = new UserDB();
+//		
+//		List<Order> orders = odb.getOrdersByOrderId(24);
+//		
+//		System.out.println(orders.get(0).getMovieShowing().getStartTime());
+		// ------------------------------------
+		
+		
+		
+		
+//		for(Order o : orders) {
+//			System.out.println("ORDER\n----------------\n " + o);
+//		}
 		
 		
 //		OrderDB odb = new OrderDB();	
@@ -97,12 +117,19 @@ public class OrderDB {
 	}
 
 	public void removeOrderItem(Order o) {
+		
+		if(true) {
+			
+		} else {
+			
+		}
+		
 		DBAccess db = new DBAccess();
        	db.createConnection();
        	db.removeOrderItem(o);
        	db.updateTotalCostOfOrder(o, o.getCost() * -1);
        	db.closeConnection();
-       	return;
+       	return;  //TODO: Return t/f depending on if order date is passed or not
 	}
 	
 	public void updateTotalCostOfOrder(Order o, double changeInCost) {
@@ -111,7 +138,13 @@ public class OrderDB {
        	db.updateTotalCostOfOrder(o, changeInCost);
        	db.closeConnection();
 		return;
-	}		
+	}
+	
+	public void updateCreditCardBalance(Order o, double changeInCost) {
+		//TODO: Implement
+		
+		return;
+	}
 	
 	private String getDateTime() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
