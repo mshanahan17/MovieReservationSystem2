@@ -721,6 +721,30 @@ public class DBAccess {
 		return;
 	}
 	
+	public void refundCreditCard(Order o, double changeInCost) {
+		//TODO: Implement
+		
+		String sql = "update CreditCard \n" + 
+				"set Balance = ?\n" + 
+				"where CreditCardNumber = ?;";
+
+	    PreparedStatement ps;	   	    	    	    
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setDouble(1, o.getCustomer().getCreditCard().getBalance() + changeInCost);
+			ps.setString(2, o.getCreditCardNumber());			
+			
+			ps.executeUpdate();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return;
+	}
+	
 	public void updateTotalCostOfOrder(Order o, double changeInCost) {
 		String sql = "UPDATE `Order`\n" + 
 				"SET TotalCost = ?\n" + 

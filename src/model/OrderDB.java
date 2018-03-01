@@ -139,6 +139,7 @@ public class OrderDB {
 		DBAccess db = new DBAccess();
        	db.createConnection();
        	db.updateTotalCostOfOrder(o, changeInCost);
+       	db.refundCreditCard(o, changeInCost);
        	db.closeConnection();
 		return;
 	}
@@ -147,7 +148,7 @@ public class OrderDB {
 		//TODO: Implement
 		DBAccess db = new DBAccess();
        	db.createConnection();
-       	//db.updateTotalCostOfOrder(o, changeInCost);
+       	db.refundCreditCard(o, changeInCost);
        	db.closeConnection();
 		return;
 	}
