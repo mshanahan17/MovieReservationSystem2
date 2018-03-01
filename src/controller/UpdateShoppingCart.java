@@ -89,7 +89,8 @@ public class UpdateShoppingCart extends HttpServlet {
 		
 		ArrayList<Order> shoppingCart = (ArrayList<Order>) session.getAttribute("shoppingCart");
 		
-		if(shoppingCart == null) {
+		if(shoppingCart == null || shoppingCart.size() < 1) {
+			session.removeAttribute("total");
 			shoppingCart = new ArrayList();
 		}
 		

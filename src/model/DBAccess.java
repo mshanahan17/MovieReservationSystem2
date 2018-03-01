@@ -518,7 +518,7 @@ public class DBAccess {
 			
 			Order refOrder = getOrderById(orderId);
 			
-			while(rs.next()) {	
+			while(rs.next()) {				
 				Order o = new Order();				
 				
 				o.setTicketQuantity(rs.getInt("Quantity"));
@@ -639,35 +639,79 @@ public class DBAccess {
 	}
 	
 	public void removeOrderItem(Order o) {
-		String sql = "DELETE FROM `OrderItem`\n" + 
-				"WHERE OrderId = \n" + 
-				"	(select Id from `Order` \n" + 
-				"    WHERE CustomerId = (select Id from User where EmailAddress = ? and `Password` = ?)\n" + 
-				"    and TotalCost = ?\n" + 
-				"    and OrderDate = ?\n" + 
-				"    and BillingAddress = ?\n" + 
-				"    and CreditCardNumber = ?)\n" + 
-				"AND ShowingID = \n" + 
-				"	(select Id from MovieShowing where movieID = \n" + 
-				"		(select Id from Movie where `Movie name` = ?)\n" + 
-				"    and StartTime = ?\n" + 
-				"    and Price = ?)\n" + 
-				"AND Quantity = ?";
+//		String sql = "DELETE FROM `OrderItem`\n" + 
+//				"WHERE OrderId = \n" + 
+//				"	(select Id from `Order` \n" + 
+//				"    WHERE CustomerId = (select Id from User where EmailAddress = ? and `Password` = ?)\n" + 
+//				"    and TotalCost = ?\n" + 
+//				"    and OrderDate = ?\n" + 
+//				"    and BillingAddress = ?\n" + 
+//				"    and CreditCardNumber = ?)\n" + 
+//				"AND ShowingID = \n" + 
+//				"	(select Id from MovieShowing where movieID = \n" + 
+//				"		(select Id from Movie where `Movie name` = ?)\n" + 
+//				"    and StartTime = ?\n" + 
+//				"    and Price = ?)\n" + 
+//				"AND Quantity = ?";
 		
+//		String sql = "DELETE FROM `OrderItem`\n" + 
+//		"WHERE OrderId = ?\n" +
+//		"AND ShowingID = \n" + 
+//		"	(select Id from MovieShowing where movieID = \n" + 
+//		"		(select Id from Movie where `Movie name` = ?)\n" + 
+//		"    and StartTime = ?\n" + 
+//		"    and Price = ?)\n" + 
+//		"AND Quantity = ?";
+		
+		String sql = "DELETE FROM `OrderItem`\n" + 
+				"WHERE OrderId = ?\n" +
+				"AND ShowingID = \n" + 
+				"(select Id from MovieShowing\n" + 
+						"    where movieID = \n" + 
+						"		(select Id from Movie where `Movie name` = ?)\n" + 
+						"    and showroomID = \n" + 
+						"		(select Id from Showroom \n" + 
+						"        where availableSeats = ? \n" + 
+						"        and theaterBuilding = \n" + 
+						"			(select Id from TheaterBuilding\n" + 
+						"            where `Name` = ?))\n" + 
+						"    and StartTime = ?\n" + 
+						"    and Price = ?)\n" +  
+				"AND Quantity = ?";
+		/*
+		 * 				"    (select Id from MovieShowing\n" + 
+				"    where movieID = \n" + 
+				"		(select Id from Movie where `Movie name` = ?)\n" + 
+				"    and showroomID = \n" + 
+				"		(select Id from Showroom \n" + 
+				"        where availableSeats = ? \n" + 
+				"        and theaterBuilding = \n" + 
+				"			(select Id from TheaterBuilding\n" + 
+				"            where `Name` = ?))\n" + 
+				"    and StartTime = ?\n" + 
+				"    and Price = ?),\n" + 
+		 */
 		PreparedStatement ps;	   	    	    	    
 	    
 		try {
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, o.getCustomer().getEmailAddress()); 
-			ps.setString(2, o.getCustomer().getPassword());
-			ps.setDouble(3, o.getCost()); // TODO: Okay?
-			ps.setString(4, o.getDate()); 
-			ps.setString(5, o.getCustomer().getBillingAddress().getStreetAddress());
-			ps.setString(6, o.getCustomer().getCreditCard().getCardNumber());
-			ps.setString(7, o.getMovieShowing().getMovie().getTitle());
-			ps.setString(8, o.getMovieShowing().getStartTime());
-			ps.setDouble(9, o.getMovieShowing().getCost()); //TODO: OKay?
-			ps.setInt(10, o.getTicketQuantity());
+			ps.setInt(1, o.getId()); 
+			ps.setString(2, o.getMovieShowing().getMovie().getTitle());
+			ps.setInt(3, o.getMovieShowing().getShowroom().getCapacity());
+			ps.setString(4, o.getMovieShowing().getShowroom().getTheater().getName());
+			ps.setString(5, o.getMovieShowing().getStartTime());
+			ps.setDouble(6, o.getMovieShowing().getCost()); //TODO: OKay?
+			ps.setInt(7, o.getTicketQuantity());
+//			ps.setString(1, o.getCustomer().getEmailAddress()); 
+//			ps.setString(2, o.getCustomer().getPassword());
+//			ps.setDouble(3, o.getCost()); // TODO: Okay?
+//			ps.setString(4, o.getDate()); 
+//			ps.setString(5, o.getCustomer().getBillingAddress().getStreetAddress());
+//			ps.setString(6, o.getCustomer().getCreditCard().getCardNumber());
+//			ps.setString(7, o.getMovieShowing().getMovie().getTitle());
+//			ps.setString(8, o.getMovieShowing().getStartTime());
+//			ps.setDouble(9, o.getMovieShowing().getCost()); //TODO: OKay?
+//			ps.setInt(10, o.getTicketQuantity());
 						
 			ps.executeUpdate();
 		    ps.close();
