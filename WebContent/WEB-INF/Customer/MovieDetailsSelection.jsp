@@ -59,6 +59,7 @@
                         <td>${movie.showroom.capacity - movie.numOfPurchasedSeats}</td>
                      </tbody>
                   </table>
+                  <h4 style="color:red">${noCapacity}</h4>
                   <h5>Ticket Quantity: 
 					<select name="ticketQty">
 					<option value="1">1</option>
@@ -66,7 +67,7 @@
 					<option value="3">3</option>
 					<option value="4">4</option>
 					<option value="5">5</option>
-					</select> <span style="color:red">${noCapacity}</span></h5>
+					</select></h5>
                   <input type="submit" value="Add To Cart">
                </form>
             </div>

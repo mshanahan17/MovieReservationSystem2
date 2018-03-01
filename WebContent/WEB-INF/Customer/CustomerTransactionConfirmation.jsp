@@ -35,13 +35,13 @@
             <th>Theater Room</th>
          </thead>
          <tbody>
-               <c:forEach items="${shoppingCart}" var="order" varStatus="count">
+               <c:forEach items="${completeOrder}" var="order" varStatus="count">
                <tr>
-                  <td>${movie.movie.title}</td>
+                  <td>${order.movieShowing.movie.title}</td>
                   <td>${order.ticketQuantity}</td>
                   <td>$<fmt:formatNumber type="number" minFractionDigits="2" 
                   maxFractionDigits="2" value="${order.cost}" /></td>
-                  <td>${movie.showroom.theater.name}</td>
+                  <td>${order.movieShowing.showroom.theater.name}</td>
                </tr>
       		   </c:forEach>
          </tbody>

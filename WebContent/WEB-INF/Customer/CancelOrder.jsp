@@ -6,6 +6,7 @@
    To change this template use File | Settings | File Templates.
    --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
    <head>
       <title>Title</title>
@@ -35,17 +36,25 @@
          </thead>
          <tbody>
             <tr>
-               <td> 443323 </td>
-               <td>Star Wars: The Last Jedi</td>
-               <td>4</td>
-               <td>$60.00</td>
-               <td>Grand 3</td>
+               <td> ${movieOrder.id} </td>
+               <td>${movieOrder.movieShowing.movie.title}</td>
+               <td>${movieOrder.ticketQuantity}</td>
+               <td>
+               $<fmt:formatNumber type="number" minFractionDigits="2" 
+               maxFractionDigits="2" 
+               value="${movieOrder.ticketQuantity * movieOrder.movieShowing.cost}" />
+               </td>
+               <td>${movieOrder.movieShowing.theater.name}</td>
             </tr>
          </tbody>
       </table>
       <br>
-      <a href="CancelOrderTransaction" class="btn btn-primary btn-sm" role="button">Confirm Cancellation</a>
-      <a href="ManageOrder" class="btn btn-primary btn-sm" role="button">Discard Cancellation</a>
+      <form action="CancelOrderTransaction" method="post">
+        <input type="submit" name="button" value="Confirm Cancelation">
+      </form>
+      <form action="ManageOrder" method="post">
+        <input type="submit" name="button" value="Discard Cancellation">
+      </form>
       <footer class="footer">
          <div class="container">
             <span style="font: Britannic Bold; font-size: 12px; color: white">IMAX®

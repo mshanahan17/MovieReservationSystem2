@@ -6,6 +6,8 @@
    To change this template use File | Settings | File Templates.
    --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
    <head>
       <title>Title</title>
@@ -32,14 +34,25 @@
             <th>Order Number</th>
             <th>Total</th>
             <th>Date</th>
+            <th></th>
          </thead>
          <tbody>
-            <tr>
-               <td>435554</td>
-               <td>$60.00</td>
-               <td>05/06/2019</td>
-               <td> <a href="ManageOrder" class="btn btn-primary btn-sm" role="button">View</a></td>
-            </tr>
+         ${noOrders}
+              <c:forEach items="${pastOrders}" var="order">
+         		<tr>
+                  <td>${order.id}</td>
+                  <td>
+                  $<fmt:formatNumber type="number" minFractionDigits="2" 
+                  maxFractionDigits="2" value="${order.cost}" />
+                  </td>
+                  <td>${order.date}</td>
+                  <td> 
+                  	   <form action="ManageOrder" method="post">
+                  			<input type="submit" name="button" value="View Order ${order.id}">
+                  	   </form>
+                  </td>
+               </tr>
+      		  </c:forEach>
          </tbody>
       </table>
       <br>
