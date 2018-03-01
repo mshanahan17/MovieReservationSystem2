@@ -4,6 +4,13 @@ import java.util.List;
 
 public class ReviewDB {
 
+	public static void main(String[] args) {
+//		Review r = new Review();
+//		r.set
+//		addReview();
+		return;
+	}
+	
 	public boolean addReview(Review r) {
 		DBAccess db = new DBAccess();
        	db.createConnection();

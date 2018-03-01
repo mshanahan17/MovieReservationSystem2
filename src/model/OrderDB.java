@@ -1,34 +1,36 @@
 package model;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.joda.time.DateTime;
 
 public class OrderDB {
 
 	public static void main(String[] args) {
 		
-		OrderDB odb = new OrderDB();	
-		UserDB udb = new UserDB();		
-		DBAccess db = new DBAccess();
-		MovieShowingDB msdb = new MovieShowingDB();
-		
-		Order o = odb.getOrdersByOrderId(24).get(0);
-		// System.out.println(o);
-		odb.removeOrderItem(o);
+//		OrderDB odb = new OrderDB();	
+//		UserDB udb = new UserDB();		
+//		DBAccess db = new DBAccess();
+//		MovieShowingDB msdb = new MovieShowingDB();
+//		
+//		Order o = odb.getOrdersByOrderId(24).get(0);
+//		// System.out.println(o);
+//		odb.removeOrderItem(o);
 		
        	
-		// STRING DATE COMPARISON TESTING
+		// STRING DATE COMPARISON TESTING	
+//		OrderDB odb = new OrderDB();		
 //		String movieDate = "2018-04-04 17:30:00.0";
-//		String orderDate = "";
 //		
-//		OrderDB odb = new OrderDB();	
-//		UserDB udb = new UserDB();
+//		System.out.println(odb.isPassedMovieShowingTime(movieDate, odb.getDateTime()));
 //		
-//		List<Order> orders = odb.getOrdersByOrderId(24);
-//		
+//		List<Order> orders = odb.getOrdersByOrderId(24);		
 //		System.out.println(orders.get(0).getMovieShowing().getStartTime());
 		// ------------------------------------
 		
@@ -116,20 +118,20 @@ public class OrderDB {
        	return;
 	}
 
-	public void removeOrderItem(Order o) {
+	public boolean removeOrderItem(Order o) {
+		OrderDB odb = new OrderDB();
 		
-		if(true) {
-			
+		if(odb.isPassedMovieShowingTime(o.getMovieShowing().getStartTime(), odb.getDateTime())) {
+			return false;
 		} else {
-			
-		}
+			DBAccess db = new DBAccess();
+	       	db.createConnection();
+	       	db.removeOrderItem(o);
+	       	db.updateTotalCostOfOrder(o, o.getCost() * -1);
+	       	db.closeConnection();
+	       	return true;
+		}		
 		
-		DBAccess db = new DBAccess();
-       	db.createConnection();
-       	db.removeOrderItem(o);
-       	db.updateTotalCostOfOrder(o, o.getCost() * -1);
-       	db.closeConnection();
-       	return;  //TODO: Return t/f depending on if order date is passed or not
 	}
 	
 	public void updateTotalCostOfOrder(Order o, double changeInCost) {
@@ -150,6 +152,24 @@ public class OrderDB {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
 		return dateFormat.format(date);
+	}
+	
+	private boolean isPassedMovieShowingTime(String movieShowingDateTime, String nowDateTime) {
+		//TODO: Implement
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		Date mdt = null;
+		Date ndt = null;
+		try {
+			mdt = dateFormat.parse(movieShowingDateTime);
+			ndt = dateFormat.parse(nowDateTime);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}				
+		
+		return ndt.after(mdt);
 	}
 	
 }
