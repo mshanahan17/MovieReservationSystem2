@@ -32,7 +32,7 @@ public class DBAccess {
 	private static final int INVALID_INT_VALUE = -777;
 	
 	public static void main(String[] args) { 
-		
+				
 //		DBAccess dba = new DBAccess();
 //		System.out.println(dba.formatSearchString("theater1   "));
 //		System.out.println(dba.formatSearchString(" scared kitten    "));
@@ -719,6 +719,26 @@ public class DBAccess {
 		}
 
 		return;
+	}
+	
+	public void attemptRemoveOrder(Order o) {
+		
+		String sql = "delete from `Order` where Id = ?";
+	    
+		PreparedStatement ps;	   	    	    	    
+	    
+		try {			
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, o.getId());			
+			
+			ps.executeUpdate();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			System.out.println("ERROR: CANNOT DELETE ORDER WHICH CONTAINS ORDER ITEMS");
+		}
+		
+
 	}
 	
 	public void refundCreditCard(Order o, double changeInCost) {

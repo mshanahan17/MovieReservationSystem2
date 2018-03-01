@@ -147,6 +147,7 @@ public class OrderDB {
 	       	db.removeOrderItem(o);
 	       	db.updateTotalCostOfOrder(o, o.getMovieShowing().getCost() * o.getTicketQuantity() * -1);
 	       	db.refundCreditCard(o, o.getMovieShowing().getCost() * o.getTicketQuantity());
+	       	db.attemptRemoveOrder(o); // TODO: Lol...
 			db.closeConnection();
 	       	return true;
 		}		
