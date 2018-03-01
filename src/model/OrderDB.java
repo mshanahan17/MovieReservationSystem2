@@ -14,6 +14,18 @@ public class OrderDB {
 
 	public static void main(String[] args) {
 		
+		OrderDB odb = new OrderDB();
+		UserDB udb = new UserDB();
+		MovieShowingDB msdb = new MovieShowingDB();
+		
+//		odb.addTestOrdersToDB();
+
+		List<Order> orders = odb.getOrdersByOrderId(45);		
+		System.out.println(odb.removeOrderItem(orders.get(0)));
+
+		
+		//========================================================
+		
 //		OrderDB odb = new OrderDB();	
 //		UserDB udb = new UserDB();		
 //		DBAccess db = new DBAccess();
@@ -107,11 +119,17 @@ public class OrderDB {
        	db.createConnection();
        	
        	String todayDate = getDateTime();
+       	
+       	//System.out.println(orders.get(0).getCustomer());
+       	
        	int orderId = db.addOrderToUser(orders.get(0), totalCost, getDateTime());
        	
        	//System.out.println("\n-----------------\nORDER ID = " + orderId + "\n-------------------\n");
        	
+       	
        	for(Order o : orders) {
+//       		System.out.println("========================\nITERATION\n================================\n");
+//       		System.out.println("MIRROR1: \n-----------------------------------------\n" + o);
        		db.addQuantityToOrderItemTable(o, totalCost, getDateTime(), orderId);
        	}
        	
@@ -128,8 +146,9 @@ public class OrderDB {
 			DBAccess db = new DBAccess();
 	       	db.createConnection();
 	       	db.removeOrderItem(o);
-	       	db.updateTotalCostOfOrder(o, o.getCost() * -1);
-	       	db.closeConnection();
+	       	db.updateTotalCostOfOrder(o, o.getMovieShowing().getCost() * o.getTicketQuantity() * -1);
+	       	db.refundCreditCard(o, o.getMovieShowing().getCost() * o.getTicketQuantity());
+			db.closeConnection();
 	       	return true;
 		}		
 		
@@ -139,7 +158,7 @@ public class OrderDB {
 		DBAccess db = new DBAccess();
        	db.createConnection();
        	db.updateTotalCostOfOrder(o, changeInCost);
-       	db.refundCreditCard(o, changeInCost);
+       	db.refundCreditCard(o, changeInCost * -1);
        	db.closeConnection();
 		return;
 	}
@@ -175,6 +194,39 @@ public class OrderDB {
 		}				
 		
 		return ndt.after(mdt);
+	}
+	
+	private void addTestOrdersToDB() {
+		
+		List<Order> orders = new ArrayList<Order>();
+		OrderDB odb = new OrderDB();
+		UserDB udb = new UserDB();
+		MovieShowingDB msdb = new MovieShowingDB();
+		
+		Order o1 = new Order();
+		User u = udb.getUserById(6);
+		
+		o1.setBillingAddress(u.getBillingAddress().getStreetAddress());
+		o1.setCost(100);
+		o1.setCreditCardNumber(u.getCreditCard().getCardNumber());
+		o1.setCustomer(u);
+		o1.setDate("2200-11-11");
+		o1.setMovieShowing(msdb.getMovieShowingById(4));
+		o1.setTicketQuantity(1); 
+		
+		Order o2 = new Order();
+		o2.setBillingAddress(u.getBillingAddress().getStreetAddress());
+		o2.setCost(100);
+		o2.setCreditCardNumber(u.getCreditCard().getCardNumber());
+		o2.setCustomer(udb.getUserById(6));
+		o2.setDate("2200-11-11");
+		o2.setMovieShowing(msdb.getMovieShowingById(9));
+		o2.setTicketQuantity(1); 
+		
+		orders.add(o1);
+		orders.add(o2);
+		
+		odb.addOrdersToUser(orders, 19);
 	}
 	
 }

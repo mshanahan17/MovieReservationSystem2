@@ -726,11 +726,15 @@ public class DBAccess {
 		
 		String sql = "update CreditCard \n" + 
 				"set Balance = ?\n" + 
-				"where CreditCardNumber = ?;";
+				"where CreditCardNumber = ?";
 
 	    PreparedStatement ps;	   	    	    	    
 	    
 		try {
+			
+			System.out.println("Setting balance to: " + o.getCustomer().getCreditCard().getBalance() + changeInCost);
+			System.out.println("For card number: " + o.getCreditCardNumber());
+			
 			ps = conn.prepareStatement(sql);
 			ps.setDouble(1, o.getCustomer().getCreditCard().getBalance() + changeInCost);
 			ps.setString(2, o.getCreditCardNumber());			
@@ -1043,6 +1047,8 @@ public class DBAccess {
 
 	    User purchaser = firstOrder.getCustomer();
 	    
+	    //System.out.println(purchaser);
+	    
 	    int id = INVALID_INT_VALUE;
 	    
 	    PreparedStatement ps;
@@ -1052,8 +1058,8 @@ public class DBAccess {
 			ps.setString(2, purchaser.getPassword());
 			ps.setDouble(3, totalCost); //TODO: This may need to be an int?
 			ps.setString(4, date);
-			ps.setString(5, firstOrder.getCustomer().getBillingAddress().getStreetAddress());
-			ps.setString(6, firstOrder.getCustomer().getCreditCard().getCardNumber());
+			ps.setString(5, purchaser.getBillingAddress().getStreetAddress());
+			ps.setString(6, purchaser.getCreditCard().getCardNumber());
 								
 			ps.executeUpdate();
 						
@@ -1074,6 +1080,8 @@ public class DBAccess {
 	}
 	
 	public void addQuantityToOrderItemTable(Order o, double totalCost, String dateTime, int orderId) {
+		
+		//System.out.println("MIRROR2: \n-----------------------------------------\n" + o);
 		//TODO: Test this
 				 
 //		String sql = "insert into OrderItem (OrderId, ShowingID, Quantity) \n" + 
@@ -1118,6 +1126,9 @@ public class DBAccess {
 				"    ?);";
 	    
 	    PreparedStatement ps;
+	    
+	    //System.out.println("MIRROR3: \n-------------\n" + o);
+	    
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, orderId);
