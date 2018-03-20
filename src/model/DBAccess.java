@@ -127,13 +127,17 @@ public class DBAccess {
 			ps.setString(1, emailAddress);
 			
 			ResultSet rs = ps.executeQuery();
-			
+			Address billing = new Address();
 			while(rs.next()) {
 				user.setFirstName(rs.getString("FirstName"));
 				user.setLastName(rs.getString("LastName"));
 				user.setEmailAddress(rs.getString("EmailAddress"));
 				user.setPassword(rs.getString("Password"));
-
+				billing.setStreetAddress(rs.getString("Address"));
+				billing.setCity(rs.getString("City"));
+				billing.setState(rs.getString("State"));
+				billing.setZip(rs.getString("PostalCode"));
+				user.setBillingAddress(billing);
 		    }
 			
 			rs.close();
@@ -196,7 +200,10 @@ public class DBAccess {
 	public CreditCard getCreditCardByUserId(int userId) {		
 
 		
-		String sql = "select * from CreditCard where UserId = ?";
+		String sql = "SELECT * FROM CreditCard AS CC "
+				+ "JOIN BankAccount AS BA ON CC.BankAccountId = BA.BankAccountId "
+				+ "JOIN User AS U ON BA.UserId = U.Id "
+				+ "WHERE U.Id = ?";
 	    PreparedStatement ps;
 	   
 	    CreditCard cc = new CreditCard();
@@ -528,13 +535,6 @@ public class DBAccess {
 				o.setCreditCardNumber(rs.getString("CreditCardNumber"));
 				o.setId(rs.getInt("Id"));
 				
-//				// TODO: HERE
-//				int showingId = rs.getInt("ShowingId"); // get MovieShowing with this
-//				MovieShowing ms = getMovieShowingById(showingId);
-//				o.setMovieShowing(ms);
-//				
-//				o.setTicketQuantity(rs.getInt("Quantity")); // This is how many tickets they bought of a particular showing
-				
 				orders.add(o);
 		    }
 			
@@ -603,19 +603,7 @@ public class DBAccess {
 						"    and StartTime = ?\n" + 
 						"    and Price = ?)\n" +  
 				"AND Quantity = ?";
-		/*
-		 * 				"    (select Id from MovieShowing\n" + 
-				"    where movieID = \n" + 
-				"		(select Id from Movie where `Movie name` = ?)\n" + 
-				"    and showroomID = \n" + 
-				"		(select Id from Showroom \n" + 
-				"        where availableSeats = ? \n" + 
-				"        and theaterBuilding = \n" + 
-				"			(select Id from TheaterBuilding\n" + 
-				"            where `Name` = ?))\n" + 
-				"    and StartTime = ?\n" + 
-				"    and Price = ?),\n" + 
-		 */
+
 		PreparedStatement ps;	   	    	    	    
 	    
 		try {
@@ -863,6 +851,28 @@ public class DBAccess {
 		return;
 	}
 	
+	public String getCreditCardNumber(User u) {
+		String sql = "select CreditCardNumber from CreditCard " + 
+				"where CardHolderName = ?";
+		
+		PreparedStatement ps;
+		String ccNum = null;
+		String name = u.getFirstName() + " " + u.getLastName();
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, name);
+			
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				ccNum = rs.getString("CreditCardNumber");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return ccNum;
+	}
 	public boolean validateCreditCard(User u, CreditCard cc) {
 
 		String sql = "select * from CreditCard \n" + 
@@ -975,26 +985,21 @@ public class DBAccess {
 				"values (\n" + 
 				"	(select Id from User where EmailAddress = ? and Password = ?),\n" + 
 				"    ?, ?, ?, ?)"; 
-		
-		// QUERY #2 - this one is for the ***OrderItem Table!***
-//		String sql = "insert into OrderItem (OrderId, ShowingID, Quantity) \n" + 
-//				"values(?, ?, ?);";
-		// ======================================================
 
 	    User purchaser = firstOrder.getCustomer();
-	    
-	    
+	    User customer = this.getUserByEmailAddress(purchaser.getEmailAddress());
+	    String ccNum = this.getCreditCardNumber(purchaser);
 	    int id = INVALID_INT_VALUE;
 	    
 	    PreparedStatement ps;
 		try {
 			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, purchaser.getEmailAddress());
-			ps.setString(2, purchaser.getPassword());
+			ps.setString(1, customer.getEmailAddress());
+			ps.setString(2, customer.getPassword());
 			ps.setDouble(3, totalCost); //TODO: This may need to be an int?
 			ps.setString(4, date);
-			ps.setString(5, purchaser.getBillingAddress().getStreetAddress());
-			ps.setString(6, purchaser.getCreditCard().getCardNumber());
+			ps.setString(5, customer.getBillingAddress().getStreetAddress());
+			ps.setString(6, ccNum);
 								
 			ps.executeUpdate();
 						

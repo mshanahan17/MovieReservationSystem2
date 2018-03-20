@@ -1,6 +1,8 @@
 package controller;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,19 +12,18 @@ import javax.servlet.http.HttpSession;
 
 import model.Order;
 import model.OrderDB;
-import model.User;
 
 /**
- * Servlet implementation class CancelOrderTransaction
+ * Servlet implementation class PlaceOrder
  */
-@WebServlet("/CancelOrderTransaction")
-public class CancelOrderTransaction extends HttpServlet {
+@WebServlet("/PlaceOrder")
+public class PlaceOrder extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CancelOrderTransaction() {
+    public PlaceOrder() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,7 +33,7 @@ public class CancelOrderTransaction extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doPost(request, response);
+		doPost(request,response);
 	}
 
 	/**
@@ -40,33 +41,15 @@ public class CancelOrderTransaction extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String error = "Can no longer cancel that order!";
-		String successMsg = "Your order has been cancelled!";
 		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("user");
-		
-		if(user == null) {
-			request.getRequestDispatcher("Login.jsp").forward(request,  response);
-			return;
-		}
-		
-		Order movOrder = (Order) session.getAttribute("movieOrder");
-		boolean success = false;
-		if(movOrder != null) {
-			OrderDB orderDB = new OrderDB();
-			success = orderDB.removeOrderItem(movOrder);
-		}
-		
-		if(!success) {
-			session.setAttribute("cancellationMsg", error);
-		}
-		else {
-			session.setAttribute("cancellationMsg", successMsg);
-		}
-		
-		request.getRequestDispatcher("WEB-INF/Customer/CancellationConfirmation.jsp")
-			   .forward(request, response);
+		double total = (double) session.getAttribute("total");
+		List<Order> orders = (List<Order>) session.getAttribute("shoppingCart");
+		OrderDB orderDB = new OrderDB();
+
+		orderDB.addOrdersToUser(orders, total);
+		session.setAttribute("completeOrder", orders);
+		session.removeAttribute("shoppingCart");
+		session.removeAttribute("total");
 	}
-	
 
 }

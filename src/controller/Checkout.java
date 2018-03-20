@@ -120,7 +120,7 @@ public class Checkout extends HttpServlet {
 			request.getRequestDispatcher("WEB-INF/Customer/ViewAndCheckoutShoppingCart.jsp").forward(request, response);
 			return;
 		}
-		request.getRequestDispatcher("WEB-INF/Customer/CustomerTransaction.jsp").forward(request, response);
+		request.getRequestDispatcher("WEB-INF/Customer/ConfirmOrder.jsp").forward(request, response);
 	}
 
 }

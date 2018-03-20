@@ -11,77 +11,6 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 public class OrderDB {
-
-	public static void main(String[] args) {
-		
-		OrderDB odb = new OrderDB();
-		UserDB udb = new UserDB();
-		MovieShowingDB msdb = new MovieShowingDB();
-		
-//		odb.addTestOrdersToDB();
-
-		List<Order> orders = odb.getOrdersByOrderId(47);		
-		System.out.println(odb.removeOrderItem(orders.get(0)));
-
-		
-		//========================================================
-		
-//		OrderDB odb = new OrderDB();	
-//		UserDB udb = new UserDB();		
-//		DBAccess db = new DBAccess();
-//		MovieShowingDB msdb = new MovieShowingDB();
-//		
-//		Order o = odb.getOrdersByOrderId(24).get(0);
-//		// System.out.println(o);
-//		odb.removeOrderItem(o);
-		
-       	
-		// STRING DATE COMPARISON TESTING	
-//		OrderDB odb = new OrderDB();		
-//		String movieDate = "2018-04-04 17:30:00.0";
-//		
-//		System.out.println(odb.isPassedMovieShowingTime(movieDate, odb.getDateTime()));
-//		
-//		List<Order> orders = odb.getOrdersByOrderId(24);		
-//		System.out.println(orders.get(0).getMovieShowing().getStartTime());
-		// ------------------------------------
-		
-		
-		
-		
-//		for(Order o : orders) {
-//			System.out.println("ORDER\n----------------\n " + o);
-//		}
-		
-		
-//		OrderDB odb = new OrderDB();	
-//		UserDB udb = new UserDB();		
-//		DBAccess db = new DBAccess();
-//		MovieShowingDB msdb = new MovieShowingDB();
-//		
-//       	db.createConnection();
-//       	
-//		List<Order> orders = new ArrayList<Order>();
-//		Order o1 = new Order();
-//		o1.setBillingAddress("blahblahblah");
-//		o1.setCost(25);
-//		o1.setCreditCardNumber("1111222233334444");
-//		o1.setCustomer(udb.getUserById(3));
-//		o1.setDate("1111-11-11");
-//		o1.setMovieShowing(msdb.getMovieShowingById(4));
-//		o1.setTicketQuantity(3);
-//				
-//		
-//		System.out.println(o1.getCustomer());
-//		System.exit(0);
-//		
-//		orders.add(o1);				
-//		
-//       	odb.addOrdersToUser(orders, 55);
-//       	       	
-//       	db.closeConnection();		
-		return;
-	}
 	
 	//TODO: Load up MovieShowing object upon creation from DB
 	
@@ -147,6 +76,7 @@ public class OrderDB {
 	       	db.removeOrderItem(o);
 	       	db.updateTotalCostOfOrder(o, o.getMovieShowing().getCost() * o.getTicketQuantity() * -1);
 	       	db.refundCreditCard(o, o.getMovieShowing().getCost() * o.getTicketQuantity());
+	       	db.updateMovieShowingSeatsPurchased(o.getMovieShowing(), -o.getTicketQuantity());
 	       	db.attemptRemoveOrder(o); // TODO: Lol...
 			db.closeConnection();
 	       	return true;
