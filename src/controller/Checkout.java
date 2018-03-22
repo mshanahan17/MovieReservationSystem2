@@ -62,7 +62,10 @@ public class Checkout extends HttpServlet {
 		String button4 = request.getParameter("button4");
 		boolean orderRemoved = false;
 		List<Order> orders = (List<Order>) session.getAttribute("shoppingCart");
-		double total = (double) session.getAttribute("total");
+		double total = 0;
+		if(session.getAttribute("total") != null) {
+			total = (double) session.getAttribute("total");
+		}
 		MovieShowingDB movDB = new MovieShowingDB();
 		int numTix;
 		session.removeAttribute("movie");
