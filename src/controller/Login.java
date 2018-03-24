@@ -21,6 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
+import model.DBAccess;
 import model.Theater;
 import model.TheaterDB;
 import model.User;
@@ -33,11 +37,18 @@ import model.UserDB;
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private long lastModified;
+	//log4j logger
+	private static Logger log = 
+    		Logger.getLogger(Login.class.getName());
+	private ServletContext sc = this.getServletContext();
+	private String path = sc.getRealPath("/WEB-INF/lib/log4j.properties");
+	
 
 	@Override
 	public void init() throws ServletException {
 		lastModified = System.currentTimeMillis() / 1000 * 1000;
-		System.out.println("Login Servlet Has Started");
+		PropertyConfigurator.configure(path);
+		log.info("Login Servlet Has Started");
 	}
 
 	@Override
@@ -51,7 +62,10 @@ public class Login extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		session.removeAttribute("pwError");
-		String success = "WEB-INF/Customer/CustomerHomePage.jsp";
+		String path = getServletContext().getInitParameter("Customer Path");
+		System.out.println(path);
+		String success = path + "/CustomerHomePage.jsp";
+		System.out.println(success);
 		String failure = "Registraion.jsp";
 		String button = request.getParameter("login");
 		if(button != null && button != "") {
@@ -137,7 +151,7 @@ public class Login extends HttpServlet {
 	 * and messaage then close the filewriter resources
 	 */
 	private void connectionClosed() {
-		System.out.println("Login Servlet Has Closed");
+		log.info("Login Servlet Has Closed");
 	}
 
 }

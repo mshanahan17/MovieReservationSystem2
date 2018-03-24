@@ -51,7 +51,7 @@ public class Checkout extends HttpServlet {
 		User user = (User) session.getAttribute("user");
 		
 		if(user == null) {
-			request.getRequestDispatcher("WEB-INF/Customer/Login.jsp").forward(request, response);
+			request.getRequestDispatcher("Login.jsp").forward(request, response);
 			return;
 		}
 		
@@ -111,19 +111,19 @@ public class Checkout extends HttpServlet {
 			orders.remove(4);
 			orderRemoved = true;
 		}
-
+		String path = getServletContext().getInitParameter("Customer Path");
 		if(orderRemoved) {
 			session.setAttribute("total", total);
-			request.getRequestDispatcher("WEB-INF/Customer/ViewAndCheckoutShoppingCart.jsp").forward(request, response);
+			request.getRequestDispatcher(path + "/ViewAndCheckoutShoppingCart.jsp").forward(request, response);
 			return;
 		}
 		if(total == 0) {
 			String errorMsg = "No items in cart.";
 			session.setAttribute("cartError", errorMsg);
-			request.getRequestDispatcher("WEB-INF/Customer/ViewAndCheckoutShoppingCart.jsp").forward(request, response);
+			request.getRequestDispatcher(path + "/ViewAndCheckoutShoppingCart.jsp").forward(request, response);
 			return;
 		}
-		request.getRequestDispatcher("WEB-INF/Customer/ConfirmOrder.jsp").forward(request, response);
+		request.getRequestDispatcher(path + "/ConfirmOrder.jsp").forward(request, response);
 	}
 
 }

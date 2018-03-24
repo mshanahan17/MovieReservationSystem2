@@ -12,8 +12,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.imageio.ImageIO;
+import org.apache.log4j.Logger;
 
 public class DBAccess {
 	private Connection conn = null;
@@ -30,6 +30,10 @@ public class DBAccess {
 
 	private static final double INVALID_DOUBLE_VALUE = -777.7777;
 	private static final int INVALID_INT_VALUE = -777;
+	
+	//log4j logger
+	static Logger log = 
+    		Logger.getLogger(DBAccess.class.getName());
 	
 	
 	public void addSingleUser(User user) {
@@ -57,7 +61,7 @@ public class DBAccess {
 		  
 		  } catch (SQLException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error(e);
 		}
 		
 	}
@@ -85,7 +89,7 @@ public class DBAccess {
 			ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return userExists;
@@ -111,7 +115,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return userExists;
@@ -144,7 +148,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		
@@ -191,7 +195,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return user;
@@ -227,7 +231,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 
 		return cc;
@@ -270,7 +274,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 
 		return theaters;
@@ -321,7 +325,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return searchResults;
@@ -353,7 +357,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return m;
@@ -386,7 +390,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	
 		return sr;
@@ -417,7 +421,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return reviewSearchResults;
@@ -457,7 +461,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	
 		return r;
@@ -500,7 +504,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	
 		return orders;
@@ -542,7 +546,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	
 		return orders;
@@ -580,7 +584,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	
 		return o;
@@ -620,7 +624,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 
 		return;
@@ -665,7 +669,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return;
@@ -699,7 +703,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 
 		return;
@@ -741,7 +745,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	
 		return t;
@@ -782,7 +786,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return ms;
@@ -817,7 +821,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return;
@@ -845,7 +849,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return;
@@ -867,8 +871,7 @@ public class DBAccess {
 				ccNum = rs.getString("CreditCardNumber");
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return ccNum;
@@ -904,7 +907,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return foundCard;
@@ -946,7 +949,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return balance;
@@ -968,7 +971,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return;
@@ -1013,7 +1016,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 				
 		return id;
@@ -1056,7 +1059,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return;
@@ -1094,7 +1097,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return;
@@ -1133,7 +1136,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return cc;
@@ -1162,7 +1165,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 			return false;
 		}
 		
@@ -1174,7 +1177,7 @@ public class DBAccess {
 			//Register the JDBC driver
 			Class.forName(JDBC_DRIVER);			
 		} catch(ClassNotFoundException e){
-			System.err.println(e);
+			log.error(e);
 			System.exit (-1);
 		} 
 		
@@ -1182,7 +1185,7 @@ public class DBAccess {
 			 //Open a connection
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	}	
 	
@@ -1190,7 +1193,7 @@ public class DBAccess {
 		try {
 			conn.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	}
 
@@ -1201,8 +1204,7 @@ public class DBAccess {
 			InputStream in = b.getBinaryStream();
 			image = ImageIO.read(in);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}  
 		
 		return image;
@@ -1219,8 +1221,7 @@ public class DBAccess {
 	        baos.close();
 	        b64 = javax.xml.bind.DatatypeConverter.printBase64Binary(imageInByteArray);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}  		
 		
 		return b64;

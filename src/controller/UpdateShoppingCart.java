@@ -44,7 +44,8 @@ public class UpdateShoppingCart extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String path = "WEB-INF/Customer/ViewAndCheckoutShoppingCart.jsp";
+		String path1 = getServletContext().getInitParameter("Customer Path");
+		String path = path1 + "/ViewAndCheckoutShoppingCart.jsp";
 		String qtyTickets = request.getParameter("ticketQty");
 		HttpSession session = request.getSession();
 		session.removeAttribute("cartError");
@@ -82,7 +83,7 @@ public class UpdateShoppingCart extends HttpServlet {
 				if(numTickets > available) {
 					String error = "Not enough tickets remaining, only " + available + " tickets remaining.";
 					session.setAttribute("noCapacity", error);
-					request.getRequestDispatcher("WEB-INF/Customer/MovieDetailsSelection.jsp").forward(request, response);
+					request.getRequestDispatcher(path1 + "/MovieDetailsSelection.jsp").forward(request, response);
 					return;
 				}
 				else {

@@ -42,7 +42,8 @@ public class ViewOrders extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String path = "WEB-INF/Customer/ViewOrders.jsp";
+		String path = getServletContext().getInitParameter("Customer Path");
+		path = path + "/ViewOrders.jsp";
 		HttpSession session = request.getSession();
 		session.removeAttribute("noOrders");
 		User user = (User) session.getAttribute("user");
