@@ -63,9 +63,9 @@ public class Login extends HttpServlet {
 		HttpSession session = request.getSession();
 		session.removeAttribute("pwError");
 		String path = getServletContext().getInitParameter("Customer Path");
-		System.out.println(path);
+
 		String success = path + "/CustomerHomePage.jsp";
-		System.out.println(success);
+
 		String failure = "Registraion.jsp";
 		String button = request.getParameter("login");
 		if(button != null && button != "") {
