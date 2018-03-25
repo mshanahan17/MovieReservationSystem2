@@ -14,7 +14,59 @@
       <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" 
          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
          crossorigin="anonymous">
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/CSS/customer.css">
+
+<script>
+function addToCart(){
+	
+	$.post("UpdateShoppingCart", {
+		ticketQty: $("#ticketQty").val(),
+		checkOut: "0"
+	}, function(data, status) {
+
+		if(data == 1){
+			$('#ticketOrder').html("<h5 style='color:green'>Movie Added To Cart</h5>" +
+							 "<form action='UpdateShoppingCart' method='post'> " +
+						     "  	<input type='submit' value='View Cart'> " +
+						      "</form>");
+		}
+		else {
+			$("#error").text(data);
+		}
+		
+	});
+}
+
+function reviewForm(){
+	var reviewHtml = "<b>Review:</b><br> <input type='text' id='review' style='width:30vw; margin:5px'><br> " +
+    				 "<b style='margin: 5px'>Rating:</b>" +
+    				 "<select id='rating' style='margin: 5px'> " +
+    				 "<option value='1'>1</option>" +
+    				 "<option value='2'>2</option>" +
+    				 "<option value='3'>3</option>" +
+    	 			 "<option value='4'>4</option>" +
+    				 "<option value='5'>5</option>" +
+    				 "</select> <br> " +
+       				 "<button onclick='addReview()'>Submit Review</button>";
+	$("#reviewForm").html(reviewHtml);
+}
+
+function addReview(){
+	$.post("CustomerReviewServlet", {
+		review: $("#review").val(),
+		rating: $("#rating").val()
+	}, function(data, status) {
+		if(data == 0){
+			$("#reviewForm").html("<h4 style='color: red'>An Error Occured Submitting Your Review</h4>");
+		}
+		else {
+			$("#movieReviews").html(data).hide().fadeIn(3000);
+		}
+		
+	});
+}
+</script>
    </head>
    <body>
       <header>
@@ -43,7 +95,7 @@
             <div class="col-md-1">
             </div>
             <div class="col-md-10">
-               <form action="UpdateShoppingCart" method="post">
+               <div id="ticketOrder">
                   <table class="table table-bordered">
                      <thead>
                         <th>Theater</th>
@@ -59,17 +111,17 @@
                         <td>${movie.showroom.capacity - movie.numOfPurchasedSeats}</td>
                      </tbody>
                   </table>
-                  <h4 style="color:red">${noCapacity}</h4>
+                  <h4 style="color:red" id="error"></h4>
                   <h5>Ticket Quantity: 
-					<select name="ticketQty">
+					<select name="ticketQty" id="ticketQty">
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
 					<option value="4">4</option>
 					<option value="5">5</option>
 					</select></h5>
-                  <input type="submit" value="Add To Cart">
-               </form>
+                  <button onclick="addToCart()">Add To Cart</button><br><br>
+               </div>
             </div>
             <div class="col-md-1">
             </div>
@@ -78,9 +130,9 @@
             <div class="col-md-1">
             </div>
             <div class="col-md-10">
-            	<form action="ReviewServlet" method="post">
-            		<input type="submit" value="Add Review">
-            	</form>
+            <button onclick="reviewForm()">Add Review</button>
+            <div id="reviewForm"></div>
+            <div id="movieReviews">
                <table class="table table-bordered">
                   <tbody id="reviews">
                   <c:forEach items="${reviews}" var="review" end="5">
@@ -93,6 +145,7 @@
       		   </c:forEach>
                   </tbody>
                </table>
+               </div>
             </div>
             <div class="col-md-1">
             </div>

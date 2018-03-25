@@ -40,13 +40,13 @@ public class Login extends HttpServlet {
 	//log4j logger
 	private static Logger log = 
     		Logger.getLogger(Login.class.getName());
-	private ServletContext sc = this.getServletContext();
-	private String path = sc.getRealPath("/WEB-INF/lib/log4j.properties");
 	
 
 	@Override
 	public void init() throws ServletException {
 		lastModified = System.currentTimeMillis() / 1000 * 1000;
+		ServletContext sc = this.getServletContext();
+		String path = sc.getRealPath("/WEB-INF/lib/log4j.properties");
 		PropertyConfigurator.configure(path);
 		log.info("Login Servlet Has Started");
 	}
