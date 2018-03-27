@@ -16,6 +16,7 @@
          rel="stylesheet"
          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
          crossorigin="anonymous">
+         <script src='https://www.google.com/recaptcha/api.js'></script>
       <script>
          function validateForm() {
          	var x = document.forms["userForm"]["email"].value;
@@ -46,12 +47,14 @@
                <fieldset>
                   <legend>Login</legend>
                   <b>E-mail:</b><br> <input type="email" name="email" value="${cookie.userId.value}"> 
-                  
                   <span
-                     style="color: red">${emailError}</span><br> <b>Password:</b><br>
-                  <input type="password" name="password"> <span
-                     style="color: red">${pwError}</span><br>
+                     style="color: red">${emailError}</span><br> 
+                     <b>Password:</b><br>
+                  <input type="password" name="password"> 
+                  <span style="color: red">${pwError}</span><br>
                      <input type="checkbox" name="rememberMe">Remember Me<br>
+                     
+                     <div class="g-recaptcha" data-sitekey="6LeUP08UAAAAAHQARV0ypp_V0OWHYl5OyXZlrT4H"></div>
                      <input type="submit" name="login">
                </fieldset>
             </form>

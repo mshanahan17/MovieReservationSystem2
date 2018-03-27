@@ -1,17 +1,7 @@
 package controller;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Properties;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,11 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-
-import model.DBAccess;
 import model.Theater;
 import model.TheaterDB;
 import model.User;
@@ -63,6 +50,9 @@ public class Login extends HttpServlet {
 		HttpSession session = request.getSession();
 		session.removeAttribute("pwError");
 		String path = getServletContext().getInitParameter("Customer Path");
+		String gRecaptchaResponse = request
+				.getParameter("g-recaptcha-response");
+		boolean verify = ServletUtils.verify(gRecaptchaResponse);
 
 		String success = path + "/CustomerHomePage.jsp";
 
@@ -121,10 +111,16 @@ public class Login extends HttpServlet {
 				request.getRequestDispatcher("Login.jsp").forward(request, response);
 				return;
 			}
+			if(!verify) {
+				session.setAttribute("pwError", "Captcha Failed");
+				request.getRequestDispatcher("Login.jsp").forward(request, response);
+				return;
+			}
 			
 			session.setAttribute("user", user);
 			
 		}
+		
 		
 		request.getRequestDispatcher(success).forward(request, response);
 
