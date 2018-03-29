@@ -41,7 +41,7 @@ public class UserDB {
     public void registerUser(User user) {
        	DBAccess db = new DBAccess();
        	db.createConnection();
-       	db.addSingleUser(user);
+       	db.addHashedSingleUser(user);
        	db.closeConnection();
     }
     
@@ -55,15 +55,21 @@ public class UserDB {
        	return userExists;
     }
     
-    public boolean userExistsByPassword(String password) {
-	    boolean passwordMatches = false;
-   	    DBAccess db = new DBAccess();
-   	    db.createConnection();
-   	    passwordMatches = db.userExistsByPassword(password);
-   	    db.closeConnection();
-   	
-   	    return passwordMatches;
-    }
+	public boolean passwordIsValid(User u, String password) {
+		String curSaltyHash = PasswordUtilities.saltAndHashPassword(password, u.getSalt());
+		String theTrueSaltyHash = u.getSaltyHash();		
+		return curSaltyHash.equals(theTrueSaltyHash);
+	}
+	
+//    public boolean userExistsByPassword(String password) {
+//	    boolean passwordMatches = false;
+//   	    DBAccess db = new DBAccess();
+//   	    db.createConnection();
+//   	    passwordMatches = db.userExistsByPassword(password);
+//   	    db.closeConnection();
+//   	
+//   	    return passwordMatches;
+//    }
     
     public User getUserByEmailAddress(String emailAddress) {   
 	   	DBAccess db = new DBAccess();

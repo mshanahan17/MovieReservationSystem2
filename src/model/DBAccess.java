@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
+import model.PasswordUtilities;
 
 public class DBAccess {
 	private Connection conn = null;
@@ -32,7 +35,7 @@ public class DBAccess {
 	private static final int INVALID_INT_VALUE = -777;
 	
 	public static void main(String[] args) { 
-				
+		
 //		DBAccess dba = new DBAccess();
 //		System.out.println(dba.formatSearchString("theater1   "));
 //		System.out.println(dba.formatSearchString(" scared kitten    "));
@@ -58,8 +61,7 @@ public class DBAccess {
 	
 	public void addSingleUser(User user) {
 		  
-		try {
-		  
+		try {		  
 		  String firstName = user.getFirstName();
 		  String lastName = user.getLastName();
 		  String emailAddress = user.getEmailAddress();
@@ -86,6 +88,38 @@ public class DBAccess {
 		
 	}
 	
+	public void addHashedSingleUser(User user) {
+		  
+		try {
+		  
+		  String firstName = user.getFirstName();
+		  String lastName = user.getLastName();
+		  String emailAddress = user.getEmailAddress();
+		  String password = user.getPassword();
+		  int numOfVisits = user.getNumOfVisits();
+		  
+		  String salt = PasswordUtilities.getSalt();
+		  
+		  String sql = "INSERT INTO User (FirstName, LastName, EmailAddress, Salt, SaltyHash, NumOfVisits) VALUES (?, ?, ?, ?, ?, ?)";
+		  
+		  PreparedStatement ps = conn.prepareStatement(sql);
+		  ps.setString(1, firstName);
+		  ps.setString(2, lastName);
+		  ps.setString(3, emailAddress);
+		  ps.setString(4, salt);
+		  ps.setString(5, PasswordUtilities.saltAndHashPassword(password, salt));
+		  ps.setInt(6, numOfVisits);
+		  
+		  ps.executeUpdate();
+		  
+		  ps.close();
+		  
+		  } catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		}
+		
+	}
 	
 	public boolean userExistsByEmailAddress(String emailAddress) {
 		boolean userExists = false;
@@ -116,31 +150,31 @@ public class DBAccess {
 		return userExists;
 	}
 	
-	public boolean userExistsByPassword(String password) {
-		boolean userExists = false;
-		String sql = "SELECT COUNT(EmailAddress) FROM User WHERE EmailAddress = ?";
-	    PreparedStatement ps;
-		try {
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, password);
-			
-			ResultSet rs = ps.executeQuery();
-			
-			while (rs.next()){	
-				if(Integer.parseInt(rs.getString(1)) > 0) {
-					userExists = true;
-				}    
-		    }
-			
-			rs.close();
-		    ps.close();
-		        
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return userExists;
-	}
+//	public boolean userExistsByPassword(String password) {
+//		boolean userExists = false;
+//		String sql = "SELECT COUNT(EmailAddress) FROM User WHERE EmailAddress = ?";
+//	    PreparedStatement ps;
+//		try {
+//			ps = conn.prepareStatement(sql);
+//			ps.setString(1, password);
+//			
+//			ResultSet rs = ps.executeQuery();
+//			
+//			while (rs.next()){	
+//				if(Integer.parseInt(rs.getString(1)) > 0) {
+//					userExists = true;
+//				}    
+//		    }
+//			
+//			rs.close();
+//		    ps.close();
+//		        
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return userExists;
+//	}
 	
 	public User getUserByEmailAddress(String emailAddress) {
 		String sql = "SELECT * from User WHERE EmailAddress = ?";
@@ -158,6 +192,8 @@ public class DBAccess {
 				user.setLastName(rs.getString("LastName"));
 				user.setEmailAddress(rs.getString("EmailAddress"));
 				user.setPassword(rs.getString("Password"));
+				user.setSalt(rs.getString("Salt"));
+				user.setSaltyHash(rs.getString("SaltyHash"));
 				//TODO: Get the rest of the user data loaded into the object
 		    }
 			
@@ -194,6 +230,8 @@ public class DBAccess {
 				user.setLastName(rs.getString("LastName"));
 				user.setEmailAddress(rs.getString("EmailAddress"));
 				user.setPassword(rs.getString("Password"));
+				user.setSalt(rs.getString("Salt"));
+				user.setSaltyHash(rs.getString("SaltyHash"));
 				user.setPhoneNumber(rs.getString("PhoneNumber"));				
 				
 				Address billingAddress = new Address();				
@@ -220,10 +258,11 @@ public class DBAccess {
 		return user;
 	}
 	
-	public CreditCard getCreditCardByUserId(int userId) {		
+	public CreditCard getCreditCardByUserId(int userId) { //TODO: This will not support returning multiple credit cards
 		//TODO: Test this
 		
-		String sql = "select * from CreditCard where UserId = ?";
+		String sql = "select * from CreditCard where BankAccountId = "
+				+ "(select BankAccountId from BankAccount where UserId = ?)"; //TODO: This is borken
 	    PreparedStatement ps;
 	   
 	    CreditCard cc = new CreditCard();
@@ -555,7 +594,7 @@ public class DBAccess {
 		String sql = "    select * from `Order` o\n" + 
 				"    join User u on o.CustomerId = u.Id\n" + 
 				"    where u.EmailAddress = ?\n" + 
-				"    and u.`Password` = ?;";
+				"    and u.`SaltyHash` = ?;";
 		
 	    PreparedStatement ps;	   	    
 	    
@@ -564,7 +603,7 @@ public class DBAccess {
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, u.getEmailAddress());
-			ps.setString(2, u.getPassword());
+			ps.setString(2, u.getSaltyHash());
 			
 			ResultSet rs = ps.executeQuery();
 			
@@ -772,7 +811,7 @@ public class DBAccess {
 	public void updateTotalCostOfOrder(Order o, double changeInCost) {
 		String sql = "UPDATE `Order`\n" + 
 				"SET TotalCost = ?\n" + 
-				"WHERE CustomerId = (select Id from User where EmailAddress = ? and `Password` = ?)\n" + 
+				"WHERE CustomerId = (select Id from User where EmailAddress = ? and `SaltyHash` = ?)\n" + 
 				"    and TotalCost = ?\n" + 
 				"    and OrderDate = ?\n" + 
 				"    and BillingAddress = ?\n" + 
@@ -786,7 +825,7 @@ public class DBAccess {
 			ps = conn.prepareStatement(sql);
 			ps.setDouble(1, o.getCost() + changeInCost); // TODO: Is this okay?
 			ps.setString(2, o.getCustomer().getEmailAddress());
-			ps.setString(3, o.getCustomer().getPassword());
+			ps.setString(3, o.getCustomer().getSaltyHash());
 			ps.setDouble(4, o.getCost()); //TODO: Is this okay?
 			ps.setString(5, o.getDate());
 			ps.setString(6, o.getCustomer().getBillingAddress().getStreetAddress());
@@ -891,7 +930,7 @@ public class DBAccess {
 		//String sql = "insert into CreditCard (CardHolderName, CreditCardNumber, Balance, CardType, UserId, CVV, ExpirationDate) values (?, ?, ?, ?, ?, ?, ?)";
 		String sql = "insert into CreditCard (CardHolderName, CreditCardNumber, Balance, CardType, UserId, CVV, ExpirationDate) \n" + 
 				"values (?, ?, ?, ?,\n" + 
-				"	(select Id from User where EmailAddress = ? and `Password` = ?), \n" + 
+				"	(select Id from User where EmailAddress = ? and `SaltyHash` = ?), \n" + 
 				"    ?, ?)";
 		
 		
@@ -905,7 +944,7 @@ public class DBAccess {
 			ps.setString(4, cc.getCardType());
 			
 			ps.setString(5, u.getEmailAddress());
-			ps.setString(6, u.getPassword());
+			ps.setString(6, u.getSaltyHash());
 			
 			ps.setString(7, cc.getCvv());
 			ps.setString(8, cc.getExpirationDate());			
@@ -942,7 +981,7 @@ public class DBAccess {
 			ps.setString(3, a.getState());
 			ps.setString(4, a.getZip());
 			ps.setString(5, u.getEmailAddress());
-			ps.setString(6, u.getPassword());
+			ps.setString(6, u.getSaltyHash());
 			
 			ps.executeUpdate();
 									
@@ -959,7 +998,7 @@ public class DBAccess {
 		//TODO: Implement
 		String sql = "select * from CreditCard \n" + 
 				"where UserId = \n" + 
-				"	(select Id from User where EmailAddress = ? and `Password` = ?)\n" + 
+				"	(select Id from User where EmailAddress = ? and `SaltyHash` = ?)\n" + 
 				"and CreditCardNumber = ?";
 		
 	    PreparedStatement ps;
@@ -969,7 +1008,7 @@ public class DBAccess {
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, u.getEmailAddress());
-			ps.setString(2, u.getPassword());
+			ps.setString(2, u.getSaltyHash());
 			ps.setString(3, cc.getCardNumber());
 			
 			ResultSet rs = ps.executeQuery();
@@ -1065,7 +1104,7 @@ public class DBAccess {
 		// QUERY #1
 		String sql = "insert into `Order` (CustomerId, TotalCost, OrderDate, BillingAddress, CreditCardNumber) \n" + 
 				"values (\n" + 
-				"	(select Id from User where EmailAddress = ? and Password = ?),\n" + 
+				"	(select Id from User where EmailAddress = ? and SaltyHash = ?),\n" + 
 				"    ?, ?, ?, ?)"; 
 		
 		// QUERY #2 - this one is for the ***OrderItem Table!***
@@ -1083,7 +1122,7 @@ public class DBAccess {
 		try {
 			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, purchaser.getEmailAddress());
-			ps.setString(2, purchaser.getPassword());
+			ps.setString(2, purchaser.getSaltyHash());
 			ps.setDouble(3, totalCost); //TODO: This may need to be an int?
 			ps.setString(4, date);
 			ps.setString(5, purchaser.getBillingAddress().getStreetAddress());
@@ -1266,7 +1305,7 @@ public class DBAccess {
 		String sql = "insert into CustomerReview (movieID, userID, ReviewDate, Rating, Review) \n" + 
 				"values (\n" + 
 				"	(select Id from Movie where `Movie name` = ?),\n" + 
-				"    (select Id from User where EmailAddress = ? and `Password`= ?),\n" + 
+				"    (select Id from User where EmailAddress = ? and `SaltyHash`= ?),\n" + 
 				"    ?, ?, ?)";
 		
 	    PreparedStatement ps;	   	    
@@ -1275,7 +1314,7 @@ public class DBAccess {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, r.getMovie().getTitle());
 			ps.setString(2, r.getUser().getEmailAddress());
-			ps.setString(3, r.getUser().getPassword());
+			ps.setString(3, r.getUser().getSaltyHash());
 			ps.setString(4, r.getDate());
 			ps.setInt(5, Integer.parseInt(rating));
 			ps.setString(6, r.getContent());			

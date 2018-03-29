@@ -102,11 +102,17 @@ public class Login extends HttpServlet {
 				request.getRequestDispatcher(failure).forward(request, response);
 				return;
 			}
-			else if(!user.getPassword().equals(password)) {
+			else if(!userDb.passwordIsValid(user, password)) {
 				session.setAttribute("pwError", "Incorrect Password");
 				request.getRequestDispatcher("Login.jsp").forward(request, response);
 				return;
 			}
+			// THIS IS HOW IT WAS BEFORE
+//			else if(!user.getPassword().equals(password)) {
+//				session.setAttribute("pwError", "Incorrect Password");
+//				request.getRequestDispatcher("Login.jsp").forward(request, response);
+//				return;
+//			}
 			
 			session.setAttribute("user", user);
 			

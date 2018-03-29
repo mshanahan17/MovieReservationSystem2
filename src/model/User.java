@@ -7,6 +7,8 @@ public class User {
 	private String lastName;	
 	private String emailAddress;
 	private String password;
+	private String salt;
+	private String saltyHash;
 	private int numOfVisits;
 	
 	private String phoneNumber;
@@ -88,6 +90,22 @@ public class User {
 
 	public void setCreditCard(CreditCard creditCard) {
 		this.creditCard = creditCard;
+	}
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	public String getSaltyHash() {
+		return saltyHash;
+	}
+
+	public void setSaltyHash(String saltyHash) {
+		this.saltyHash = saltyHash;
 	}
 
 	@Override
