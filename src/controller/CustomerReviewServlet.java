@@ -1,7 +1,9 @@
 package controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -51,11 +53,11 @@ public class CustomerReviewServlet extends HttpServlet {
 		String successResponse = "Your Review Was Successfully Submitted!";
 		String failResponse = "An error was encountered submitting your review!";
 		String date = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
-		String confirmationResponse;
+		boolean submissionSuccess = false;
 		
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
-		System.out.print(review);
+
 		MovieShowing movieShowing = (MovieShowing) session.getAttribute("movie");
 		if(user == null) {
 			request.getRequestDispatcher("Login.jsp")
@@ -70,16 +72,49 @@ public class CustomerReviewServlet extends HttpServlet {
 		movieReview.setRating(rating);
 		movieReview.setUser(user);
 		
+		StringBuilder sb = new StringBuilder();
 		if(new ReviewDB().addReview(movieReview, rating)) {
-			confirmationResponse = successResponse;
+			submissionSuccess = true;
+			ReviewDB reviewDb = new ReviewDB();
+			String movieTitle = movieShowing.getMovie().getTitle();
+			List<Review> reviews = reviewDb.getReviewsByMovieTitle(movieTitle);
+			
+			
+			sb.append("<table class=\"table table-bordered\">\r\n" + 
+					  "<tbody id=\"reviews\">");
+			
+			for(Review reviewEntry: reviews) {
+				
+				String fName = reviewEntry.getUser().getFirstName();
+				String lName = reviewEntry.getUser().getLastName();
+				String revDate = reviewEntry.getDate();
+				String revCont = reviewEntry.getContent();
+				String revRating = reviewEntry.getRating();
+				
+				sb.append("<tr>\r\n" + 
+						  "<td>" + fName + " " + lName + "</td>\r\n" + 
+						  "<td>" + revDate + "</td>\r\n" + 
+						  "<td>" + revCont + "</td>\r\n" + 
+						  "<td>" + revRating + "</td>\r\n" + 
+						  "</tr>");
+			}
+			
+			sb.append("</tbody>\r\n" + 
+					  "</table>");
+		}
+		
+		PrintWriter out = response.getWriter();
+		if(submissionSuccess) {
+			response.setContentType("text/html");
+			out.println(sb.toString());
+			return;
 		}
 		else {
-			confirmationResponse = failResponse;
+			out.println(0);
+			return;
 		}
-		session.setAttribute("review", confirmationResponse);
-		
-		request.getRequestDispatcher("WEB-INF/Customer/CustomerReviewConfirmation.jsp")
-			   .forward(request, response);
+//		request.getRequestDispatcher("WEB-INF/Customer/CustomerReviewConfirmation.jsp")
+//			   .forward(request, response);
 	}
 
 }

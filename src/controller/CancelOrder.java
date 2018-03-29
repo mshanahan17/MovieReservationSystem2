@@ -60,7 +60,8 @@ public class CancelOrder extends HttpServlet {
 		if(orderItems == null) {
 			String msg = "No order to cancel";
 			session.setAttribute("cancelOrderError", msg);
-			request.getRequestDispatcher("WEB-INF/Customer/CancelOrder.jsp")
+			String path = getServletContext().getInitParameter("Customer Path");
+			request.getRequestDispatcher(path + "/CancelOrder.jsp")
 			   .forward(request, response);
 			return;
 		}

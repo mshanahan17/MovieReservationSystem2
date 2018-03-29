@@ -16,7 +16,10 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.plaf.synth.SynthSeparatorUI;
 
+import org.apache.log4j.Logger;
+
 import model.PasswordUtilities;
+
 
 public class DBAccess {
 	private Connection conn = null;
@@ -58,6 +61,10 @@ public class DBAccess {
 //	   	db.closeConnection();
 				
 	}
+
+	//log4j logger
+	static Logger log = 
+    		Logger.getLogger(DBAccess.class.getName());
 	
 	public void addSingleUser(User user) {
 		  
@@ -83,7 +90,7 @@ public class DBAccess {
 		  
 		  } catch (SQLException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error(e);
 		}
 		
 	}
@@ -143,8 +150,7 @@ public class DBAccess {
 			ps.close();
 		        
 		} catch (SQLException e) {
-			System.out.println("ERROR: Blah");
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return userExists;
@@ -186,7 +192,7 @@ public class DBAccess {
 			ps.setString(1, emailAddress);
 			
 			ResultSet rs = ps.executeQuery();
-			
+			Address billing = new Address();
 			while(rs.next()) {
 				user.setFirstName(rs.getString("FirstName"));
 				user.setLastName(rs.getString("LastName"));
@@ -195,13 +201,18 @@ public class DBAccess {
 				user.setSalt(rs.getString("Salt"));
 				user.setSaltyHash(rs.getString("SaltyHash"));
 				//TODO: Get the rest of the user data loaded into the object
+				billing.setStreetAddress(rs.getString("Address"));
+				billing.setCity(rs.getString("City"));
+				billing.setState(rs.getString("State"));
+				billing.setZip(rs.getString("PostalCode"));
+				user.setBillingAddress(billing);
 		    }
 			
 			rs.close();
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		
@@ -214,7 +225,7 @@ public class DBAccess {
 	}
 
 	public User getUserById(int Id) {
-		//TODO: Test this
+
 		String sql = "SELECT * from User WHERE Id = ?";
 	    PreparedStatement ps;
 	   
@@ -243,26 +254,26 @@ public class DBAccess {
 				user.setBillingAddress(billingAddress);
 								
 				user.setCreditCard(getCreditCardByUserId(Id));
-				
-				
-				//TODO: Get the rest of the user data stored in the object
+
 		    }
 			
 			rs.close();
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return user;
 	}
 	
-	public CreditCard getCreditCardByUserId(int userId) { //TODO: This will not support returning multiple credit cards
-		//TODO: Test this
+	public CreditCard getCreditCardByUserId(int userId) {		
+
 		
-		String sql = "select * from CreditCard where BankAccountId = "
-				+ "(select BankAccountId from BankAccount where UserId = ?)"; //TODO: This is borken
+		String sql = "SELECT * FROM CreditCard AS CC "
+				+ "JOIN BankAccount AS BA ON CC.BankAccountId = BA.BankAccountId "
+				+ "JOIN User AS U ON BA.UserId = U.Id "
+				+ "WHERE U.Id = ?";
 	    PreparedStatement ps;
 	   
 	    CreditCard cc = new CreditCard();
@@ -286,33 +297,15 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 
 		return cc;
 	}
 	
-	public void displayAllUsers() {
-		String sql = "SELECT * from User";
-	    Statement stat;
-		try {
-			stat = conn.createStatement();
-			ResultSet rs = stat.executeQuery(sql);
-			
-			while (rs.next()){
-		        System.out.println(rs.getString(1) + " " + rs.getString(2) +  " " + rs.getString(3)
-		        		+ " " + rs.getString(4) + " " + rs.getString(5));
-		    }
-			
-		    stat.close();
-		        
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
 
 	public List<Theater> getAllTheaters() {
-		//TODO: Test this
+
 		String sql = "SELECT * from TheaterBuilding";
 	    PreparedStatement ps;
 	   
@@ -347,14 +340,14 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 
 		return theaters;
 	}
 
 	public List<MovieShowing> getMovieShowingSearchResults(String theaterName, String movieName, String date) {
-		//TODO: Finish this
+
 		String sql = "select * from MovieShowing ms\n"
 				+ "join Movie m on ms.movieID = m.Id\n"
 				+ "join Showroom sr on ms.showroomID = sr.Id\n" 
@@ -398,14 +391,14 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return searchResults;
 	}
 	
 	public Movie getMovieById(int id) {
-		//TODO: Test this
+
 		String sql = "select * from Movie where Id = ?";
 		
 	    PreparedStatement ps;
@@ -430,14 +423,14 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return m;
 	}
 	
 	public Showroom getShowroomById(int id) {
-		//TODO: Test this
+
 		String sql = "select * from Showroom where Id = ?";
 		
 	    PreparedStatement ps;	   	    
@@ -463,14 +456,14 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	
 		return sr;
 	}
 	
 	public List<Review> getReviewsByMovieTitle(String movieTitle) {
-		//TODO: Test this
+		
 		String sql = "select cr.Id from CustomerReview cr\n" + 
 				"join Movie m on cr.movieID = m.Id\n" + 
 				"where m.`Movie name` like ?"; 				
@@ -494,14 +487,14 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return reviewSearchResults;
 	}
 	
 	public Review getReviewById(int id) {
-		//TODO: test this
+		
 		String sql = "select * from CustomerReview where Id = ?";
 		
 	    PreparedStatement ps;	   	    
@@ -534,7 +527,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	
 		return r;
@@ -577,19 +570,14 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	
 		return orders;
 	}
 	
 	public List<Order> getOrdersByUser(User u) {
-		//TODO: test this
-//		String sql = "select * from `Order` o\n" + 
-//				"join User u on o.CustomerId = u.Id\n" + 
-//				"join OrderItem oi on o.Id = oi.OrderId\n" + 
-//				"where u.EmailAddress = ?\n" + 
-//				"and u.`Password` = ?";
+
 		
 		String sql = "    select * from `Order` o\n" + 
 				"    join User u on o.CustomerId = u.Id\n" + 
@@ -617,13 +605,6 @@ public class DBAccess {
 				o.setCreditCardNumber(rs.getString("CreditCardNumber"));
 				o.setId(rs.getInt("Id"));
 				
-//				// TODO: HERE
-//				int showingId = rs.getInt("ShowingId"); // get MovieShowing with this
-//				MovieShowing ms = getMovieShowingById(showingId);
-//				o.setMovieShowing(ms);
-//				
-//				o.setTicketQuantity(rs.getInt("Quantity")); // This is how many tickets they bought of a particular showing
-				
 				orders.add(o);
 		    }
 			
@@ -631,14 +612,14 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	
 		return orders;
 	}
 	
 	public Order getOrderById(int id) {
-		//TODO: test this
+		
 		String sql = "select * from `Order` where Id = ?";
 		
 	    PreparedStatement ps;	   	    
@@ -669,36 +650,13 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	
 		return o;
 	}
 	
 	public void removeOrderItem(Order o) {
-//		String sql = "DELETE FROM `OrderItem`\n" + 
-//				"WHERE OrderId = \n" + 
-//				"	(select Id from `Order` \n" + 
-//				"    WHERE CustomerId = (select Id from User where EmailAddress = ? and `Password` = ?)\n" + 
-//				"    and TotalCost = ?\n" + 
-//				"    and OrderDate = ?\n" + 
-//				"    and BillingAddress = ?\n" + 
-//				"    and CreditCardNumber = ?)\n" + 
-//				"AND ShowingID = \n" + 
-//				"	(select Id from MovieShowing where movieID = \n" + 
-//				"		(select Id from Movie where `Movie name` = ?)\n" + 
-//				"    and StartTime = ?\n" + 
-//				"    and Price = ?)\n" + 
-//				"AND Quantity = ?";
-		
-//		String sql = "DELETE FROM `OrderItem`\n" + 
-//		"WHERE OrderId = ?\n" +
-//		"AND ShowingID = \n" + 
-//		"	(select Id from MovieShowing where movieID = \n" + 
-//		"		(select Id from Movie where `Movie name` = ?)\n" + 
-//		"    and StartTime = ?\n" + 
-//		"    and Price = ?)\n" + 
-//		"AND Quantity = ?";
 		
 		String sql = "DELETE FROM `OrderItem`\n" + 
 				"WHERE OrderId = ?\n" +
@@ -715,19 +673,7 @@ public class DBAccess {
 						"    and StartTime = ?\n" + 
 						"    and Price = ?)\n" +  
 				"AND Quantity = ?";
-		/*
-		 * 				"    (select Id from MovieShowing\n" + 
-				"    where movieID = \n" + 
-				"		(select Id from Movie where `Movie name` = ?)\n" + 
-				"    and showroomID = \n" + 
-				"		(select Id from Showroom \n" + 
-				"        where availableSeats = ? \n" + 
-				"        and theaterBuilding = \n" + 
-				"			(select Id from TheaterBuilding\n" + 
-				"            where `Name` = ?))\n" + 
-				"    and StartTime = ?\n" + 
-				"    and Price = ?),\n" + 
-		 */
+
 		PreparedStatement ps;	   	    	    	    
 	    
 		try {
@@ -737,24 +683,14 @@ public class DBAccess {
 			ps.setInt(3, o.getMovieShowing().getShowroom().getCapacity());
 			ps.setString(4, o.getMovieShowing().getShowroom().getTheater().getName());
 			ps.setString(5, o.getMovieShowing().getStartTime());
-			ps.setDouble(6, o.getMovieShowing().getCost()); //TODO: OKay?
+			ps.setDouble(6, o.getMovieShowing().getCost()); 
 			ps.setInt(7, o.getTicketQuantity());
-//			ps.setString(1, o.getCustomer().getEmailAddress()); 
-//			ps.setString(2, o.getCustomer().getPassword());
-//			ps.setDouble(3, o.getCost()); // TODO: Okay?
-//			ps.setString(4, o.getDate()); 
-//			ps.setString(5, o.getCustomer().getBillingAddress().getStreetAddress());
-//			ps.setString(6, o.getCustomer().getCreditCard().getCardNumber());
-//			ps.setString(7, o.getMovieShowing().getMovie().getTitle());
-//			ps.setString(8, o.getMovieShowing().getStartTime());
-//			ps.setDouble(9, o.getMovieShowing().getCost()); //TODO: OKay?
-//			ps.setInt(10, o.getTicketQuantity());
 						
 			ps.executeUpdate();
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 
 		return;
@@ -774,7 +710,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			System.out.println("ERROR: CANNOT DELETE ORDER WHICH CONTAINS ORDER ITEMS");
+			
 		}
 		
 
@@ -791,9 +727,6 @@ public class DBAccess {
 	    
 		try {
 			
-			System.out.println("Setting balance to: " + o.getCustomer().getCreditCard().getBalance() + changeInCost);
-			System.out.println("For card number: " + o.getCreditCardNumber());
-			
 			ps = conn.prepareStatement(sql);
 			ps.setDouble(1, o.getCustomer().getCreditCard().getBalance() + changeInCost);
 			ps.setString(2, o.getCreditCardNumber());			
@@ -802,7 +735,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return;
@@ -819,7 +752,7 @@ public class DBAccess {
 		
 	    PreparedStatement ps;	   	    	    	    
 	    
-	    System.out.println("Updating Order Cost...\nProvided values--\nCHANGE IN COST: " + changeInCost + "\nORDER: \n" + o);
+	    
 	    
 		try {
 			ps = conn.prepareStatement(sql);
@@ -836,14 +769,14 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 
 		return;
 	}
 	
 	public Theater getTheaterById(int id) {
-		//TODO: Test this
+		
 		String sql = "select * from TheaterBuilding where Id = ?";
 		
 	    PreparedStatement ps;	   	    
@@ -878,14 +811,14 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	
 		return t;
 	}
 	
 	public MovieShowing getMovieShowingById(int id) {
-		//TODO: Test this
+		
 		String sql = "select * from MovieShowing where Id = ?";
 		
 	    PreparedStatement ps;
@@ -919,7 +852,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return ms;
@@ -954,25 +887,19 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return;
 	}
 	
 	public void addAddressToUser(User u, Address a) {
-		//TODO: Test this
+
 		String sql = "update User \n" + 
 				"set Address = ?, City = ?, State = ?, PostalCode = ?\n" + 
 				"where EmailAddress = ? and Password = ?"; 
 		
 	    PreparedStatement ps;	    
-	    
-	    System.out.println("ADDING ADDRESS TO USER:");
-	    System.out.println("ADDING ADDRESS TO USER:\n=============================\n");
-	    System.out.println("PROVIDED ADDRESS: " + a);
-	    System.out.println("PROVIDED USER: " + u);
-	    System.out.println("=============================");
 	    
 		try {
 			ps = conn.prepareStatement(sql);
@@ -988,14 +915,35 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return;
 	}
 	
+	public String getCreditCardNumber(User u) {
+		String sql = "select CreditCardNumber from CreditCard " + 
+				"where CardHolderName = ?";
+		
+		PreparedStatement ps;
+		String ccNum = null;
+		String name = u.getFirstName() + " " + u.getLastName();
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, name);
+			
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				ccNum = rs.getString("CreditCardNumber");
+			}
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return ccNum;
+	}
 	public boolean validateCreditCard(User u, CreditCard cc) {
-		//TODO: Implement
+
 		String sql = "select * from CreditCard \n" + 
 				"where UserId = \n" + 
 				"	(select Id from User where EmailAddress = ? and `SaltyHash` = ?)\n" + 
@@ -1025,7 +973,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return foundCard;
@@ -1046,7 +994,7 @@ public class DBAccess {
 	}
 	
 	private double getCreditCardBalanceByCreditCard(CreditCard cc) {
-		//TODO: Test this
+		
 		String sql = "select Balance from CreditCard where CreditCardNumber = ?";
 		
 	    PreparedStatement ps;
@@ -1067,14 +1015,14 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return balance;
 	}
 	
 	private void updateCreditCardBalanceByCreditCard(CreditCard cc, double newBalance) {
-		//TODO: Test this
+		
 		String sql = "update CreditCard set Balance = ? where CreditCardNumber = ?";
 		
 	    PreparedStatement ps;
@@ -1089,14 +1037,14 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return;
 	}
 	
 	public int addOrderToUser(Order firstOrder, double totalCost, String date) {
-		//TODO: Test this
+		
 		
 		// ======================================================
 		// Keep this stuff, yo
@@ -1106,16 +1054,10 @@ public class DBAccess {
 				"values (\n" + 
 				"	(select Id from User where EmailAddress = ? and SaltyHash = ?),\n" + 
 				"    ?, ?, ?, ?)"; 
-		
-		// QUERY #2 - this one is for the ***OrderItem Table!***
-//		String sql = "insert into OrderItem (OrderId, ShowingID, Quantity) \n" + 
-//				"values(?, ?, ?);";
-		// ======================================================
 
 	    User purchaser = firstOrder.getCustomer();
-	    
-	    //System.out.println(purchaser);
-	    
+	    User customer = this.getUserByEmailAddress(purchaser.getEmailAddress());
+	    String ccNum = this.getCreditCardNumber(purchaser);
 	    int id = INVALID_INT_VALUE;
 	    
 	    PreparedStatement ps;
@@ -1125,8 +1067,8 @@ public class DBAccess {
 			ps.setString(2, purchaser.getSaltyHash());
 			ps.setDouble(3, totalCost); //TODO: This may need to be an int?
 			ps.setString(4, date);
-			ps.setString(5, purchaser.getBillingAddress().getStreetAddress());
-			ps.setString(6, purchaser.getCreditCard().getCardNumber());
+			ps.setString(5, customer.getBillingAddress().getStreetAddress());
+			ps.setString(6, ccNum);
 								
 			ps.executeUpdate();
 						
@@ -1140,7 +1082,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 				
 		return id;
@@ -1148,34 +1090,6 @@ public class DBAccess {
 	
 	public void addQuantityToOrderItemTable(Order o, double totalCost, String dateTime, int orderId) {
 		
-		//System.out.println("MIRROR2: \n-----------------------------------------\n" + o);
-		//TODO: Test this
-				 
-//		String sql = "insert into OrderItem (OrderId, ShowingID, Quantity) \n" + 
-//				"values( \n" + 
-//				"	(select Id from `Order`\n" + 
-//				"    where CustomerId = \n" + 
-//				"		(select Id from User where EmailAddress = ? and `Password` = ?)\n" + 
-//				"    and TotalCost = ?\n" + 
-//				"    and OrderDate = ?\n" + 
-//				"    and BillingAddress = ?\n" + 
-//				"    and CreditCardNumber = ?),\n" + 
-//				"    (select Id from MovieShowing\n" + 
-//				"    where movieID = \n" + 
-//				"		(select Id from Movie where `Movie name` = ?)\n" + 				 
-//				"    and StartTime = ?\n" + 
-//				"    and Price = ?),\n" + 
-//				"    ?)";
-		
-//		String sql = "insert into OrderItem (OrderId, ShowingID, Quantity) \n" + 
-//				"values( ?,\n" + 
-//				"    (select Id from MovieShowing\n" + 
-//				"    where movieID = \n" + 
-//				"		(select Id from Movie where `Movie name` = ?)\n" + 
-//				"    and showroomID = ?\n" + 
-//				"    and StartTime = ?\n" + 
-//				"    and Price = ?),\n" + 
-//				"    ?);";
 		
 		String sql = "insert into OrderItem (OrderId, ShowingID, Quantity) \n" + 
 				"values( ?,\n" + 
@@ -1193,8 +1107,7 @@ public class DBAccess {
 				"    ?);";
 	    
 	    PreparedStatement ps;
-	    
-	    //System.out.println("MIRROR3: \n-------------\n" + o);
+	   
 	    
 		try {
 			ps = conn.prepareStatement(sql);
@@ -1205,19 +1118,14 @@ public class DBAccess {
 			ps.setString(5, o.getMovieShowing().getStartTime());
 			ps.setDouble(6, o.getMovieShowing().getCost()); //Double check this cost value is correct
 			ps.setInt(7, o.getTicketQuantity());
-			
-//			ps.setInt(1, orderId);
-//			ps.setString(2, o.getMovieShowing().getMovie().getTitle());
-//			ps.setString(3, o.getMovieShowing().getStartTime());
-//			ps.setDouble(4, o.getMovieShowing().getCost());
-//			ps.setInt(5, o.getTicketQuantity());			
+					
 			
 			ps.executeUpdate();
 									
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return;
@@ -1255,14 +1163,14 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return;
 	}
 	
 	public CreditCard getCreditCardById(int id) {
-		//TODO: Test this
+
 		String sql = "select * from CreditCard where Id = ?";
 		
 	    PreparedStatement ps;
@@ -1294,14 +1202,13 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return cc;
 	}
 	
 	public boolean addReview(Review r, String rating) {
-		//TODO: Test this
 		String sql = "insert into CustomerReview (movieID, userID, ReviewDate, Rating, Review) \n" + 
 				"values (\n" + 
 				"	(select Id from Movie where `Movie name` = ?),\n" + 
@@ -1324,7 +1231,7 @@ public class DBAccess {
 		    ps.close();
 		        
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 			return false;
 		}
 		
@@ -1336,7 +1243,7 @@ public class DBAccess {
 			//Register the JDBC driver
 			Class.forName(JDBC_DRIVER);			
 		} catch(ClassNotFoundException e){
-			System.err.println(e);
+			log.error(e);
 			System.exit (-1);
 		} 
 		
@@ -1344,7 +1251,7 @@ public class DBAccess {
 			 //Open a connection
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	}	
 	
@@ -1352,7 +1259,7 @@ public class DBAccess {
 		try {
 			conn.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	}
 
@@ -1363,8 +1270,7 @@ public class DBAccess {
 			InputStream in = b.getBinaryStream();
 			image = ImageIO.read(in);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}  
 		
 		return image;
@@ -1381,8 +1287,7 @@ public class DBAccess {
 	        baos.close();
 	        b64 = javax.xml.bind.DatatypeConverter.printBase64Binary(imageInByteArray);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}  		
 		
 		return b64;

@@ -15,6 +15,19 @@
          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
          crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/CSS/customer.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+function remove(element){
+	var index = element.value;
+	
+	$.post("Checkout", {
+		removeItem: index
+	}, function(data, status) {
+		$("#cartInfo").html(data).hide().fadeIn(3000);
+	});
+}
+</script>
    </head>
    <body>
       <header>
@@ -29,6 +42,8 @@
       <h1>${user.firstName} ${user.lastName}</h1>
       <div class="main">
       <h3 style="color:red">${orderError}</h3>
+      <h1 style="color:red">${cartError}</h1>
+      <div id="cartInfo">
          <table class="table table-bordered table-striped">
             <thead>
                <th>Movie</th>
@@ -37,10 +52,9 @@
                <th>Showtime</th>
                <th># of Tickets</th>
                <th>Total</th>
-               <th>Delete</th>
+               <th>Remove</th>
             </thead>
             <tbody>
-            <h1 style="color:red">${cartError}</h1>
               <c:forEach items="${shoppingCart}" var="order" varStatus="count">
                <tr>
                   <td>${order.movieShowing.movie.title}</td>
@@ -51,10 +65,8 @@
                   <td>$<fmt:formatNumber type="number" minFractionDigits="2" 
                   maxFractionDigits="2" value="${order.cost}" /></td>
                   <td>
-                  <form action="Checkout">
-                  <input type="submit" value="Remove" name="button${count.index}">
+                  <button onclick='remove(this)'  value='${count.index}'>Remove</button>
                   </td>
-                   </form>
                </tr>
       		   </c:forEach>
             </tbody>
@@ -65,6 +77,7 @@
             <br>
             <input type="submit" value="Checkout">
          </form>
+         </div>
       </div>
       <footer class="footer">
          <div class="container">

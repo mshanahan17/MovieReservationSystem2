@@ -63,8 +63,8 @@ public class ManageOrder extends HttpServlet {
 			Order order = new OrderDB().getOrderById(orderId);
 			session.setAttribute("singleOrder", order);
 		}
-		
-		request.getRequestDispatcher("WEB-INF/Customer/ManageOrder.jsp")
+		String path = getServletContext().getInitParameter("Customer Path");
+		request.getRequestDispatcher(path + "/ManageOrder.jsp")
 			   .forward(request, response);
 	}
 

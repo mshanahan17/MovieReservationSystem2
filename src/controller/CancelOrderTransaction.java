@@ -44,6 +44,7 @@ public class CancelOrderTransaction extends HttpServlet {
 		String successMsg = "Your order has been cancelled!";
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
+		
 		if(user == null) {
 			request.getRequestDispatcher("Login.jsp").forward(request,  response);
 			return;
@@ -62,7 +63,8 @@ public class CancelOrderTransaction extends HttpServlet {
 		else {
 			session.setAttribute("cancellationMsg", successMsg);
 		}
-		request.getRequestDispatcher("WEB-INF/Customer/CancellationConfirmation.jsp")
+		String path = getServletContext().getInitParameter("Customer Path");
+		request.getRequestDispatcher(path + "/CancellationConfirmation.jsp")
 			   .forward(request, response);
 	}
 	

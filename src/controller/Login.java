@@ -1,17 +1,7 @@
 package controller;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Properties;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,7 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import model.Theater;
 import model.TheaterDB;
 import model.User;
@@ -33,11 +24,18 @@ import model.UserDB;
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private long lastModified;
+	//log4j logger
+	private static Logger log = 
+    		Logger.getLogger(Login.class.getName());
+	
 
 	@Override
 	public void init() throws ServletException {
 		lastModified = System.currentTimeMillis() / 1000 * 1000;
-		System.out.println("Login Servlet Has Started");
+		ServletContext sc = this.getServletContext();
+		String path = sc.getRealPath("/WEB-INF/lib/log4j.properties");
+		PropertyConfigurator.configure(path);
+		log.info("Login Servlet Has Started");
 	}
 
 	@Override
@@ -51,7 +49,13 @@ public class Login extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		session.removeAttribute("pwError");
-		String success = "WEB-INF/Customer/CustomerHomePage.jsp";
+		String path = getServletContext().getInitParameter("Customer Path");
+		String gRecaptchaResponse = request
+				.getParameter("g-recaptcha-response");
+		boolean verify = ServletUtils.verify(gRecaptchaResponse);
+
+		String success = path + "/CustomerHomePage.jsp";
+
 		String failure = "Registraion.jsp";
 		String button = request.getParameter("login");
 		if(button != null && button != "") {
@@ -103,7 +107,12 @@ public class Login extends HttpServlet {
 				return;
 			}
 			else if(!userDb.passwordIsValid(user, password)) {
-				session.setAttribute("pwError", "Incorrect Password");
+				session.setAttribute("pwError", "Incorrect Email or Password");
+				request.getRequestDispatcher("Login.jsp").forward(request, response);
+				return;
+			}
+			if(!verify) {
+				session.setAttribute("pwError", "Captcha Failed");
 				request.getRequestDispatcher("Login.jsp").forward(request, response);
 				return;
 			}
@@ -117,6 +126,7 @@ public class Login extends HttpServlet {
 			session.setAttribute("user", user);
 			
 		}
+		
 		
 		request.getRequestDispatcher(success).forward(request, response);
 
@@ -143,7 +153,7 @@ public class Login extends HttpServlet {
 	 * and messaage then close the filewriter resources
 	 */
 	private void connectionClosed() {
-		System.out.println("Login Servlet Has Closed");
+		log.info("Login Servlet Has Closed");
 	}
 
 }

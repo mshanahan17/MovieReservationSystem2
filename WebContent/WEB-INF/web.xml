@@ -4,4 +4,11 @@
   <welcome-file-list>
     <welcome-file>Login.jsp</welcome-file>
   </welcome-file-list>
+  <error-page>
+    <location>/general-error.jsp</location>
+  </error-page>
+  <context-param>
+  	<param-name>Customer Path</param-name>
+  	<param-value>WEB-INF/Customer</param-value>
+  </context-param>
 </web-app>

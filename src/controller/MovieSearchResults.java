@@ -108,7 +108,8 @@ public class MovieSearchResults extends HttpServlet {
 		}
 		
 		session.setAttribute("reviews", reviews);
-		request.getRequestDispatcher("WEB-INF/Customer/MovieDetailsSelection.jsp").forward(request, response);
+		String path = getServletContext().getInitParameter("Customer Path");
+		request.getRequestDispatcher(path + "/MovieDetailsSelection.jsp").forward(request, response);
 	}
 
 }

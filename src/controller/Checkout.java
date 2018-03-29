@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -47,80 +48,99 @@ public class Checkout extends HttpServlet {
 		session.removeAttribute("cartError");
 		session.removeAttribute("ccError");
 		session.removeAttribute("transactionError");
-		
+		String removeItem = request.getParameter("removeItem");
+		boolean orderRemoved = false;
 		User user = (User) session.getAttribute("user");
 		
 		if(user == null) {
-			request.getRequestDispatcher("WEB-INF/Customer/Login.jsp").forward(request, response);
+			request.getRequestDispatcher("Login.jsp").forward(request, response);
 			return;
 		}
 		
-		String button0 = request.getParameter("button0");
-		String button1 = request.getParameter("button1");
-		String button2 = request.getParameter("button2");
-		String button3 = request.getParameter("button3");
-		String button4 = request.getParameter("button4");
-		boolean orderRemoved = false;
 		List<Order> orders = (List<Order>) session.getAttribute("shoppingCart");
-		double total = (double) session.getAttribute("total");
+		double total = 0;
+		
+		if(session.getAttribute("total") != null) {
+			total = (double) session.getAttribute("total");
+		}
+		
 		MovieShowingDB movDB = new MovieShowingDB();
 		int numTix;
 		session.removeAttribute("movie");
 		
-		if(button0 != null) {
-			total -= orders.get(0).getCost();
-			numTix = -orders.get(0).getTicketQuantity();
+		if(removeItem != null) {
+			int index = Integer.parseInt(removeItem);
+			
+			total -= orders.get(index).getCost();
+			numTix = -orders.get(index).getTicketQuantity();
 
-			movDB.updateNumberPurchasedSeats(orders.get(0).getMovieShowing()
+			movDB.updateNumberPurchasedSeats(orders.get(index).getMovieShowing()
 					, numTix);
-			orders.remove(0);
+			orders.remove(index);
 			orderRemoved = true;
 		}
-		else if(button1 != null) {
-			total -= orders.get(1).getCost();
-			numTix = -orders.get(1).getTicketQuantity();
-			movDB.updateNumberPurchasedSeats(orders.get(1).getMovieShowing()
-					, numTix);
-			orders.remove(1);
-			orderRemoved = true;
-		}
-		else if(button2 != null) {
-			total -= orders.get(2).getCost();
-			numTix = -orders.get(2).getTicketQuantity();
-			movDB.updateNumberPurchasedSeats(orders.get(2).getMovieShowing()
-					, numTix);
-			orders.remove(2);
-			orderRemoved = true;
-		}
-		else if(button3 != null) {
-			total -= orders.get(3).getCost();
-			numTix = -orders.get(3).getTicketQuantity();
-			movDB.updateNumberPurchasedSeats(orders.get(3).getMovieShowing()
-					, numTix);
-			orders.remove(3);
-			orderRemoved = true;
-		}
-		else if(button4 != null) {
-			total -= orders.get(4).getCost();
-			numTix = -orders.get(4).getTicketQuantity();
-			movDB.updateNumberPurchasedSeats(orders.get(4).getMovieShowing()
-					, numTix);
-			orders.remove(4);
-			orderRemoved = true;
-		}
-
+		
+		String path = getServletContext().getInitParameter("Customer Path");
+		PrintWriter out = response.getWriter();
+		
 		if(orderRemoved) {
 			session.setAttribute("total", total);
-			request.getRequestDispatcher("WEB-INF/Customer/ViewAndCheckoutShoppingCart.jsp").forward(request, response);
+			StringBuilder sb = new StringBuilder();
+			sb.append("<table class=\"table table-bordered table-striped\">\r\n" + 
+					"<thead>\r\n" + 
+					"<th>Movie</th>\r\n" + 
+					"<th>Poster</th>\r\n" + 
+					"<th>Theater</th>\r\n" + 
+					"<th>Showtime</th>\r\n" + 
+					"<th># of Tickets</th>\r\n" + 
+					"<th>Total</th>\r\n" + 
+					"<th>Remove</th>\r\n" + 
+					"</thead>\r\n" + 
+					"<tbody>");
+			
+			int count = 0;
+			for(Order order: orders) {
+				
+				String totalCost = String.format("$%.2f", order.getCost());
+				String title = order.getMovieShowing().getMovie().getTitle();
+				String thumbnail = order.getMovieShowing().getMovie().getThumbnail();
+				String theaterName = order.getMovieShowing().getShowroom().getTheater().getName();
+				String startTime = order.getMovieShowing().getStartTime();
+				int ticketQty = order.getTicketQuantity();
+				sb.append("<tr>\r\n" + 
+						"<td>" + title + "</td>\r\n" + 
+						"<td><img src=\"data:image/gif; base64," + thumbnail + "\" style=\"max-height: 75px\"></td>\r\n" + 
+						"<td>" + theaterName + "</td>\r\n" + 
+						"<td>" + startTime + "</td>\r\n" + 
+						"<td>" + ticketQty + "</td>\r\n" + 
+						"<td>" + totalCost + "\r\n" + 
+						"<td>\r\n" + 
+						"<button onclick='remove(this)'  value='" + count++ + "'>Remove</button>\r\n" + 
+						"</td>\r\n" + 
+						"</tr>");
+			}
+			
+			String updatedTotal = String.format("$%.2f", total);
+			sb.append("</tbody>\r\n" + 
+					  "</table>\r\n" +
+					"<form action='Checkout' method='post'>\r\n" + 
+					"<h3>Total: " + updatedTotal + "</h3>\r\n" + 
+					"<br>\r\n" + 
+					"<input type='submit' value='Checkout'>\r\n" + 
+					"</form>");
+			response.setContentType("text/html");
+			out.println(sb.toString());
 			return;
 		}
+		
 		if(total == 0) {
 			String errorMsg = "No items in cart.";
 			session.setAttribute("cartError", errorMsg);
-			request.getRequestDispatcher("WEB-INF/Customer/ViewAndCheckoutShoppingCart.jsp").forward(request, response);
+			request.getRequestDispatcher(path + "/ViewAndCheckoutShoppingCart.jsp").forward(request, response);
 			return;
 		}
-		request.getRequestDispatcher("WEB-INF/Customer/CustomerTransaction.jsp").forward(request, response);
+		
+		request.getRequestDispatcher(path + "/ConfirmOrder.jsp").forward(request, response);
 	}
 
 }
