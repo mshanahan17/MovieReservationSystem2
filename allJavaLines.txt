@@ -1,0 +1,4141 @@
+package controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import model.Order;
+import model.User;
+
+/**
+ * Servlet implementation class CancelOrder
+ */
+@WebServlet("/CancelOrder")
+public class CancelOrder extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public CancelOrder() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String button0 = request.getParameter("button0");
+		String button1 = request.getParameter("button1");
+		String button2 = request.getParameter("button2");
+		String button3 = request.getParameter("button3");
+		String button4 = request.getParameter("button4");
+		
+		HttpSession session = request.getSession();
+		session.removeAttribute("cancelOrderError");
+		session.removeAttribute("movieOrder");
+		User user = (User) session.getAttribute("user");
+		List<Order> orderItems = (List<Order>) session.getAttribute("orderItems");
+		
+		if(user == null) {
+			request.getRequestDispatcher("Login.jsp").forward(request,  response);
+			return;
+		}
+		if(orderItems == null) {
+			String msg = "No order to cancel";
+			session.setAttribute("cancelOrderError", msg);
+			String path = getServletContext().getInitParameter("Customer Path");
+			request.getRequestDispatcher(path + "/CancelOrder.jsp")
+			   .forward(request, response);
+			return;
+		}
+		
+		Order movOrder = new Order();
+
+		if(button0 != null && button0 != "") {
+			movOrder = orderItems.get(0);
+		}
+		if(button1 != null && button1 != "") {
+			movOrder = orderItems.get(1);
+		}
+		if(button2 != null && button2 != "") {
+			movOrder = orderItems.get(2);
+		}
+		if(button3 != null && button3 != "") {
+			movOrder = orderItems.get(3);
+		}
+		if(button4 != null && button4 != "") {
+			movOrder = orderItems.get(4);
+		}
+		
+		session.setAttribute("movieOrder", movOrder);
+		request.getRequestDispatcher("WEB-INF/Customer/CancelOrder.jsp")
+			   .forward(request, response);
+	}
+
+}
+package controller;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import model.Order;
+import model.OrderDB;
+import model.User;
+
+/**
+ * Servlet implementation class CancelOrderTransaction
+ */
+@WebServlet("/CancelOrderTransaction")
+public class CancelOrderTransaction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public CancelOrderTransaction() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String error = "Can no longer cancel that order!";
+		String successMsg = "Your order has been cancelled!";
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		
+		if(user == null) {
+			request.getRequestDispatcher("Login.jsp").forward(request,  response);
+			return;
+		}
+		
+		Order movOrder = (Order) session.getAttribute("movieOrder");
+		boolean success = false;
+		if(movOrder != null) {
+			OrderDB orderDB = new OrderDB();
+			success = orderDB.removeOrderItem(movOrder);
+		}
+		
+		if(!success) {
+			session.setAttribute("cancellationMsg", error);
+		}
+		else {
+			session.setAttribute("cancellationMsg", successMsg);
+		}
+		String path = getServletContext().getInitParameter("Customer Path");
+		request.getRequestDispatcher(path + "/CancellationConfirmation.jsp")
+			   .forward(request, response);
+	}
+	
+
+}
+package controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import model.MovieShowingDB;
+import model.Order;
+import model.ReviewDB;
+import model.User;
+
+/**
+ * Servlet implementation class Checkout
+ */
+@WebServlet("/Checkout")
+public class Checkout extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public Checkout() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		HttpSession session = request.getSession();
+		session.removeAttribute("cartError");
+		session.removeAttribute("ccError");
+		session.removeAttribute("transactionError");
+		String removeItem = request.getParameter("removeItem");
+		boolean orderRemoved = false;
+		User user = (User) session.getAttribute("user");
+		
+		if(user == null) {
+			request.getRequestDispatcher("Login.jsp").forward(request, response);
+			return;
+		}
+		
+		List<Order> orders = (List<Order>) session.getAttribute("shoppingCart");
+		double total = 0;
+		
+		if(session.getAttribute("total") != null) {
+			total = (double) session.getAttribute("total");
+		}
+		
+		MovieShowingDB movDB = new MovieShowingDB();
+		int numTix;
+		session.removeAttribute("movie");
+		
+		if(removeItem != null) {
+			int index = Integer.parseInt(removeItem);
+			
+			total -= orders.get(index).getCost();
+			numTix = -orders.get(index).getTicketQuantity();
+
+			movDB.updateNumberPurchasedSeats(orders.get(index).getMovieShowing()
+					, numTix);
+			orders.remove(index);
+			orderRemoved = true;
+		}
+		
+		String path = getServletContext().getInitParameter("Customer Path");
+		PrintWriter out = response.getWriter();
+		
+		if(orderRemoved) {
+			session.setAttribute("total", total);
+			StringBuilder sb = new StringBuilder();
+			sb.append("<table class=\"table table-bordered table-striped\">\r\n" + 
+					"<thead>\r\n" + 
+					"<th>Movie</th>\r\n" + 
+					"<th>Poster</th>\r\n" + 
+					"<th>Theater</th>\r\n" + 
+					"<th>Showtime</th>\r\n" + 
+					"<th># of Tickets</th>\r\n" + 
+					"<th>Total</th>\r\n" + 
+					"<th>Remove</th>\r\n" + 
+					"</thead>\r\n" + 
+					"<tbody>");
+			
+			int count = 0;
+			for(Order order: orders) {
+				
+				String totalCost = String.format("$%.2f", order.getCost());
+				String title = order.getMovieShowing().getMovie().getTitle();
+				String thumbnail = order.getMovieShowing().getMovie().getThumbnail();
+				String theaterName = order.getMovieShowing().getShowroom().getTheater().getName();
+				String startTime = order.getMovieShowing().getStartTime();
+				int ticketQty = order.getTicketQuantity();
+				sb.append("<tr>\r\n" + 
+						"<td>" + title + "</td>\r\n" + 
+						"<td><img src=\"data:image/gif; base64," + thumbnail + "\" style=\"max-height: 75px\"></td>\r\n" + 
+						"<td>" + theaterName + "</td>\r\n" + 
+						"<td>" + startTime + "</td>\r\n" + 
+						"<td>" + ticketQty + "</td>\r\n" + 
+						"<td>" + totalCost + "\r\n" + 
+						"<td>\r\n" + 
+						"<button onclick='remove(this)'  value='" + count++ + "'>Remove</button>\r\n" + 
+						"</td>\r\n" + 
+						"</tr>");
+			}
+			
+			String updatedTotal = String.format("$%.2f", total);
+			sb.append("</tbody>\r\n" + 
+					  "</table>\r\n" +
+					"<form action='Checkout' method='post'>\r\n" + 
+					"<h3>Total: " + updatedTotal + "</h3>\r\n" + 
+					"<br>\r\n" + 
+					"<input type='submit' value='Checkout'>\r\n" + 
+					"</form>");
+			response.setContentType("text/html");
+			out.println(sb.toString());
+			return;
+		}
+		
+		if(total == 0) {
+			String errorMsg = "No items in cart.";
+			session.setAttribute("cartError", errorMsg);
+			request.getRequestDispatcher(path + "/ViewAndCheckoutShoppingCart.jsp").forward(request, response);
+			return;
+		}
+		
+		request.getRequestDispatcher(path + "/ConfirmOrder.jsp").forward(request, response);
+	}
+
+}
+package controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import model.Movie;
+import model.MovieShowing;
+import model.Review;
+import model.ReviewDB;
+import model.User;
+
+/**
+ * Servlet implementation class CustomerReview
+ */
+@WebServlet("/CustomerReviewServlet")
+public class CustomerReviewServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public CustomerReviewServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String review = ServletUtils.validateInput(
+				request.getParameter("review".trim()), "");
+		String rating = request.getParameter("rating");
+		
+		String successResponse = "Your Review Was Successfully Submitted!";
+		String failResponse = "An error was encountered submitting your review!";
+		String date = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
+		boolean submissionSuccess = false;
+		
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+
+		MovieShowing movieShowing = (MovieShowing) session.getAttribute("movie");
+		if(user == null) {
+			request.getRequestDispatcher("Login.jsp")
+			   .forward(request, response);
+			return;
+		}
+		
+		Review movieReview = new Review();
+		movieReview.setContent(review);
+		movieReview.setDate(date);
+		movieReview.setMovie(movieShowing.getMovie());
+		movieReview.setRating(rating);
+		movieReview.setUser(user);
+		
+		StringBuilder sb = new StringBuilder();
+		if(new ReviewDB().addReview(movieReview, rating)) {
+			submissionSuccess = true;
+			ReviewDB reviewDb = new ReviewDB();
+			String movieTitle = movieShowing.getMovie().getTitle();
+			List<Review> reviews = reviewDb.getReviewsByMovieTitle(movieTitle);
+			
+			
+			sb.append("<table class=\"table table-bordered\">\r\n" + 
+					  "<tbody id=\"reviews\">");
+			
+			for(Review reviewEntry: reviews) {
+				
+				String fName = reviewEntry.getUser().getFirstName();
+				String lName = reviewEntry.getUser().getLastName();
+				String revDate = reviewEntry.getDate();
+				String revCont = reviewEntry.getContent();
+				String revRating = reviewEntry.getRating();
+				
+				sb.append("<tr>\r\n" + 
+						  "<td>" + fName + " " + lName + "</td>\r\n" + 
+						  "<td>" + revDate + "</td>\r\n" + 
+						  "<td>" + revCont + "</td>\r\n" + 
+						  "<td>" + revRating + "</td>\r\n" + 
+						  "</tr>");
+			}
+			
+			sb.append("</tbody>\r\n" + 
+					  "</table>");
+		}
+		
+		PrintWriter out = response.getWriter();
+		if(submissionSuccess) {
+			response.setContentType("text/html");
+			out.println(sb.toString());
+			return;
+		}
+		else {
+			out.println(0);
+			return;
+		}
+//		request.getRequestDispatcher("WEB-INF/Customer/CustomerReviewConfirmation.jsp")
+//			   .forward(request, response);
+	}
+
+}
+package controller;
+
+import org.apache.commons.mail.Email;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.SimpleEmail;
+
+public class JavaMailer {
+	
+	public static void sendConfirmationEmail(String to) throws EmailException {
+		
+		Email email = new SimpleEmail();
+		email.setHostName("smtp.googlemail.com");
+		email.setSmtpPort(465);
+		email.setAuthentication("csce464practice@gmail.com", "CSCE464PASSWORD");
+		email.setSSLOnConnect(true);
+		email.setFrom("csce464practice@gmail.com");
+		email.setSubject("Confirmation E-mail");
+		email.setMsg("Your registraion was succesful!");
+		email.addTo(to);
+		email.send();
+	}
+
+}
+package controller;
+
+import java.io.IOException;
+import java.util.List;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+import model.Theater;
+import model.TheaterDB;
+import model.User;
+import model.UserDB;
+
+/**
+ * Servlet implementation class Login
+ */
+@WebServlet("/Login")
+public class Login extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private long lastModified;
+	//log4j logger
+	private static Logger log = 
+    		Logger.getLogger(Login.class.getName());
+	
+
+	@Override
+	public void init() throws ServletException {
+		lastModified = System.currentTimeMillis() / 1000 * 1000;
+		ServletContext sc = this.getServletContext();
+		String path = sc.getRealPath("/WEB-INF/lib/log4j.properties");
+		PropertyConfigurator.configure(path);
+		log.info("Login Servlet Has Started");
+	}
+
+	@Override
+	protected long getLastModified(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		return this.lastModified;
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		HttpSession session = request.getSession();
+		session.removeAttribute("pwError");
+		String path = getServletContext().getInitParameter("Customer Path");
+		String gRecaptchaResponse = request
+				.getParameter("g-recaptcha-response");
+		boolean verify = ServletUtils.verify(gRecaptchaResponse);
+
+		String success = path + "/CustomerHomePage.jsp"; // TODO: Make sure this is a *relative* filepath?
+
+		String failure = "Registraion.jsp";
+		String button = request.getParameter("login");
+		if(button != null && button != "") {
+			session.removeAttribute("total");
+		}
+		/*
+		 * recieves and validates login information
+		 */
+		String email = ServletUtils.
+				validateInput(request.getParameter("email"), "");
+		String password = ServletUtils.
+				validateInput(request.getParameter("password"), "");
+		
+		boolean rememberMe = request.getParameter("rememberMe") != null;
+		boolean invalidEmail = email == null || email == "";
+		boolean invalidPassword = password == null || password == "";
+		
+		//Sets email into cookie to be remembered for next login attempt
+		if(rememberMe)
+		{
+		    Cookie c = new Cookie("userId", email);
+		    c.setMaxAge(24*60*60);
+		    response.addCookie(c); 
+		}
+
+
+		User user = (User) session.getAttribute("user");
+		List<Theater> theaters = (List<Theater>) session.getAttribute("theaters");
+		
+		
+		if(theaters == null) {
+			theaters = new TheaterDB().getTheaters();
+			session.setAttribute("theaters", theaters);
+		}
+		
+		if(user == null && invalidEmail && invalidPassword) {
+			request.getRequestDispatcher("Login.jsp").forward(request, response);
+			return;
+		}
+		//Validates login directing to registration if user is not found
+		//or displays a password error on ligin if user is found but wrong password
+		if(user == null) {
+			UserDB userDb = new UserDB();
+
+			user = userDb.getUserByEmailAddress(email);
+
+			if(user == null) {
+				request.getRequestDispatcher(failure).forward(request, response);
+				return;
+			}
+			else if(!userDb.passwordIsValid(user, password)) {
+				session.setAttribute("pwError", "Incorrect Email or Password");
+				request.getRequestDispatcher("Login.jsp").forward(request, response);
+				return;
+			}
+			if(!verify) {
+				session.setAttribute("pwError", "Captcha Failed");
+				request.getRequestDispatcher("Login.jsp").forward(request, response);
+				return;
+			}
+			// THIS IS HOW IT WAS BEFORE
+//			else if(!user.getPassword().equals(password)) {
+//				session.setAttribute("pwError", "Incorrect Password");
+//				request.getRequestDispatcher("Login.jsp").forward(request, response);
+//				return;
+//			}
+			
+			session.setAttribute("user", user);
+			
+		}
+		
+		
+		request.getRequestDispatcher(success).forward(request, response);
+
+
+		/*
+		 * redirects to correct webpage depending on if login info was correct or not.
+		 */
+
+
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		doPost(request, response);
+	}
+
+	@Override
+	public void destroy() {
+		connectionClosed();
+	}
+
+	/*
+	 * when servlet connection is terminated this method will write the time stamp
+	 * and messaage then close the filewriter resources
+	 */
+	private void connectionClosed() {
+		log.info("Login Servlet Has Closed");
+	}
+
+}
+package controller;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+/**
+ * Servlet implementation class LogOut
+ */
+@WebServlet("/LogOut")
+public class LogOut extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public LogOut() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		HttpSession session = request.getSession(false);
+		String path = "Login.jsp";
+		session.invalidate();
+		
+		request.getRequestDispatcher(path).forward(request, response);
+	}
+
+}
+package controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import model.Order;
+import model.OrderDB;
+import model.User;
+
+/**
+ * Servlet implementation class ManageOrder
+ */
+@WebServlet("/ManageOrder")
+public class ManageOrder extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public ManageOrder() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		String buttonVal = request.getParameter("button");
+		session.removeAttribute("orderId");
+		session.removeAttribute("singleOrder");
+		session.removeAttribute("movieOrder");
+		
+		if(user == null) {
+			request.getRequestDispatcher("Login.jsp").forward(request,  response);
+			return;
+		}
+		
+		if(buttonVal != null && buttonVal != "") {
+			String[] buttonSplit = buttonVal.split(" ");
+			int orderId = Integer.parseInt(buttonSplit[2]);
+			List<Order> orderItems = new OrderDB().getOrdersByOrderId(orderId);
+			session.setAttribute("orderItems", orderItems);
+			session.setAttribute("orderId", buttonSplit[2]);
+			Order order = new OrderDB().getOrderById(orderId);
+			session.setAttribute("singleOrder", order);
+		}
+		String path = getServletContext().getInitParameter("Customer Path");
+		request.getRequestDispatcher(path + "/ManageOrder.jsp")
+			   .forward(request, response);
+	}
+
+}
+package controller;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import model.Movie;
+import model.MovieDB;
+import model.MovieShowing;
+import model.MovieShowingDB;
+import model.User;
+
+/**
+ * Servlet implementation class MovieSearchQuery
+ */
+@WebServlet("/MovieSearchQuery")
+public class MovieSearchQuery extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public MovieSearchQuery() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String query = ServletUtils.validateInput(request.getParameter("search"), "");
+		String theater = request.getParameter("theaters");
+		String date = request.getParameter("showDate");
+
+		HttpSession session = request.getSession();
+		List<MovieShowing> movieShowings = (List<MovieShowing>) session.getAttribute("movieShowing");
+		
+		User user = (User) session.getAttribute("user");
+		if(user == null) {
+			request.getRequestDispatcher("Login.jsp").forward(request,  response);
+			return;
+		}
+		
+		if(movieShowings == null) {
+			movieShowings = new MovieShowingDB().searchMovieShowings(theater, query, date);
+		}
+
+		session.setAttribute("movieShowings", movieShowings);
+		String path = getServletContext().getInitParameter("Customer Path");
+		request.getRequestDispatcher(path + "/MovieSearchResults.jsp").forward(request,  response);
+
+	}
+
+}
+package controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.joda.time.DateTime;
+
+import model.Movie;
+import model.MovieDB;
+import model.MovieShowing;
+import model.Order;
+import model.Review;
+import model.ReviewDB;
+import model.User;
+
+/**
+ * Servlet implementation class MovieSearchResults
+ */
+@WebServlet("/MovieSearchResults")
+public class MovieSearchResults extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public MovieSearchResults() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String button0 = request.getParameter("button0");
+		String button1 = request.getParameter("button1");
+		String button2 = request.getParameter("button2");
+		String button3 = request.getParameter("button3");
+		String button4 = request.getParameter("button4");
+		String buttons0 = request.getParameter("buttons0");
+		String buttons1 = request.getParameter("buttons1");
+		String buttons2 = request.getParameter("buttons2");
+		String buttons3 = request.getParameter("buttons3");
+		String buttons4 = request.getParameter("buttons4");
+		HttpSession session = request.getSession();
+		session.removeAttribute("noCapacity");
+
+		List<MovieShowing> movieShowings = (List<MovieShowing>) session.getAttribute("movieShowings");
+		List<Review> reviews = null;
+		List<Order> orderItems = (List<Order>) session.getAttribute("orderItems");
+
+		User user = (User) session.getAttribute("user");
+		if (user == null) {
+			request.getRequestDispatcher("Login.jsp").forward(request, response);
+			return;
+		}
+
+		if (button0 != null) {
+			session.setAttribute("movie", movieShowings.get(0));
+			reviews = new ReviewDB().getReviewsByMovieTitle(movieShowings.get(0).getMovie().getTitle());
+		} else if (button1 != null) {
+			session.setAttribute("movie", movieShowings.get(1));
+			reviews = new ReviewDB().getReviewsByMovieTitle(movieShowings.get(1).getMovie().getTitle());
+		} else if (button2 != null) {
+			session.setAttribute("movie", movieShowings.get(2));
+			reviews = new ReviewDB().getReviewsByMovieTitle(movieShowings.get(2).getMovie().getTitle());
+		} else if (button3 != null) {
+			session.setAttribute("movie", movieShowings.get(3));
+			reviews = new ReviewDB().getReviewsByMovieTitle(movieShowings.get(3).getMovie().getTitle());
+		} else if (button4 != null) {
+			session.setAttribute("movie", movieShowings.get(4));
+			reviews = new ReviewDB().getReviewsByMovieTitle(movieShowings.get(4).getMovie().getTitle());
+		} else if (buttons0 != null) {
+			session.setAttribute("movie", orderItems.get(0).getMovieShowing());
+			reviews = new ReviewDB().getReviewsByMovieTitle(orderItems.get(0).getMovieShowing().getMovie().getTitle());
+		} else if (buttons1 != null) {
+			session.setAttribute("movie", orderItems.get(1).getMovieShowing());
+			reviews = new ReviewDB().getReviewsByMovieTitle(orderItems.get(1).getMovieShowing().getMovie().getTitle());
+		} else if (buttons2 != null) {
+			session.setAttribute("movie", orderItems.get(2).getMovieShowing());
+			reviews = new ReviewDB().getReviewsByMovieTitle(orderItems.get(2).getMovieShowing().getMovie().getTitle());
+		} else if (buttons3 != null) {
+			session.setAttribute("movie", orderItems.get(3).getMovieShowing());
+			reviews = new ReviewDB().getReviewsByMovieTitle(orderItems.get(3).getMovieShowing().getMovie().getTitle());
+		} else if (buttons4 != null) {
+			session.setAttribute("movie", orderItems.get(4).getMovieShowing());
+			reviews = new ReviewDB().getReviewsByMovieTitle(orderItems.get(4).getMovieShowing().getMovie().getTitle());
+		}
+		
+		session.setAttribute("reviews", reviews);
+		String path = getServletContext().getInitParameter("Customer Path");
+		request.getRequestDispatcher(path + "/MovieDetailsSelection.jsp").forward(request, response);
+	}
+
+}
+package controller;
+
+import java.io.IOException;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
+import model.User;
+
+/**
+ * Servlet implementation class PasswordAuthServlet
+ */
+@WebServlet("/PasswordAuthServlet")
+public class PasswordAuthServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	//log4j logger
+		private static Logger log = 
+	    		Logger.getLogger(PasswordAuthServlet.class.getName());
+		
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public PasswordAuthServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	@Override
+	public void init() throws ServletException {
+		ServletContext sc = this.getServletContext();
+		String path = sc.getRealPath("/WEB-INF/lib/log4j.properties");
+		PropertyConfigurator.configure(path);
+		log.info("Password Authentication Servlet Has Started");
+	}
+	
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String passAuth = ServletUtils.validateInput(request.getParameter("passAuth"), "");
+		User u = (User) request.getAttribute("user");
+		u.getEmailAddress();
+		
+	}
+
+	@Override
+	public void destroy() {
+		connectionClosed();
+	}
+	
+	/*
+	 * when servlet connection is terminated this method will write the time stamp
+	 * and messaage then close the filewriter resources
+	 */
+	private void connectionClosed() {
+		log.info("Password Authentication Servlet Has Closed");
+	}
+
+}
+package controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import model.Order;
+import model.OrderDB;
+
+/**
+ * Servlet implementation class PlaceOrder
+ */
+@WebServlet("/PlaceOrder")
+public class PlaceOrder extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public PlaceOrder() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request,response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		HttpSession session = request.getSession();
+		double total = (double) session.getAttribute("total");
+		List<Order> orders = (List<Order>) session.getAttribute("shoppingCart");
+		OrderDB orderDB = new OrderDB();
+
+		orderDB.addOrdersToUser(orders, total);
+		session.setAttribute("completeOrder", orders);
+		session.setAttribute("recentTotal", total);
+		session.removeAttribute("shoppingCart");
+		session.removeAttribute("total");
+		
+		
+		StringBuilder sb = new StringBuilder();
+		
+		String tableStart = "<table class=\"table table-bordered table-striped\">\r\n" + 
+							"<thead>\r\n" + 
+							"<th>Movie</th>\r\n" + 
+							"<th># of Tickets</th>\r\n" + 
+							"<th>Total</th>\r\n" + 
+							"<th>Theater Room</th>\r\n" + 
+							"</thead>\r\n" + 
+							"<tbody>";
+		sb.append(tableStart);
+		for(Order order: orders) {
+			String cost = String.format("$%.2f", order.getCost());
+			sb.append("<tr>\r\n" + 
+					"<td>" + order.getMovieShowing().getMovie().getTitle() + "</td>\r\n" + 
+					"<td>" + order.getTicketQuantity() + "</td>\r\n" + 
+					"<td>" + cost + "</td>\r\n" + 
+					"<td>" + order.getMovieShowing().getShowroom().getTheater().getName() + "</td>\r\n" + 
+					"</tr>");
+		}
+		
+		String totalStr = String.format("$%.2f", total);
+		sb.append("</tbody>\r\n" + 
+				"</table>\r\n" + 
+				"<br>\r\n" + 
+				"<h3 id=\"total\" value=\"${total}\">Total: " + totalStr + "</h3>");
+		PrintWriter out = response.getWriter();
+		response.setContentType("text/html");
+		out.println(sb.toString());
+	}
+
+}
+package controller;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Properties;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.catalina.Session;
+import org.apache.commons.mail.EmailException;
+
+import model.User;
+import model.UserDB;
+
+/**
+ * Servlet implementation class Registration
+ */
+@WebServlet("/Registration")
+public class Registration extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private long lastModified;
+	
+	@Override
+	public void init() throws ServletException {
+		lastModified = System.currentTimeMillis()/1000 * 1000;
+		System.out.println("Registration Servlet Has Started");
+	}
+	
+	@Override
+	protected long getLastModified(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		return this.lastModified;
+	}
+
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+    	/* 
+    	 * unused parameters at this time will use in futre stages possibly
+    	 */
+        String fName = ServletUtils.validateInput(request.getParameter("fName"), "");
+        String lName = ServletUtils.validateInput(request.getParameter("lName"), "");
+        
+        /* email is used as login info so both email and password
+         * are validated
+         */
+        String[] email = request.getParameterValues("email");
+        String[] password = request.getParameterValues("password");
+        ServletUtils.validateAllInput(email);
+        ServletUtils.validateAllInput(password);
+        
+        /*
+         * Checks to see the repeat entries of the form match.
+         */
+        UserDB userDB = new UserDB();
+        Boolean emailMatch = ServletUtils.validMatch(email[0], email[1]);
+        Boolean passwordMatch = ServletUtils.validMatch(password[0], password[1]);
+		Boolean userAlreadyExists = userDB.userExistsByEmailAddress(email[0]);
+
+		/*
+		 * If email and password entries match user is redirected to login
+		 * page. Otherwise an error message is displayed depending on which
+		 * entries did not match.
+		 */
+        if(emailMatch && passwordMatch && !userAlreadyExists){
+            User user = new User();
+            user.setFirstName(fName);
+            user.setLastName(lName);
+            user.setEmailAddress(email[0]);
+            user.setPassword(password[0]);
+
+            UserDB userDb = new UserDB();
+            userDb.registerUser(user);
+            
+            //Send out confirmation e-mail
+            try {
+				JavaMailer.sendConfirmationEmail(email[0]);
+			} catch (EmailException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            response.sendRedirect("Login.jsp");
+        }
+        else if(userAlreadyExists) {
+        	String emailError = "E-mail Already Exists!";
+            request.setAttribute("emailError", emailError);
+            request.getRequestDispatcher("Registration.jsp").forward(request,response);
+            return;
+        }
+        else if(passwordMatch){
+            String emailError = "E-mails do not match!";
+            request.setAttribute("emailError", emailError);
+            request.getRequestDispatcher("Registration.jsp").forward(request,response);
+            return;
+        }
+        else {
+            String pwError = "Passwords do not match!";
+            request.setAttribute("pwError", pwError);
+            request.getRequestDispatcher("Registration.jsp").forward(request,response);
+        }
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doPost(request,response);
+    }
+    
+	@Override
+	public void destroy() {
+		connectionClosed();
+	}
+	
+	/*
+	 * when servlet connection is terminated this method will 
+	 * write the time stamp and messaage then close the filewriter
+	 * resources
+	 */
+	private void connectionClosed() {
+		System.out.println("Registration Server Has Closed");
+	}
+	
+
+}
+package controller;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class ReviewServlet
+ */
+@WebServlet("/ReviewServlet")
+public class ReviewServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public ReviewServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		request.getRequestDispatcher("WEB-INF/Customer/CustomerReview.jsp").forward(request, response);
+	}
+
+}
+package controller;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.net.URL;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.net.ssl.HttpsURLConnection;
+
+import org.json.JSONObject;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+public class ServletUtils {
+
+	private static final String secret = "6LeUP08UAAAAAMIpEs7DmHat0RDVz3ZOhc9LLPQl";
+	private static final String SITE_VERIFY_URL = //
+			"https://www.google.com/recaptcha/api/siteverify";
+
+	public static boolean verify(String gRecaptchaResponse) {
+		if (gRecaptchaResponse == null || gRecaptchaResponse.length() == 0) {
+			return false;
+		}
+
+		try {
+			URL verifyUrl = new URL(SITE_VERIFY_URL);
+
+			// Open a Connection to URL above.
+			HttpsURLConnection conn = (HttpsURLConnection) verifyUrl.openConnection();
+
+			// Add the Header informations to the Request to prepare send to the server.
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+			conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+			// Data will be sent to the server.
+			String postParams = "secret=" + secret //
+					+ "&response=" + gRecaptchaResponse;
+
+			// Send Request
+			conn.setDoOutput(true);
+
+			// Get the output stream of Connection.
+			// Write data in this stream, which means to send data to Server.
+			OutputStream outStream = conn.getOutputStream();
+			outStream.write(postParams.getBytes());
+
+			outStream.flush();
+			outStream.close();
+
+			// Response code return from Server.
+			int responseCode = conn.getResponseCode();
+
+			// Get the Input Stream of Connection to read data sent from the Server.
+			// InputStream is = conn.getInputStream();
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String inputLine;
+			StringBuffer content = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+				content.append(inputLine);
+			}
+			in.close();
+
+			JSONObject jsonObj = new JSONObject(content.toString());
+
+			boolean success = jsonObj.getBoolean("success");
+
+			return success;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public static String headWithTitle(String title) {
+		return ("<!DOCTYPE html>\n" + "<HTML>\n" + "<HEAD><TITLE>" + title + "</TITLE></HEAD>\n");
+	}
+
+	private static String filter(String input) {
+		if (!hasSpecialChars(input)) {
+			return (input);
+		}
+		StringBuffer filtered = new StringBuffer(input.length());
+		char c;
+		for (int i = 0; i < input.length(); i++) {
+			c = input.charAt(i);
+			switch (c) {
+			case '<':
+				filtered.append("&lt;");
+				break;
+			case '>':
+				filtered.append("&gt;");
+				break;
+			case '"':
+				filtered.append("&quot;");
+				break;
+			case '&':
+				filtered.append("&amp;");
+				break;
+			default:
+				filtered.append(c);
+			}
+		}
+		return (filtered.toString());
+	}
+
+	private static boolean hasSpecialChars(String input) {
+		boolean flag = false;
+		if ((input != null) && (input.length() > 0)) {
+			char c;
+			for (int i = 0; i < input.length(); i++) {
+				c = input.charAt(i);
+				switch (c) {
+				case '<':
+					flag = true;
+					break;
+				case '>':
+					flag = true;
+					break;
+				case '"':
+					flag = true;
+					break;
+				case '&':
+					flag = true;
+					break;
+				}
+			}
+		}
+		return (flag);
+	}
+
+	public static String validateInput(String str, String replacement) {
+
+		if (str == null || str.equals("")) {
+			str = replacement;
+		}
+		str = filter(str);
+
+		return str;
+	}
+
+	public static void validateAllInput(String[] strArr) {
+
+		for (String str : strArr) {
+			str = filter(str);
+		}
+	}
+
+	public static boolean validMatch(String str1, String str2) {
+
+		return str1.equals(str2);
+	}
+}
+package controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import model.MovieShowing;
+import model.MovieShowingDB;
+import model.Order;
+import model.User;
+
+/**
+ * Servlet implementation class UpdateShoppingCart
+ */
+@WebServlet("/UpdateShoppingCart")
+public class UpdateShoppingCart extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public UpdateShoppingCart() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String path1 = getServletContext().getInitParameter("Customer Path");
+		String path = path1 + "/ViewAndCheckoutShoppingCart.jsp";
+		String qtyTickets = request.getParameter("ticketQty");
+		String checkOut = request.getParameter("checkOut");
+		HttpSession session = request.getSession();
+		session.removeAttribute("cartError");
+		session.removeAttribute("orderError");
+
+		
+		User user = (User) session.getAttribute("user");
+		if(user == null) {
+			request.getRequestDispatcher("Login.jsp").forward(request,  response);
+			return;
+		}
+		if(checkOut != null && checkOut.equals("1")) {
+			request.getRequestDispatcher(path).forward(request,  response);
+			return;
+		}
+		
+		MovieShowing movShow = (MovieShowing) session.getAttribute("movie");
+
+		if(movShow == null || qtyTickets == null || qtyTickets == "") {
+			request.getRequestDispatcher(path).forward(request,  response);
+			return;
+		}
+		
+		double total;
+		if(session.getAttribute("total") == null) {
+			total = 0;
+		}
+		else {
+			total = (Double) session.getAttribute("total");
+		}
+		
+		int numTickets = 0;
+		
+		
+		PrintWriter out = response.getWriter();
+		//prevents race conditions for purchasing last tickets.
+		synchronized(this) {
+			if(qtyTickets != null) {
+				numTickets = Integer.parseInt(qtyTickets);
+				int capacity = movShow.getShowroom().getCapacity();
+				int available = capacity - movShow.getNumOfPurchasedSeats();
+				if(numTickets > available) {
+					String error = "Not enough tickets remaining, only " + available + " tickets remaining.";
+					session.setAttribute("noCapacity", error);
+//					request.getRequestDispatcher(path1 + "/MovieDetailsSelection.jsp").forward(request, response);
+					out.println(error);
+					return;
+				}
+				else {
+					MovieShowingDB movDB = new MovieShowingDB();
+					movDB.updateNumberPurchasedSeats(movShow, numTickets);
+					movShow.updatePurchasedSeatCount(numTickets);
+				}
+			}
+		}
+
+		
+		ArrayList<Order> shoppingCart = (ArrayList<Order>) session.getAttribute("shoppingCart");
+		
+		if(shoppingCart == null) {
+			shoppingCart = new ArrayList();
+		}
+		
+		if(shoppingCart.size() > 4) {
+			String orderError = "Maximum of 5 orders please remove an item from your cart to add another!";
+			session.setAttribute("orderError", orderError);
+			out.println(orderError);
+			return;
+		}
+		Order order = new Order();
+		double cost = movShow.getCost() * numTickets;
+		order.setTicketQuantity(numTickets);
+		order.setCost(cost);
+		order.setMovieShowing(movShow);
+		total += cost;
+		order.setCustomer(user);
+		order.setDate(movShow.getStartTime());
+		shoppingCart.add(order);
+		session.setAttribute("shoppingCart", shoppingCart);
+		session.setAttribute("total", total);
+
+		out.println(1);
+	}
+
+}
+package controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import model.Order;
+import model.OrderDB;
+import model.User;
+
+/**
+ * Servlet implementation class ViewOrders
+ */
+@WebServlet("/ViewOrders")
+public class ViewOrders extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public ViewOrders() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String path = getServletContext().getInitParameter("Customer Path");
+		path = path + "/ViewOrders.jsp";
+		HttpSession session = request.getSession();
+		session.removeAttribute("noOrders");
+		User user = (User) session.getAttribute("user");
+		
+		if(user == null) {
+			request.getRequestDispatcher("Login.jsp").forward(request,  response);
+			return;
+		}
+		
+		List<Order> orders = new OrderDB().getOrdersByUser(user);
+		
+		if(orders == null) {
+			session.setAttribute("noOrders", "You do not have any orders yet!");
+		}
+		session.setAttribute("pastOrders", orders);
+		request.getRequestDispatcher(path).forward(request, response);
+	}
+
+}
+package model;
+
+public class Address {
+	private String streetAddress;
+	private String city;
+	private String state;
+	private String zip;
+	
+	public Address() {
+		super();		
+	}
+	
+	public String getStreetAddress() {
+		return streetAddress;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public String getZip() {
+		return zip;
+	}
+
+	public void setStreetAddress(String streetAddress) {
+		this.streetAddress = streetAddress;
+	}
+	
+	public void setCity(String city) {
+		this.city = city;
+	}
+	
+	public void setState(String state) {
+		this.state = state;
+	}
+	
+	public void setZip(String zip) {
+		this.zip = zip;
+	}
+	
+	@Override
+	public String toString() {
+		return "Address-"
+				+ "\nstreetAddress: " + streetAddress 
+				+ "\ncity: " + city
+				+ "\nstate: " + state
+				+ "\nzip: " + zip;
+		
+	}
+}
+package model;
+
+public class CreditCard {
+	String cardHolderName;
+	String cardNumber;
+	double balance;
+	String cardType;
+	User owner;
+	String cvv;
+	String expirationDate;
+	
+	public CreditCard() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public String getCardHolderName() {
+		return cardHolderName;
+	}
+
+	public void setCardHolderName(String cardHolderName) {
+		this.cardHolderName = cardHolderName;
+	}
+
+	public String getCardNumber() {
+		return cardNumber;
+	}
+
+	public void setCardNumber(String cardNumber) {
+		this.cardNumber = cardNumber;
+	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+
+	public String getCardType() {
+		return cardType;
+	}
+
+	public void setCardType(String cardType) {
+		this.cardType = cardType;
+	}
+
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
+	}
+
+	public String getCvv() {
+		return cvv;
+	}
+
+	public void setCvv(String cvv) {
+		this.cvv = cvv;
+	}
+
+	public String getExpirationDate() {
+		return expirationDate;
+	}
+
+	public void setExpirationDate(String expirationDate) {
+		this.expirationDate = expirationDate;
+	}
+	
+	@Override
+	public String toString() {
+		return "CreditCard-"
+				+ "\ncardHolderName: " + cardHolderName
+				+ "\ncardNumber: " + cardNumber
+				+ "\nbalance: " + balance
+				+ "\ncardType: " + cardType
+				+ "\nowner: " + owner
+				+ "\ncvv: " + cvv
+				+ "\nexpirationDate: " + expirationDate;
+	}
+
+}
+package model;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.sql.Blob;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
+import org.apache.log4j.Logger;
+
+import model.PasswordUtilities;
+
+
+public class DBAccess {
+	private Connection conn = null;
+	private PreparedStatement ps = null;
+	
+	// JDBC driver name and database URL
+	private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
+	// static final String DB_URL = "jdbc:mysql://localhost/MVCApp"; 
+	private static final String DB_URL = "jdbc:mysql://cse.unl.edu:3306/mshanahan";
+
+	// Database credentials
+	private static final String USER = "mshanahan"; // Replace with your CSE_LOGIN
+	private static final String PASS = "k8ErVH";   // Replace with your CSE MySQL_PASSWORD
+
+	private static final double INVALID_DOUBLE_VALUE = -777.7777;
+	private static final int INVALID_INT_VALUE = -777;
+	
+	public static void main(String[] args) { 
+		
+//		DBAccess dba = new DBAccess();
+//		System.out.println(dba.formatSearchString("theater1   "));
+//		System.out.println(dba.formatSearchString(" scared kitten    "));
+//		System.out.println(dba.formatSearchString("2018-04-04 17:30:00"));
+		
+//       	DBAccess dba = new DBAccess();
+//       	dba.createConnection();       	
+//		User u = new User();
+//		u.setFirstName("Catman");
+//		u.setLastName("Pages");
+//		u.setEmailAddress("catman@gmail.com");
+//		u.setPassword("333");
+//		dba.addSingleUser(u);
+//		dba.closeConnection();
+//		
+//	   	DBAccess db = new DBAccess();
+//	   	db.createConnection();
+//	   	User user = db.getUserByEmailAddress("catman@gmail.com");
+//	   	System.out.println(user.toString());
+//	   	db.closeConnection();
+				
+	}
+
+	//log4j logger
+	static Logger log = 
+    		Logger.getLogger(DBAccess.class.getName());
+	
+	public void addSingleUser(User user) {
+		  
+		try {		  
+		  String firstName = user.getFirstName();
+		  String lastName = user.getLastName();
+		  String emailAddress = user.getEmailAddress();
+		  String password = user.getPassword();
+		  int numOfVisits = user.getNumOfVisits();
+
+		  String sql = "INSERT INTO User (FirstName, LastName, EmailAddress, Password, NumOfVisits) VALUES (?, ?, ?, ?, ?)";
+		  
+		  PreparedStatement ps = conn.prepareStatement(sql);
+		  ps.setString(1, firstName);
+		  ps.setString(2, lastName);
+		  ps.setString(3, emailAddress);
+		  ps.setString(4, password);
+		  ps.setInt(5, numOfVisits);
+		  
+		  ps.executeUpdate();
+		  
+		  ps.close();
+		  
+		  } catch (SQLException e) {
+				// TODO Auto-generated catch block
+				log.error(e);
+		}
+		
+	}
+	
+	public void addHashedSingleUser(User user) {
+		  
+		try {
+		  
+		  String firstName = user.getFirstName();
+		  String lastName = user.getLastName();
+		  String emailAddress = user.getEmailAddress();
+		  String password = user.getPassword();
+		  int numOfVisits = user.getNumOfVisits();
+		  
+		  String salt = PasswordUtilities.getSalt();
+		  
+		  String sql = "INSERT INTO User (FirstName, LastName, EmailAddress, Salt, SaltyHash, NumOfVisits) VALUES (?, ?, ?, ?, ?, ?)";
+		  
+		  PreparedStatement ps = conn.prepareStatement(sql);
+		  ps.setString(1, firstName);
+		  ps.setString(2, lastName);
+		  ps.setString(3, emailAddress);
+		  ps.setString(4, salt);
+		  ps.setString(5, PasswordUtilities.saltAndHashPassword(password, salt));
+		  ps.setInt(6, numOfVisits);
+		  
+		  ps.executeUpdate();
+		  
+		  ps.close();
+		  
+		  } catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		}
+		
+	}
+	
+	public boolean userExistsByEmailAddress(String emailAddress) {
+		boolean userExists = false;
+		
+		String sql = "SELECT COUNT(EmailAddress) FROM User WHERE EmailAddress = ?";
+	    PreparedStatement ps;
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, emailAddress);
+			
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while (rs.next()){	
+				if(Integer.parseInt(rs.getString(1)) > 0) {
+					userExists = true;
+				}    
+		    }
+			
+			rs.close();
+			ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return userExists;
+	}
+	
+//	public boolean userExistsByPassword(String password) {
+//		boolean userExists = false;
+//		String sql = "SELECT COUNT(EmailAddress) FROM User WHERE EmailAddress = ?";
+//	    PreparedStatement ps;
+//		try {
+//			ps = conn.prepareStatement(sql);
+//			ps.setString(1, password);
+//			
+//			ResultSet rs = ps.executeQuery();
+//			
+//			while (rs.next()){	
+//				if(Integer.parseInt(rs.getString(1)) > 0) {
+//					userExists = true;
+//				}    
+//		    }
+//			
+//			rs.close();
+//		    ps.close();
+//		        
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return userExists;
+//	}
+	
+	public User getUserByEmailAddress(String emailAddress) {
+		String sql = "SELECT * from User WHERE EmailAddress = ?";
+	    PreparedStatement ps;
+	   
+	    User user = new User();
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, emailAddress);
+			
+			ResultSet rs = ps.executeQuery();
+			Address billing = new Address();
+			while(rs.next()) {
+				user.setFirstName(rs.getString("FirstName"));
+				user.setLastName(rs.getString("LastName"));
+				user.setEmailAddress(rs.getString("EmailAddress"));
+				user.setPassword(rs.getString("Password"));
+				user.setSalt(rs.getString("Salt"));
+				user.setSaltyHash(rs.getString("SaltyHash"));
+				//TODO: Get the rest of the user data loaded into the object
+				billing.setStreetAddress(rs.getString("Address"));
+				billing.setCity(rs.getString("City"));
+				billing.setState(rs.getString("State"));
+				billing.setZip(rs.getString("PostalCode"));
+				user.setBillingAddress(billing);
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		
+		if(user.getFirstName() == null) {
+			return null;
+		} else {
+			return user;	
+		}
+				
+	}
+
+	public User getUserById(int Id) {
+
+		String sql = "SELECT * from User WHERE Id = ?";
+	    PreparedStatement ps;
+	   
+	    User user = new User();
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, Id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				user.setFirstName(rs.getString("FirstName"));
+				user.setLastName(rs.getString("LastName"));
+				user.setEmailAddress(rs.getString("EmailAddress"));
+				user.setPassword(rs.getString("Password"));
+				user.setSalt(rs.getString("Salt"));
+				user.setSaltyHash(rs.getString("SaltyHash"));
+				user.setPhoneNumber(rs.getString("PhoneNumber"));				
+				
+				Address billingAddress = new Address();				
+				billingAddress.setStreetAddress(rs.getString("Address"));
+				billingAddress.setCity(rs.getString("City"));
+				billingAddress.setState(rs.getString("State"));
+				billingAddress.setZip(rs.getString("PostalCode"));
+				
+				user.setBillingAddress(billingAddress);
+								
+				user.setCreditCard(getCreditCardByUserId(Id));
+
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return user;
+	}
+	
+	public CreditCard getCreditCardByUserId(int userId) {		
+
+		
+		String sql = "SELECT * FROM CreditCard AS CC "
+				+ "JOIN BankAccount AS BA ON CC.BankAccountId = BA.BankAccountId "
+				+ "JOIN User AS U ON BA.UserId = U.Id "
+				+ "WHERE U.Id = ?";
+	    PreparedStatement ps;
+	   
+	    CreditCard cc = new CreditCard();
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, userId);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				cc.setCardNumber(rs.getString("CreditCardNumber"));
+				cc.setBalance(rs.getDouble("Balance"));
+				cc.setCardHolderName(rs.getString("CardHolderName"));
+				cc.setCardType(rs.getString("CardType"));
+				cc.setCvv(rs.getString("CVV"));
+				cc.setExpirationDate(rs.getString("ExpirationDate"));
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+
+		return cc;
+	}
+	
+
+	public List<Theater> getAllTheaters() {
+
+		String sql = "SELECT * from TheaterBuilding";
+	    PreparedStatement ps;
+	   
+	    List<Theater> theaters = new ArrayList<Theater>();
+	    
+		try {
+			ps = conn.prepareStatement(sql);			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+					
+			    Theater t = new Theater();
+			    Address a = new Address();
+			    User owner = new User();
+			    
+				a.setStreetAddress(rs.getString("Address"));
+				a.setCity(rs.getString("City"));
+				a.setState(rs.getString("State"));
+				a.setZip(rs.getString("PostalCode"));
+				
+				t.setAddress(a);
+				t.setName(rs.getString("Name"));
+				
+				int ownerID = rs.getInt("ownerID");
+				owner = getUserById(ownerID);
+				t.setOwner(owner);
+				
+				theaters.add(t);				
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+
+		return theaters;
+	}
+
+	public List<MovieShowing> getMovieShowingSearchResults(String theaterName, String movieName, String date) {
+
+		String sql = "select * from MovieShowing ms\n"
+				+ "join Movie m on ms.movieID = m.Id\n"
+				+ "join Showroom sr on ms.showroomID = sr.Id\n" 
+				+ "join TheaterBuilding tb on sr.theaterBuilding = tb.Id\n" 
+				+ "where m.`Movie name` like ? \n" 
+				+ "and tb.name like ?\n"
+				+ "and ms.StartTime like ?";
+		
+	    PreparedStatement ps;
+	   
+	    List<MovieShowing> searchResults = new ArrayList<MovieShowing>();
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, formatSearchString(movieName));
+			ps.setString(2, formatSearchString(theaterName));
+			ps.setString(3, formatSearchString(date));
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				
+				MovieShowing ms = new MovieShowing();
+				ms.setCost(rs.getDouble("Price"));
+				ms.setNumOfPurchasedSeats(rs.getInt("NumberPurchased"));				
+				ms.setStartTime(rs.getString("StartTime").substring(0, 16));
+				ms.setEndTime(rs.getString("EndTime").substring(0, 16));
+				
+				int movieId = rs.getInt("movieID");				
+				Movie m = getMovieById(movieId);
+				ms.setMovie(m);
+				
+				int showroomId = rs.getInt("showroomID");
+				Showroom sr = getShowroomById(showroomId);
+				ms.setShowroom(sr);
+				
+				searchResults.add(ms);
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return searchResults;
+	}
+	
+	public Movie getMovieById(int id) {
+
+		String sql = "select * from Movie where Id = ?";
+		
+	    PreparedStatement ps;
+	   
+	    Movie m = new Movie();
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {				
+				m.setTitle(rs.getString("Movie name"));
+				m.setDescription(rs.getString("Description"));				
+				m.setThumbnail(blobToString(rs.getBlob("Thumbnail")));
+				m.setRating(rs.getString("Rating"));
+				
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return m;
+	}
+	
+	public Showroom getShowroomById(int id) {
+
+		String sql = "select * from Showroom where Id = ?";
+		
+	    PreparedStatement ps;	   	    
+	    
+	    Showroom sr = null;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {	
+				sr = new Showroom();
+				sr.setCapacity(rs.getInt("availableSeats"));
+				
+				int theaterId = rs.getInt("theaterBuilding");
+				Theater t = getTheaterById(theaterId);
+				sr.setTheater(t);
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+	
+		return sr;
+	}
+	
+	public List<Review> getReviewsByMovieTitle(String movieTitle) {
+		
+		String sql = "select cr.Id from CustomerReview cr\n" + 
+				"join Movie m on cr.movieID = m.Id\n" + 
+				"where m.`Movie name` like ?"; 				
+		
+	    PreparedStatement ps;
+	   
+	    List<Review> reviewSearchResults = new ArrayList<Review>();
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, formatSearchString(movieTitle));
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {				
+				int reviewId = rs.getInt("Id");				
+				reviewSearchResults.add(getReviewById(reviewId));
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return reviewSearchResults;
+	}
+	
+	public Review getReviewById(int id) {
+		
+		String sql = "select * from CustomerReview where Id = ?";
+		
+	    PreparedStatement ps;	   	    
+	    
+	    Review r = null;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {	
+				r = new Review();
+				
+				int movieId = rs.getInt("movieID");
+				Movie m = getMovieById(movieId);
+				r.setMovie(m);
+				
+				int userId = rs.getInt("userID");
+				User u = getUserById(userId);
+				r.setUser(u);
+				
+				r.setDate(rs.getString("ReviewDate"));				
+				r.setRating(rs.getString("Rating"));
+				r.setContent(rs.getString("Review"));
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+	
+		return r;
+	}
+	
+	public List<Order> getOrdersByOrderId(int orderId) {
+		//TODO: Implement
+		String sql = "select * from OrderItem\n" + 
+				"where OrderId = ?";
+		
+	    PreparedStatement ps;	   	    
+	    
+	    List<Order> orders = new ArrayList<Order>();
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, orderId);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			Order refOrder = getOrderById(orderId);
+			
+			while(rs.next()) {				
+				Order o = new Order();				
+				
+				o.setTicketQuantity(rs.getInt("Quantity"));
+				
+				o.setBillingAddress(refOrder.getBillingAddress());
+				o.setCost(refOrder.getCost());
+				o.setCreditCardNumber(refOrder.getCreditCardNumber());
+				o.setCustomer(refOrder.getCustomer());
+				o.setDate(refOrder.getDate());
+				o.setId(refOrder.getId());
+				o.setMovieShowing(getMovieShowingById(rs.getInt("ShowingID")));				
+								
+				orders.add(o);
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+	
+		return orders;
+	}
+	
+	public List<Order> getOrdersByUser(User u) {
+
+		
+		String sql = "    select * from `Order` o\n" + 
+				"    join User u on o.CustomerId = u.Id\n" + 
+				"    where u.EmailAddress = ?\n" + 
+				"    and u.`SaltyHash` = ?;";
+		
+	    PreparedStatement ps;	   	    
+	    
+	    List<Order> orders = new ArrayList<Order>();
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, u.getEmailAddress());
+			ps.setString(2, u.getSaltyHash());
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {	
+				Order o = new Order();
+				
+				// Order attributes
+				o.setCost(rs.getDouble("TotalCost"));
+				o.setDate(rs.getString("OrderDate"));
+				o.setBillingAddress(rs.getString("BillingAddress"));
+				o.setCreditCardNumber(rs.getString("CreditCardNumber"));
+				o.setId(rs.getInt("Id"));
+				
+				orders.add(o);
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+	
+		return orders;
+	}
+	
+	public Order getOrderById(int id) {
+		
+		String sql = "select * from `Order` where Id = ?";
+		
+	    PreparedStatement ps;	   	    
+	    
+	    Order o = null;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {	
+				o = new Order();
+				
+				int customerId = rs.getInt("CustomerID");
+				User customer = getUserById(customerId);
+				o.setCustomer(customer);
+				
+				o.setCost(rs.getInt("TotalCost"));				
+				o.setDate(rs.getString("OrderDate"));				
+				o.setBillingAddress(rs.getString("BillingAddress"));
+				o.setCreditCardNumber(rs.getString("CreditCardNumber"));
+				o.setId(rs.getInt("Id"));
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+	
+		return o;
+	}
+	
+	public void removeOrderItem(Order o) {
+		
+		String sql = "DELETE FROM `OrderItem`\n" + 
+				"WHERE OrderId = ?\n" +
+				"AND ShowingID = \n" + 
+				"(select Id from MovieShowing\n" + 
+						"    where movieID = \n" + 
+						"		(select Id from Movie where `Movie name` = ?)\n" + 
+						"    and showroomID = \n" + 
+						"		(select Id from Showroom \n" + 
+						"        where availableSeats = ? \n" + 
+						"        and theaterBuilding = \n" + 
+						"			(select Id from TheaterBuilding\n" + 
+						"            where `Name` = ?))\n" + 
+						"    and StartTime = ?\n" + 
+						"    and Price = ?)\n" +  
+				"AND Quantity = ?";
+
+		PreparedStatement ps;	   	    	    	    
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, o.getId()); 
+			ps.setString(2, o.getMovieShowing().getMovie().getTitle());
+			ps.setInt(3, o.getMovieShowing().getShowroom().getCapacity());
+			ps.setString(4, o.getMovieShowing().getShowroom().getTheater().getName());
+			ps.setString(5, o.getMovieShowing().getStartTime());
+			ps.setDouble(6, o.getMovieShowing().getCost()); 
+			ps.setInt(7, o.getTicketQuantity());
+						
+			ps.executeUpdate();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+
+		return;
+	}
+	
+	public void attemptRemoveOrder(Order o) {
+		
+		String sql = "delete from `Order` where Id = ?";
+	    
+		PreparedStatement ps;	   	    	    	    
+	    
+		try {			
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, o.getId());			
+			
+			ps.executeUpdate();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			
+		}
+		
+
+	}
+	
+	public void refundCreditCard(Order o, double changeInCost) {
+		//TODO: Implement
+		
+		String sql = "update CreditCard \n" + 
+				"set Balance = ?\n" + 
+				"where CreditCardNumber = ?";
+
+	    PreparedStatement ps;	   	    	    	    
+	    
+		try {
+			
+			ps = conn.prepareStatement(sql);
+			ps.setDouble(1, o.getCustomer().getCreditCard().getBalance() + changeInCost);
+			ps.setString(2, o.getCreditCardNumber());			
+			
+			ps.executeUpdate();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return;
+	}
+	
+	public void updateTotalCostOfOrder(Order o, double changeInCost) {
+		String sql = "UPDATE `Order`\n" + 
+				"SET TotalCost = ?\n" + 
+				"WHERE CustomerId = (select Id from User where EmailAddress = ? and `SaltyHash` = ?)\n" + 
+				"    and TotalCost = ?\n" + 
+				"    and OrderDate = ?\n" + 
+				"    and BillingAddress = ?\n" + 
+				"    and CreditCardNumber = ?";
+		
+	    PreparedStatement ps;	   	    	    	    
+	    
+	    
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setDouble(1, o.getCost() + changeInCost); // TODO: Is this okay?
+			ps.setString(2, o.getCustomer().getEmailAddress());
+			ps.setString(3, o.getCustomer().getSaltyHash());
+			ps.setDouble(4, o.getCost()); //TODO: Is this okay?
+			ps.setString(5, o.getDate());
+			ps.setString(6, o.getCustomer().getBillingAddress().getStreetAddress());
+			ps.setString(7, o.getCustomer().getCreditCard().getCardNumber());
+			
+			
+			ps.executeUpdate();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+
+		return;
+	}
+	
+	public Theater getTheaterById(int id) {
+		
+		String sql = "select * from TheaterBuilding where Id = ?";
+		
+	    PreparedStatement ps;	   	    
+	    
+	    Theater t = null;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {	
+				t = new Theater();
+				
+				int ownerId = rs.getInt("ownerID");
+				User owner = getUserById(ownerId);
+				t.setOwner(owner);
+				
+				t.setName(rs.getString("Name"));	
+				
+				Address a = new Address();
+				a.setStreetAddress(rs.getString("Address"));
+				a.setCity(rs.getString("Address"));
+				a.setState(rs.getString("State"));
+				a.setZip(rs.getString("PostalCode"));
+				
+				t.setAddress(a);
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+	
+		return t;
+	}
+	
+	public MovieShowing getMovieShowingById(int id) {
+		
+		String sql = "select * from MovieShowing where Id = ?";
+		
+	    PreparedStatement ps;
+	   
+	    MovieShowing ms = null;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				
+				ms = new MovieShowing();
+				ms.setCost(rs.getDouble("Price"));
+				ms.setNumOfPurchasedSeats(rs.getInt("NumberPurchased"));				
+				ms.setStartTime(rs.getString("StartTime"));
+				ms.setEndTime(rs.getString("EndTime"));
+				
+				int movieId = rs.getInt("movieID");				
+				Movie m = getMovieById(movieId);
+				ms.setMovie(m);
+				
+				int showroomId = rs.getInt("showroomID");
+				Showroom sr = getShowroomById(showroomId);
+				ms.setShowroom(sr);				
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return ms;
+	}
+	
+	public void addCreditCardToUser(User u, CreditCard cc) {
+		
+		//String sql = "insert into CreditCard (CardHolderName, CreditCardNumber, Balance, CardType, UserId, CVV, ExpirationDate) values (?, ?, ?, ?, ?, ?, ?)";
+		String sql = "insert into CreditCard (CardHolderName, CreditCardNumber, Balance, CardType, UserId, CVV, ExpirationDate) \n" + 
+				"values (?, ?, ?, ?,\n" + 
+				"	(select Id from User where EmailAddress = ? and `SaltyHash` = ?), \n" + 
+				"    ?, ?)";
+		
+		
+	    PreparedStatement ps;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, cc.getCardHolderName());
+			ps.setString(2, cc.getCardNumber());
+			ps.setDouble(3, cc.getBalance());
+			ps.setString(4, cc.getCardType());
+			
+			ps.setString(5, u.getEmailAddress());
+			ps.setString(6, u.getSaltyHash());
+			
+			ps.setString(7, cc.getCvv());
+			ps.setString(8, cc.getExpirationDate());			
+			
+			ps.executeUpdate();						
+			
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return;
+	}
+	
+	public void addAddressToUser(User u, Address a) {
+
+		String sql = "update User \n" + 
+				"set Address = ?, City = ?, State = ?, PostalCode = ?\n" + 
+				"where EmailAddress = ? and Password = ?"; 
+		
+	    PreparedStatement ps;	    
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, a.getStreetAddress());
+			ps.setString(2, a.getCity());
+			ps.setString(3, a.getState());
+			ps.setString(4, a.getZip());
+			ps.setString(5, u.getEmailAddress());
+			ps.setString(6, u.getSaltyHash());
+			
+			ps.executeUpdate();
+									
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return;
+	}
+	
+	public String getCreditCardNumber(User u) {
+		String sql = "select CreditCardNumber from CreditCard " + 
+				"where CardHolderName = ?";
+		
+		PreparedStatement ps;
+		String ccNum = null;
+		String name = u.getFirstName() + " " + u.getLastName();
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, name);
+			
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				ccNum = rs.getString("CreditCardNumber");
+			}
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return ccNum;
+	}
+	public boolean validateCreditCard(User u, CreditCard cc) {
+
+		String sql = "select * from CreditCard \n" + 
+				"where UserId = \n" + 
+				"	(select Id from User where EmailAddress = ? and `SaltyHash` = ?)\n" + 
+				"and CreditCardNumber = ?";
+		
+	    PreparedStatement ps;
+	   
+	    boolean foundCard = false;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, u.getEmailAddress());
+			ps.setString(2, u.getSaltyHash());
+			ps.setString(3, cc.getCardNumber());
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				if(rs.getString("CreditCardNumber") == null) {
+					foundCard = false;
+				} else {
+					foundCard = true;
+				}					
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return foundCard;
+	}
+	
+	public boolean attemptTransaction(CreditCard cc, double transactionAmount) {
+		
+		double balance = getCreditCardBalanceByCreditCard(cc);
+		double result = balance - transactionAmount;
+		
+		if(result > 0) {
+			updateCreditCardBalanceByCreditCard(cc, result);
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+	
+	private double getCreditCardBalanceByCreditCard(CreditCard cc) {
+		
+		String sql = "select Balance from CreditCard where CreditCardNumber = ?";
+		
+	    PreparedStatement ps;
+	    
+	    double balance = INVALID_DOUBLE_VALUE;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, cc.getCardNumber());
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {				
+				balance = rs.getDouble("Balance");			
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return balance;
+	}
+	
+	private void updateCreditCardBalanceByCreditCard(CreditCard cc, double newBalance) {
+		
+		String sql = "update CreditCard set Balance = ? where CreditCardNumber = ?";
+		
+	    PreparedStatement ps;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setDouble(1, newBalance);
+			ps.setString(2, cc.getCardNumber());
+			
+			ps.executeUpdate();
+
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return;
+	}
+	
+	public int addOrderToUser(Order firstOrder, double totalCost, String date) {
+		
+		
+		// ======================================================
+		// Keep this stuff, yo
+		// ======================================================
+		// QUERY #1
+		String sql = "insert into `Order` (CustomerId, TotalCost, OrderDate, BillingAddress, CreditCardNumber) \n" + 
+				"values (\n" + 
+				"	(select Id from User where EmailAddress = ? and SaltyHash = ?),\n" + 
+				"    ?, ?, ?, ?)"; 
+
+	    User purchaser = firstOrder.getCustomer();
+	    User customer = this.getUserByEmailAddress(purchaser.getEmailAddress());
+	    String ccNum = this.getCreditCardNumber(purchaser);
+	    int id = INVALID_INT_VALUE;
+	    
+	    PreparedStatement ps;
+		try {
+			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, purchaser.getEmailAddress());
+			ps.setString(2, purchaser.getSaltyHash());
+			ps.setDouble(3, totalCost); //TODO: This may need to be an int?
+			ps.setString(4, date);
+			ps.setString(5, customer.getBillingAddress().getStreetAddress());
+			ps.setString(6, ccNum);
+								
+			ps.executeUpdate();
+						
+			
+			ResultSet rs = ps.getGeneratedKeys();
+			
+			while(rs.next()) {
+				id = rs.getInt(1);
+			}
+			
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+				
+		return id;
+	}
+	
+	public void addQuantityToOrderItemTable(Order o, double totalCost, String dateTime, int orderId) {
+		
+		
+		String sql = "insert into OrderItem (OrderId, ShowingID, Quantity) \n" + 
+				"values( ?,\n" + 
+				"    (select Id from MovieShowing\n" + 
+				"    where movieID = \n" + 
+				"		(select Id from Movie where `Movie name` = ?)\n" + 
+				"    and showroomID = \n" + 
+				"		(select Id from Showroom \n" + 
+				"        where availableSeats = ? \n" + 
+				"        and theaterBuilding = \n" + 
+				"			(select Id from TheaterBuilding\n" + 
+				"            where `Name` = ?))\n" + 
+				"    and StartTime = ?\n" + 
+				"    and Price = ?),\n" + 
+				"    ?);";
+	    
+	    PreparedStatement ps;
+	   
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, orderId);
+			ps.setString(2, o.getMovieShowing().getMovie().getTitle());
+			ps.setInt(3, o.getMovieShowing().getShowroom().getCapacity());
+			ps.setString(4, o.getMovieShowing().getShowroom().getTheater().getName());
+			ps.setString(5, o.getMovieShowing().getStartTime());
+			ps.setDouble(6, o.getMovieShowing().getCost()); //Double check this cost value is correct
+			ps.setInt(7, o.getTicketQuantity());
+					
+			
+			ps.executeUpdate();
+									
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return;
+	}
+	
+	public void updateMovieShowingSeatsPurchased(MovieShowing ms, int updateValue) {
+		
+		String sql = "UPDATE `MovieShowing`\n" + 
+				"SET `NumberPurchased` = ?\n" + 
+				"WHERE Price = ?\n" + 
+				"    and NumberPurchased = ?\n" + 
+				"    and StartTime = ?\n" + 
+				"    and movieID = (select Id from Movie where `Movie name` = ?)\n" + 
+				"    and showroomID = \n" + 
+				"		(select Id from Showroom \n" + 
+				"        where availableSeats = ? \n" + 
+				"        and theaterBuilding = \n" + 
+				"			(select Id from TheaterBuilding\n" + 
+				"            where `Name` = ?))";
+		
+		PreparedStatement ps;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, ms.getNumOfPurchasedSeats() + updateValue);
+			ps.setDouble(2, ms.getCost());
+			ps.setInt(3, ms.getNumOfPurchasedSeats());
+			ps.setString(4, ms.getStartTime());
+			ps.setString(5, ms.getMovie().getTitle());
+			ps.setInt(6, ms.getShowroom().getCapacity());
+			ps.setString(7, ms.getShowroom().getTheater().getName());
+			
+			ps.executeUpdate();
+						
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return;
+	}
+	
+	public CreditCard getCreditCardById(int id) {
+
+		String sql = "select * from CreditCard where Id = ?";
+		
+	    PreparedStatement ps;
+	   
+	    CreditCard cc = null;
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				
+				cc = new CreditCard();
+				cc.setCardHolderName(rs.getString("CardHolderName"));
+				cc.setCardNumber(rs.getString("CreditCardNumber"));				
+				cc.setBalance(rs.getDouble("Balance"));
+				cc.setCardType(rs.getString("CardType"));
+				cc.setCvv(rs.getString("CVV"));
+				cc.setExpirationDate(rs.getString("ExpirationDate"));
+				
+				int ownerId = rs.getInt("userID");				
+				User owner = getUserById(ownerId);
+				cc.setOwner(owner);
+		    }
+			
+			rs.close();
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		return cc;
+	}
+	
+	public boolean addReview(Review r, String rating) {
+		String sql = "insert into CustomerReview (movieID, userID, ReviewDate, Rating, Review) \n" + 
+				"values (\n" + 
+				"	(select Id from Movie where `Movie name` = ?),\n" + 
+				"    (select Id from User where EmailAddress = ? and `SaltyHash`= ?),\n" + 
+				"    ?, ?, ?)";
+		
+	    PreparedStatement ps;	   	    
+	    
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, r.getMovie().getTitle());
+			ps.setString(2, r.getUser().getEmailAddress());
+			ps.setString(3, r.getUser().getSaltyHash());
+			ps.setString(4, r.getDate());
+			ps.setInt(5, Integer.parseInt(rating));
+			ps.setString(6, r.getContent());			
+			
+			ps.executeUpdate();
+
+		    ps.close();
+		        
+		} catch (SQLException e) {
+			log.error(e);
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public void createConnection() {
+		try {
+			//Register the JDBC driver
+			Class.forName(JDBC_DRIVER);			
+		} catch(ClassNotFoundException e){
+			log.error(e);
+			System.exit (-1);
+		} 
+		
+		try {
+			 //Open a connection
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+		} catch (SQLException e) {
+			log.error(e);
+		}
+	}	
+	
+	public void closeConnection() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			log.error(e);
+		}
+	}
+
+	private BufferedImage blobToBufferedImage(Blob b) {
+  		
+		BufferedImage image = null;
+		try {
+			InputStream in = b.getBinaryStream();
+			image = ImageIO.read(in);
+		} catch (Exception e) {
+			log.error(e);
+		}  
+		
+		return image;
+	}
+	
+	private String blobToString(Blob b) {
+		
+		String b64 = null;
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        ImageIO.write(blobToBufferedImage(b), "jpg", baos );
+	        baos.flush();
+	        byte[] imageInByteArray = baos.toByteArray();
+	        baos.close();
+	        b64 = javax.xml.bind.DatatypeConverter.printBase64Binary(imageInByteArray);
+		} catch (Exception e) {
+			log.error(e);
+		}  		
+		
+		return b64;
+	}
+	
+	private String formatSearchString(String s) {
+		String newStr = "%" + s.trim() + "%";
+		newStr = newStr.replace(' ', '%');
+		return newStr;
+	}
+}
+package model;
+
+public class Movie {
+	private String title;
+	private String description;
+	private String rating;
+	private String thumbnail;
+	
+	public static void main(String[] args) {		
+		
+	}
+	
+	public Movie() {
+		super();
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public String getRating() {
+		return rating;
+	}
+	
+	public void setRating(String rating) {
+		this.rating = rating;
+	}
+	
+	public String getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
+	@Override
+	public String toString() {
+		return "Movie-"
+				+ "\ntitle: " + title
+				+ "\ndescription: " + description
+				+ "\nrating: " + rating;
+	}
+}
+package model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MovieDB {
+	
+//	public static void main(String[] args) {
+//		MovieDB mdb = new MovieDB();
+//		
+//		List<Movie> movies = mdb.searchMovies("    theater", "  scared kitten  ", " 2018-04-04     17:30:00  ");
+//		
+//		for(Movie movie : movies) {
+//			System.out.println(movie);
+//		}
+//	}
+	
+	public Movie getMovieById(int id) {	    
+       	DBAccess db = new DBAccess();
+       	db.createConnection();
+       	
+       	Movie m = db.getMovieById(id);
+       	
+       	db.closeConnection();       	
+       	return m;
+	}
+
+}
+package model;
+
+public class MovieShowing {
+	Movie movie;
+	Showroom showroom;
+	int numOfPurchasedSeats;
+	double cost;
+	String startTime;
+	String endTime;
+	
+	public MovieShowing() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public void updatePurchasedSeatCount(int seatValue) {
+		numOfPurchasedSeats += seatValue;
+	}
+	
+	public Movie getMovie() {
+		return movie;
+	}
+
+	public void setMovie(Movie movie) {
+		this.movie = movie;
+	}
+
+	public Showroom getShowroom() {
+		return showroom;
+	}
+
+	public void setShowroom(Showroom showRoom) {
+		this.showroom = showRoom;
+	}
+
+	public int getNumOfPurchasedSeats() {
+		return numOfPurchasedSeats;
+	}
+
+	public void setNumOfPurchasedSeats(int numOfPurchasedSeats) {
+		this.numOfPurchasedSeats = numOfPurchasedSeats;
+	}
+
+	public double getCost() {
+		return cost;
+	}
+
+	public void setCost(double cost) {
+		this.cost = cost;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+	
+	@Override
+	public String toString() {
+		return "MovieShowing-"
+		   + "\nnumOfPurchasedSeats: " + numOfPurchasedSeats
+		   + "\ncost: " + cost
+		   + "\nstartTime: " + startTime
+		   + "\nendTime: " + endTime
+		   + "\nmovie: " + movie
+		   + "\nshowroom: " + showroom;
+	}
+
+}
+package model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MovieShowingDB {
+
+	public static void main(String[] args) {
+		
+		MovieShowingDB mdb = new MovieShowingDB();
+		DBAccess dba = new DBAccess();
+		dba.createConnection();
+		
+		mdb.updateNumberPurchasedSeats(dba.getMovieShowingById(3), -3);
+		
+		dba.closeConnection();
+		return;
+//		List<MovieShowing> movieShowings = mdb.searchMovieShowings("    theater", "  scared kitten  ", " 2018-04-04     17:30:00  ");
+//		
+//		for(MovieShowing movieShowing : movieShowings) {
+//			System.out.println(movieShowing);
+//		}
+	}
+	
+	public MovieShowing getMovieShowingById(int id) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	MovieShowing ms = db.getMovieShowingById(id);
+       	db.closeConnection();
+		return ms;
+	}
+	
+	public List<MovieShowing> searchMovieShowings(String theaterName, String movieName, String date) {
+
+		List<MovieShowing> movieShowings = new ArrayList<MovieShowing>();
+		
+	   	DBAccess db = new DBAccess();
+	   	db.createConnection();
+	   	
+	   	movieShowings = db.getMovieShowingSearchResults(theaterName, movieName, date);
+	   	
+	   	db.closeConnection();
+		
+		return movieShowings;
+	}
+	
+	public void updateNumberPurchasedSeats(MovieShowing ms, int updateValue) {
+	
+	   	DBAccess db = new DBAccess();
+	   	db.createConnection();
+	   	
+	   	db.updateMovieShowingSeatsPurchased(ms, updateValue);
+	   	
+	   	db.closeConnection();
+		
+		return;
+	}
+
+}
+package model;
+
+import java.util.Date;
+
+public class Order {
+	//TODO: Validate billing address
+	//TODO: Confirm/Validate that the desired ticket quantity does not exceed the showroom capacity
+	
+	User customer;
+	String date;
+	double cost;
+	String billingAddress;
+	String creditCardNumber;
+	MovieShowing movieShowing;
+	int ticketQuantity;
+	int id;
+	
+	//TODO: Load up MovieShowing object upon creation from DB
+	
+	public Order() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public User getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(User customer) {
+		this.customer = customer;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public double getCost() {
+		return cost;
+	}
+
+	public void setCost(double cost) {
+		this.cost = cost;
+	}
+
+	public String getBillingAddress() {
+		return billingAddress;
+	}
+
+	public void setBillingAddress(String billingAddress) {
+		this.billingAddress = billingAddress;
+	}
+
+	public String getCreditCardNumber() {
+		return creditCardNumber;
+	}
+
+	public void setCreditCardNumber(String creditCardNumber) {
+		this.creditCardNumber = creditCardNumber;
+	}
+
+	public MovieShowing getMovieShowing() {
+		return movieShowing;
+	}
+
+	public void setMovieShowing(MovieShowing movieShowing) {
+		this.movieShowing = movieShowing;
+	}
+
+	public int getTicketQuantity() {
+		return ticketQuantity;
+	}
+
+	public void setTicketQuantity(int ticketQuantity) {
+		this.ticketQuantity = ticketQuantity;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "Order-"
+			+ "\ncustomer: " + customer
+			+ "\ndate: " + date
+			+ "\ncost: " + cost
+			+ "\nbillingAddress: " + billingAddress
+			+ "\ncreditCardNumber: " + creditCardNumber
+			+ "\nmovieShowing: " + movieShowing
+			+ "\nticketQuantity: " + ticketQuantity
+			+ "\nid: " + id;
+	}
+}
+package model;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.joda.time.DateTime;
+
+public class OrderDB {
+	
+	//TODO: Load up MovieShowing object upon creation from DB
+	
+	public Order getOrderById(int id) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	Order o = db.getOrderById(id);
+       	db.closeConnection();
+		return o;
+	}
+	
+	public List<Order> getOrdersByOrderId(int orderId) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	
+       	List<Order> orders = db.getOrdersByOrderId(orderId);
+       	
+       	db.closeConnection();
+		return orders;
+	}
+	
+	public List<Order> getOrdersByUser(User u) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	List<Order> orders = db.getOrdersByUser(u);
+       	db.closeConnection();
+		return orders;
+	}	
+
+	public void addOrdersToUser(List<Order> orders, double totalCost) {
+		//TODO: Implement
+		// totalCost gets stored into the Order table into the totalCost attribute		
+		
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	
+       	String todayDate = getDateTime();
+       	
+       	//System.out.println(orders.get(0).getCustomer());
+       	
+       	int orderId = db.addOrderToUser(orders.get(0), totalCost, getDateTime());
+       	
+       	//System.out.println("\n-----------------\nORDER ID = " + orderId + "\n-------------------\n");
+       	
+       	
+       	for(Order o : orders) {
+//       		System.out.println("========================\nITERATION\n================================\n");
+//       		System.out.println("MIRROR1: \n-----------------------------------------\n" + o);
+       		db.addQuantityToOrderItemTable(o, totalCost, getDateTime(), orderId);
+       	}
+       	
+       	db.closeConnection();
+       	return;
+	}
+
+	public boolean removeOrderItem(Order o) {
+		
+		if(this.isPassedMovieShowingTime(o.getMovieShowing().getStartTime(), this.getDateTime())) {
+			return false;
+		} else {
+			DBAccess db = new DBAccess();
+	       	db.createConnection();
+	       	db.removeOrderItem(o);
+	       	db.updateTotalCostOfOrder(o, o.getMovieShowing().getCost() * o.getTicketQuantity() * -1);
+	       	db.refundCreditCard(o, o.getMovieShowing().getCost() * o.getTicketQuantity());
+	       	db.updateMovieShowingSeatsPurchased(o.getMovieShowing(), -o.getTicketQuantity());
+	       	db.attemptRemoveOrder(o); // TODO: Lol...
+			db.closeConnection();
+	       	return true;
+		}		
+		
+	}
+	
+	public void updateTotalCostOfOrder(Order o, double changeInCost) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	db.updateTotalCostOfOrder(o, changeInCost);
+       	db.refundCreditCard(o, changeInCost * -1);
+       	db.closeConnection();
+		return;
+	}
+	
+	public void updateCreditCardBalance(Order o, double changeInCost) {
+		//TODO: Implement
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	db.refundCreditCard(o, changeInCost);
+       	db.closeConnection();
+		return;
+	}
+	
+	private String getDateTime() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		return dateFormat.format(date);
+	}
+	
+	private boolean isPassedMovieShowingTime(String movieShowingDateTime, String nowDateTime) {
+		//TODO: Implement
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		Date mdt = null;
+		Date ndt = null;
+		try {
+			mdt = dateFormat.parse(movieShowingDateTime);
+			ndt = dateFormat.parse(nowDateTime);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}				
+		
+		return ndt.after(mdt);
+	}
+	
+	private void addTestOrdersToDB() {
+		
+		List<Order> orders = new ArrayList<Order>();
+		OrderDB odb = new OrderDB();
+		UserDB udb = new UserDB();
+		MovieShowingDB msdb = new MovieShowingDB();
+		
+		Order o1 = new Order();
+		User u = udb.getUserById(6);
+		
+		o1.setBillingAddress(u.getBillingAddress().getStreetAddress());
+		o1.setCost(100);
+		o1.setCreditCardNumber(u.getCreditCard().getCardNumber());
+		o1.setCustomer(u);
+		o1.setDate("2200-11-11");
+		o1.setMovieShowing(msdb.getMovieShowingById(4));
+		o1.setTicketQuantity(1); 
+		
+		Order o2 = new Order();
+		o2.setBillingAddress(u.getBillingAddress().getStreetAddress());
+		o2.setCost(100);
+		o2.setCreditCardNumber(u.getCreditCard().getCardNumber());
+		o2.setCustomer(udb.getUserById(6));
+		o2.setDate("2200-11-11");
+		o2.setMovieShowing(msdb.getMovieShowingById(9));
+		o2.setTicketQuantity(1); 
+		
+		orders.add(o1);
+		orders.add(o2);
+		
+		odb.addOrdersToUser(orders, 19);
+	}
+	
+}
+package model;
+
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.Random;
+
+import com.sun.org.apache.xml.internal.security.utils.Base64;
+
+public final class PasswordUtilities {
+	
+	public static void main(String[] args) {
+		genTestHash("bobsmith");
+	}
+	
+	private PasswordUtilities() {
+		// No instantiation for you
+	}
+	
+	private static void genTestHash(String password) {
+		System.out.println("Pass:");
+		printReport(password);
+		
+		String s = PasswordUtilities.getSalt();
+		System.out.println("Salt:");
+		printReport(s);
+		
+		String saltedPass = password + s;
+		System.out.println("SaltedPass:");
+		printReport(saltedPass);
+		
+		String hsPass = PasswordUtilities.saltAndHashPassword(password, s);
+		System.out.println("HashedSaltedPass:");
+		printReport(hsPass);	
+	}
+	
+	private static void printReport(String s) {
+		System.out.println(s.length() + " : " + s + "\n");
+		return;
+	}
+	
+	public static String saltAndHashPassword(String password, String salt) {
+		return hashify(password + salt);
+	}
+	
+	// Uses Base64 class to convert bytes into String
+	private static String hashify(String s) {
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("SHA-256"); 
+			md.update(s.getBytes());
+			byte[] mdArray = md.digest();
+			String st = Base64.encode(mdArray);
+			return st;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public static String getSalt() {		 
+		Random r = new SecureRandom();
+		byte[] saltBytes = new byte[32];
+		r.nextBytes(saltBytes);
+		return Base64.encode(saltBytes);
+	}
+	
+}
+package model;
+
+public class Review {
+	String content; //TODO: Validate content - make sure it doesn't exceed max review size
+	String rating;
+	User user;
+	Movie movie;
+	String date;
+	
+	public Review() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getRating() {
+		return rating;
+	}
+
+	public void setRating(String rating) {
+		this.rating = this.formatRating(rating);
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Movie getMovie() {
+		return movie;
+	}
+
+	public void setMovie(Movie movie) {
+		this.movie = movie;
+	}
+	
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	private String formatRating(String rating) {
+		int numStars = Integer.parseInt(rating);
+		StringBuilder formattedRating = new StringBuilder();
+		for(int i =0; i < 5; i++) {
+			if(i < numStars) {
+				formattedRating.append("&#9733 ");
+			}
+			else {
+				formattedRating.append("&#9734 ");
+			}
+		}
+		
+		return formattedRating.toString();
+	}
+	@Override
+	public String toString() {
+		return "Review-"
+				+ "\ncontent: " + content
+				+ "\nrating: " + rating
+				+ "\nuser:" + user
+				+ "\ndate: " + date
+				+ "\nmovie: " + movie;
+	}
+
+}
+package model;
+
+import java.util.List;
+
+public class ReviewDB {
+
+
+	public static void main(String[] args) {
+//		Review r = new Review();
+//		r.set
+//		addReview();
+		return;
+	}
+	
+	public boolean addReview(Review r, String rating) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	boolean success = db.addReview(r, rating);
+       	db.closeConnection();
+		return success;
+	}
+	
+	public Review getReviewById(int id) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	Review r = db.getReviewById(id);
+       	db.closeConnection();
+		return r;
+	}
+	
+	public List<Review> getReviewsByMovieTitle(String movieTitle) {
+					
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	
+       	List<Review> reviews = db.getReviewsByMovieTitle(movieTitle);
+       	
+       	db.closeConnection();
+		return reviews;
+	}
+}
+package model;
+
+public class Showroom {
+	private int capacity;
+	private Theater theater; //TODO: Is this the correct class it should be referencing?
+	
+	public Showroom() {	
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+
+	public Theater getTheater() {
+		return theater;
+	}
+
+	public void setTheater(Theater theater) {
+		this.theater = theater;
+	}
+	
+	@Override
+	public String toString() {
+		return "Showroom-"
+		   + "\ncapacity: " + capacity
+		   + "\ntheater: " + theater;
+	}
+	
+
+}
+package model;
+
+public class ShowroomDB {
+
+	public Showroom getShowroomById(int id) {
+       	DBAccess db = new DBAccess();
+       	db.createConnection();
+       	Showroom sr = db.getShowroomById(id);
+       	db.closeConnection();
+		return sr;
+	}
+
+}
+package model;
+
+public class Theater {
+	private String name;
+	private Address address;
+	private User owner; 
+	
+	public Theater() {
+		super();
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public Address getAddress() {
+		return address;
+	}
+	
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+	
+	public User getOwner() {
+		return owner;
+	}
+	
+	public void setOwner(User owner) {
+		this.owner = owner;
+	}
+	
+	@Override
+	public String toString() {
+		return "Theater-"
+			+ "\nname: " + name
+			+ "\naddress: " + address
+			+ "\nowner: " + owner;
+	}
+}
+package model;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TheaterDB {
+
+	public static void main(String[] args) {
+//		TheaterDB tdb = new TheaterDB();
+//		
+//		List<Theater> theaters = tdb.getTheaters(); 
+//		
+//		for(Theater theater : theaters) {
+//			System.out.println(theater + "\n\n");
+//			
+//		}
+				
+//		for(int i = 0; i < 10000000; i++) {					
+//				
+//		}		
+		
+	}
+	
+	public List<Theater> getTheaters() {
+		List<Theater> theaters = new ArrayList<Theater>();
+		
+	   	DBAccess db = new DBAccess();
+	   	db.createConnection();
+	   	
+	   	theaters = db.getAllTheaters();
+	   	
+	   	db.closeConnection();
+		return theaters;
+	}
+	
+	public Theater getTheaterById(int id) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	Theater t = db.getTheaterById(id);
+       	db.closeConnection();
+		return t;
+	}
+
+}
+package model;
+
+//TODO: LOAD CREDITCARD INFO FROM DB UPON CREATION
+
+public class User {
+	private String firstName;
+	private String lastName;	
+	private String emailAddress;
+	private String password;
+	private String salt;
+	private String saltyHash;
+	private int numOfVisits;
+	
+	private String phoneNumber;
+	private Address billingAddress;
+	private Address shippingAddress;	
+	private CreditCard creditCard;
+	
+	public User() {
+		super();
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Address getBillingAddress() {
+		return billingAddress;
+	}
+
+	public void setBillingAddress(Address billingAddress) {
+		this.billingAddress = billingAddress;
+	}
+
+	public Address getShippingAddress() {
+		return shippingAddress;
+	}
+
+	public void setShippingAddress(Address shippingAddress) {
+		this.shippingAddress = shippingAddress;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	
+	public int getNumOfVisits() {
+		return numOfVisits;
+	}
+
+	public void setNumOfVisits(int numOfVisits) {
+		this.numOfVisits = numOfVisits;
+	}
+
+	public CreditCard getCreditCard() {
+		return creditCard;
+	}
+
+	public void setCreditCard(CreditCard creditCard) {
+		this.creditCard = creditCard;
+	}
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	public String getSaltyHash() {
+		return saltyHash;
+	}
+
+	public void setSaltyHash(String saltyHash) {
+		this.saltyHash = saltyHash;
+	}
+
+	@Override
+	public String toString() {
+		return "User-"
+				+ "\nfirstName: " + firstName
+				+ "\nlastName: " + lastName
+				+ "\nemailAddress: " + emailAddress
+				+ "\npassword: " + password
+				+ "\nnumOfVisits: " + numOfVisits
+				+ "\nphoneNumber: " + phoneNumber
+				+ "\nbillingAddress: " + billingAddress
+				+ "\nshippingAddress: " + shippingAddress
+				+ "\ncreditCard: " + creditCard;
+	}
+		
+}
+package model;
+
+import model.DBAccess;
+import model.User;
+	//TODO: LOAD CREDITCARD INFO FROM DB UPON CREATION
+public class UserDB {
+		
+	public static void main(String[] args) {
+		UserDB udb = new UserDB();		
+       	
+		Address a = new Address();
+		a.setStreetAddress("testest");
+		a.setCity("Lincoln");
+		a.setState("NE");
+		a.setZip("555555");				
+		
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	udb.addAddressToUser(udb.getUserById(3), a);
+       	db.closeConnection();
+//		// User u = udb.getUserById(4);
+//		
+//		User u = new User();
+//		u.setEmailAddress("mattshanahan@hotmail.com");
+//		u.setPassword("123");
+//		
+//		CreditCard cc = new CreditCard();
+//		cc.setCardNumber("23452");
+//		cc.setBalance(300.0);
+//		cc.setCardHolderName("Jeff Bezos");
+//		cc.setCardType("Visa");
+//		cc.setCvv("452");
+//		cc.setExpirationDate("2018-04-01");
+//		cc.setOwner(u);
+//		
+//		System.out.println(cc);
+//		
+//		udb.addCreditCardToUser(u, cc);
+	}
+	
+    public void registerUser(User user) {
+       	DBAccess db = new DBAccess();
+       	db.createConnection();
+       	db.addHashedSingleUser(user);
+       	db.closeConnection();
+    }
+    
+    public boolean userExistsByEmailAddress(String userName) {
+    	    boolean userExists = false;
+       	DBAccess db = new DBAccess();
+       	db.createConnection();
+       	userExists = db.userExistsByEmailAddress(userName);
+       	db.closeConnection();
+       	
+       	return userExists;
+    }
+    
+	public boolean passwordIsValid(User u, String password) {
+		String curSaltyHash = PasswordUtilities.saltAndHashPassword(password, u.getSalt());
+		String theTrueSaltyHash = u.getSaltyHash();		
+		return curSaltyHash.equals(theTrueSaltyHash);
+	}
+	
+//    public boolean userExistsByPassword(String password) {
+//	    boolean passwordMatches = false;
+//   	    DBAccess db = new DBAccess();
+//   	    db.createConnection();
+//   	    passwordMatches = db.userExistsByPassword(password);
+//   	    db.closeConnection();
+//   	
+//   	    return passwordMatches;
+//    }
+    
+    public User getUserByEmailAddress(String emailAddress) {   
+	   	DBAccess db = new DBAccess();
+	   	db.createConnection();
+	   	User user = db.getUserByEmailAddress(emailAddress);
+	   	db.closeConnection();
+	   	
+	   	return user;
+    }
+    
+    public User getUserById(int id) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	User u = db.getUserById(id);
+       	db.closeConnection();
+		return u;
+    }
+
+    public boolean addCreditCardToUser(User u, CreditCard cc) {
+    		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	
+       	if(isValidCreditCardFormatting(cc)) {
+       		db.addCreditCardToUser(u, cc);	
+       	} else {
+       		return false;
+       	}
+       	       	
+       	db.closeConnection();
+		return true;
+    }
+    
+    private boolean isValidCreditCardFormatting(CreditCard cc) {
+    		//TODO: Do more crap in here
+    		
+    		String cardNumber = cc.getCardNumber().trim().replaceAll(" ", "");
+    		if(cardNumber.length() == 16) {
+    			return true;
+    		} else {
+    			return false;	
+    		}
+    		
+    }
+    
+    public void addAddressToUser(User u, Address a) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	db.addAddressToUser(u, a);
+       	db.closeConnection();
+    		return;
+    }
+    
+    public boolean validateCreditCard(User u, CreditCard cc) {		
+    		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	
+       	boolean isValid = db.validateCreditCard(u, cc);
+       	
+       	db.closeConnection();
+		return isValid;
+    }
+    
+    public boolean attemptTransaction(User u, CreditCard cc, double transactionAmount) {
+		DBAccess db = new DBAccess();
+       	db.createConnection();
+       	
+       	boolean wasSuccessful = db.attemptTransaction(cc, transactionAmount);
+       	
+       	db.closeConnection();
+		return wasSuccessful;
+    }
+}

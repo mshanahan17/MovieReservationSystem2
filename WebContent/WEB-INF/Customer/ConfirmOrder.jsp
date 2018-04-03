@@ -30,21 +30,36 @@
         var h=$("#shipStreet").val();
         var i=$("#shipCity").val();;
         var j=$("#shipZip").val();;
+        var k=$("#passAuth").val();;
 
         if (a==null || a=="",b==null || b=="",c==null || c=="",d==null || d=="",
         	e==null || e=="",f==null || f=="",g==null || g=="",h==null || h=="",
-        	i==null || i=="",j==null || j=="")
+        	i==null || i=="",j==null || j=="",k==null || k=="")
         {
             alert("Please Fill All Fields");
             return false;
         }
-        else{
-        	confirm();
+        else {
+        	passwordIsCorrect()
         }
     }
+    
+    function passwordIsCorrect() {
+    	$.post("/MovieReservationSystem/PasswordAuthServlet", { 
+    		passAuth: $("#passAuth").val() },
+    		function(data, status) {
+    			if(data == 0){
+    				confirm();				
+    			}
+    			if(data == 1){
+    				alert("INVALID PASSWORD")
+    			}
+    		});
+    }
+    
     function confirm(){
-    	
-		$.post("/Bank/BankingServlet", {
+    	console.log("Test?")
+    	$.post("/Bank/BankingServlet", {
 			fName: $("#fName").val(),
 			lName: $("#lName").val(),
 			ccType: $("#type").val(),
@@ -251,8 +266,12 @@
             </select>
             <br>
             <input id="shipZip" type="text" placeholder="Zip" name="shipZip"><br>
-           <button onclick="validateForm()">Submit</button><br>
-            <a href="UpdateShoppingCart">
+            
+            <br>
+            <p> Validate Password: </p>
+            <input name=passAuth id="passAuth" type="password"/><br>
+            <button onclick="validateForm()">Submit</button>
+            <a href="UpdateShoppingCart">            
             <input type="button" value="Cancel Payment" />
             </a>
       </div>
