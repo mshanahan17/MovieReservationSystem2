@@ -66,6 +66,36 @@ public class DBAccess {
 	static Logger log = 
     		Logger.getLogger(DBAccess.class.getName());
 	
+	public void changePassword(User user, String newPassword) {
+
+		try {
+			  
+//			  String firstName = user.getFirstName();
+//			  String lastName = user.getLastName();
+//			  String emailAddress = user.getEmailAddress();
+//			  String password = user.getPassword();
+//			  int numOfVisits = user.getNumOfVisits();			  			  
+			  
+			  String sql = "UPDATE User SET Salt = ?, SaltyHash = ? WHERE EmailAddress = ?";
+			  
+			  String salt = PasswordUtilities.getSalt();
+			  
+			  PreparedStatement ps = conn.prepareStatement(sql);
+			  ps.setString(1, salt);
+			  ps.setString(2, PasswordUtilities.saltAndHashPassword(newPassword, salt));
+			  ps.setString(3, user.getEmailAddress());
+			  
+			  ps.executeUpdate();
+			  
+			  ps.close();
+			  
+			  } catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+			  }
+		return;
+	}
+	
 	public void addSingleUser(User user) {
 		  
 		try {		  
@@ -124,7 +154,7 @@ public class DBAccess {
 		  } catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-		}
+		  }
 		
 	}
 	

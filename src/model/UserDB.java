@@ -38,11 +38,20 @@ public class UserDB {
 //		udb.addCreditCardToUser(u, cc);
 	}
 	
+	public void changePassword(User user, String newPass) {
+       	DBAccess db = new DBAccess();
+       	db.createConnection();
+       	db.changePassword(user, newPass);
+       	db.closeConnection();		
+		return;
+	}
+	
     public void registerUser(User user) {
        	DBAccess db = new DBAccess();
        	db.createConnection();
        	db.addHashedSingleUser(user);
        	db.closeConnection();
+       	return;
     }
     
     public boolean userExistsByEmailAddress(String userName) {

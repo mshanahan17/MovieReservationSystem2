@@ -23,7 +23,8 @@
          <nav>
          	<a href="Login">Home</a> 
          	<a href="ViewOrders">View Orders</a> 
-         	<a href="UpdateShoppingCart">View Cart</a> 
+         	<a href="UpdateShoppingCart">View Cart</a>
+         	<a href="ChangePassword">Change Password</a>
          	<a href="LogOut">Log Out</a>
       	 </nav>
       </header>

@@ -21,8 +21,8 @@ import model.UserDB;
 /**
  * Servlet implementation class PasswordAuthServlet
  */
-@WebServlet("/PasswordAuthServlet")
-public class PasswordAuthServlet extends HttpServlet {
+@WebServlet("/PasswordChangeServlet")
+public class PasswordChangeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	//log4j logger
 		private static Logger log = 
@@ -31,7 +31,7 @@ public class PasswordAuthServlet extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public PasswordAuthServlet() {
+    public PasswordChangeServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -41,7 +41,7 @@ public class PasswordAuthServlet extends HttpServlet {
 		ServletContext sc = this.getServletContext();
 		String path = sc.getRealPath("/WEB-INF/lib/log4j.properties");
 		PropertyConfigurator.configure(path);
-		log.info("Password Authentication Servlet Has Started");
+		log.info("Password Change Servlet Has Started");
 	}
 	
 	/**
@@ -57,34 +57,19 @@ public class PasswordAuthServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String passAuth = ServletUtils.validateInput(request.getParameter("passAuth"), "");
+		String newPass = ServletUtils.validateInput(request.getParameter("newPass"), "");		
+		System.out.println("newPass: " + newPass);
 		
 		HttpSession session = request.getSession();
 		User u = (User) session.getAttribute("user");
-				
+			
+		System.out.println(u);
 		
 		UserDB udb = new UserDB();
-		
-		
-		int status = 1;
-		
-		System.out.println("provided password: " + passAuth);
-		System.out.println("pass in session object: " + u.getPassword());
-		
-		System.out.println("sessobj - userSalt: " + u.getSalt());
-		
-		String curSaltyHash = PasswordUtilities.saltAndHashPassword(passAuth, u.getSalt());
-		
-		System.out.println("provided end pass: " + curSaltyHash);
-		
-		String theTrueSaltyHash = u.getSaltyHash();
-		System.out.println("session obj - end pass: " + curSaltyHash);
 				
-		System.out.println("Do results match? " + curSaltyHash.equals(theTrueSaltyHash));
+		int status = 0; // 0 = Success
 		
-		if(udb.passwordIsValid(u, passAuth)) {
-			status = 0;
-		}
+		udb.changePassword(u, newPass);
 		
 		System.out.println("Return Status: " + status);
 		
@@ -102,7 +87,7 @@ public class PasswordAuthServlet extends HttpServlet {
 	 * and messaage then close the filewriter resources
 	 */
 	private void connectionClosed() {
-		log.info("Password Authentication Servlet Has Closed");
+		log.info("Password Change Servlet Has Closed");
 	}
 
 }
