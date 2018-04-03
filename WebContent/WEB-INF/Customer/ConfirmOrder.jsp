@@ -45,7 +45,7 @@
     }
     
     function passwordIsCorrect() {
-    	$.post("/MovieReservationSystem/PasswordAuthServlet", { 
+    	$.post("PasswordAuthServlet", { 
     		passAuth: $("#passAuth").val() },
     		function(data, status) {
     			if(data == 0){
