@@ -54,7 +54,7 @@ public class Login extends HttpServlet {
 				.getParameter("g-recaptcha-response");
 		boolean verify = ServletUtils.verify(gRecaptchaResponse);
 
-		String success = path + "/CustomerHomePage.jsp";
+		String success = path + "/CustomerHomePage.jsp"; // TODO: Make sure this is a *relative* filepath?
 
 		String failure = "Registraion.jsp";
 		String button = request.getParameter("login");

@@ -9,7 +9,7 @@ import com.sun.org.apache.xml.internal.security.utils.Base64;
 public final class PasswordUtilities {
 	
 	public static void main(String[] args) {
-		genTestHash("I'macat77");
+		genTestHash("bobsmith");
 	}
 	
 	private PasswordUtilities() {
